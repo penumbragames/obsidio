@@ -45,7 +45,7 @@ Bullet.inheritsFrom(Entity);
 Bullet.VELOCITY_MAGNITUDE = 0.85;
 Bullet.DEFAULT_DAMAGE = 1;
 Bullet.MAX_TRAVEL_DISTANCE = 1000;
-Bullet.HITBOX_SIZE = 10;
+Bullet.HITBOX_SIZE = 16;
 
 /**
  * Factory method for the Bullet object. This is meant to be called from the
