@@ -20,3 +20,16 @@ Praesidium.inheritsFrom(Entity);
 
 Praesidium.HITBOX_SIZE = 10;
 Praesidium.DRAW_SIZE = [10, 10];
+
+Praesidium.prototype.update = function(clients) {
+  var players = clients.values();
+  for (var i = 0; i < this.players.length; ++i) {
+    if (players[i].isCollidedWith(this)) {
+      players[i].praesidium += this.quantity;
+      this.shouldExist = false;
+      return;
+    }
+  }
+};
+
+module.exports = Praesidium;

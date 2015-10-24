@@ -143,6 +143,15 @@ Game.prototype.update = function() {
       this.turrets.splice(i--, 1);
     }
   }
+
+  // Update all the praesidium pallets.
+  for (var i = 0; i < this.praesidium.length; ++i) {
+    if (this.praesidium[i].shouldExist) {
+      this.praesidium.update(this.players);
+    } else {
+      this.praesidium.splice(i--, 1);
+    }
+  }
 };
 
 /**

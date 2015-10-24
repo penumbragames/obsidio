@@ -29,7 +29,7 @@ Turret.SHOT_COOLDOWN = 500;
 Turret.MAX_HEALTH = 10;
 Turret.HITBOX_SIZE = 10;
 
-Turret.prototype.update = function(players) {
+Turret.prototype.update = function(clients) {
 };
 
 Turret.prototype.damage = function(amount) {
