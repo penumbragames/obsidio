@@ -6,6 +6,8 @@
 
 var Entity = require('./Entity');
 
+var Util = require('../shared/Util');
+
 /**
  * Constructor for a Praesidium object.
  * @constructor
@@ -43,7 +45,7 @@ Praesidium.generateRandomPraesidium = function() {
  */
 Praesidium.prototype.update = function(clients) {
   var players = clients.values();
-  for (var i = 0; i < this.players.length; ++i) {
+  for (var i = 0; i < players.length; ++i) {
     if (players[i].isCollidedWith(this)) {
       players[i].praesidium += this.quantity;
       this.shouldExist = false;

@@ -150,7 +150,7 @@ Game.prototype.update = function() {
   // Update all the praesidium pallets.
   for (var i = 0; i < this.praesidium.length; ++i) {
     if (this.praesidium[i].shouldExist) {
-      this.praesidium.update(this.players);
+      this.praesidium[i].update(this.players);
     } else {
       this.praesidium.splice(i--, 1);
     }
