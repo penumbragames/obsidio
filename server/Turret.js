@@ -36,23 +36,38 @@ Turret.HITBOX_SIZE = 10;
 Turret.MINIMUM_SHOOTING_DISTANCE_SQUARED = 200;
 
 /**
- * Given an array of players, this function returns a player
- * @param {Array.<Player>} player The player object to check against.
+ * Given an array of players, this function returns a player that the turret
+ * will fire at.
+ * @param {Array.<Player>} players The array of players to check.
  */
 Turret.prototype.getTarget = function(players) {
-  return Util.getEuclideanDistance2(this.x, this.y, player.x, player.y) <
-    Turret.MINIMUM_SHOOTING_DISTANCE_SQUARED;
+  var target = null;
+  for (var i = 0; i < players.length; ++i) {
+    if (target &&
+        Util.getEuclideanDistance2(this.x, this.y,
+                                   players[i].x, players[i].y) <
+        Util.getEuclideanDistance2(this.x, this.y,
+                                   target.x, target.y)) {
+      target = players[i];
+    } else if (Util.getEuclideanDistance2(this.x, this.y,
+                                          players[i].x, players[i].y) <
+               Turret.MINIMUM_SHOOTING_DISTANCE_SQUARED) {
+      target = players[i];
+    }
+  }
+  return target;
 };
 
 /**
  * Updates this turret.
  */
 Turret.prototype.update = function(clients) {
-//  var players = clients.values();
-//  var context = this;
-//  players = players.filter(function(player) {
-//    return context.isInShootingRange(player);
-//  }).sort(;
+  var players = clients.values();
+  var target = this.getTarget(players);
+  if (target) {
+    this.orientation = Math.atan2(target.y - this.y,
+                                  target.x - this.x);
+  }
 };
 
 Turret.prototype.damage = function(amount) {
