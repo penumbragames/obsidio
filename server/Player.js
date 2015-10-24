@@ -61,7 +61,7 @@ Player.inheritsFrom(Entity);
 Player.DEFAULT_VELOCITY_MAGNITUDE = 0.3;
 Player.DEFAULT_SHOT_COOLDOWN = 800;
 Player.DEFAULT_HITBOX_SIZE = 20;
-Player.DEFAULT_DRAW_SIZE = [32, 32];
+Player.DEFAULT_DRAW_SIZE = [20, 20];
 Player.MAX_HEALTH = 10;
 Player.MINIMUM_RESPAWN_BUFFER = 1000;
 
@@ -150,7 +150,7 @@ Player.prototype.canShoot = function() {
  * @return {Array.<Bullet>}
  */
 Player.prototype.getProjectilesShot = function() {
-  var bullets = [Bullet.create(this.x, this.y, this.turretAngle, this.id)];
+  var bullets = [Bullet.create(this.x, this.y, this.orientation, this.id)];
   this.lastShotTime = (new Date()).getTime();
   return bullets;
 };
