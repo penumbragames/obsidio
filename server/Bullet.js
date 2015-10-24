@@ -27,6 +27,9 @@ function Bullet(x, y, vx, vy, orientation, source) {
   this.source = source;
   this.damage = Bullet.DEFAULT_DAMAGE;
 
+  this.hitboxSize = Bullet.HITBOX_SIZE;
+  this.drawSize = Bullet.DRAW_SIZE;
+
   this.distanceTraveled = 0;
   this.shouldExist = true;
 }
@@ -43,6 +46,7 @@ Bullet.VELOCITY_MAGNITUDE = 0.85;
 Bullet.DEFAULT_DAMAGE = 1;
 Bullet.MAX_TRAVEL_DISTANCE = 1000;
 Bullet.HITBOX_SIZE = 10;
+Bullet.DRAW_SIZE = [10, 10];
 
 /**
  * Factory method for the Bullet object. This is meant to be called from the
