@@ -32,6 +32,9 @@ Praesidium.HITBOX_SIZE = 10;
 Praesidium.MIN_VALUE = 5;
 Praesidium.MAX_VALUE = 10;
 
+/**
+ * This function returns a randomly generated praesidium pallet.
+ */
 Praesidium.generateRandomPraesidium = function() {
   var point = Util.getRandomWorldPoint();
   var quantity = Util.randRangeInt(Praesidium.MIN_VALUE, Praesidium.MAX_VALUE);
