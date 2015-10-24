@@ -87,8 +87,7 @@ Bullet.prototype.update = function(clients) {
   var players = clients.values();
   for (var i = 0; i < players.length; ++i) {
     if (this.source != players[i].id &&
-        players[i].isCollidedWith(this.x, this.y,
-                                  Bullet.HITBOX_SIZE)) {
+        players[i].isCollidedWith(this)) {
       players[i].damage(1);
       if (players[i].isDead()) {
         players[i].respawn();
