@@ -1,6 +1,6 @@
 /**
  * This is the server app script that is run on the server.
- * @author Alvin Lin (alvin.lin@stuypulse.com)
+ * @author Alvin Lin (alin18@stuy.edu)
  * @todo Add unit tests!
  */
 
@@ -27,7 +27,6 @@ app.engine('html', swig.renderFile);
 app.set('port', PORT_NUMBER);
 app.set('view engine', 'html');
 
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan(':date[web] :method :url :req[header] :remote-addr :status'));
 app.use('/bower_components',
         express.static(__dirname + '/bower_components'));

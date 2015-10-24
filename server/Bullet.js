@@ -1,6 +1,6 @@
 /**
  * Stores the state of a bullet on the server.
- * @author Alvin Lin (alvin.lin@stuypulse.com)
+ * @author Alvin Lin (alin18@stuy.edu)
  */
 
 var Entity = require('./Entity');

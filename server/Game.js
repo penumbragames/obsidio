@@ -1,7 +1,7 @@
 /**
  * Game class on the server to manage the state of existing players and
  * and entities.
- * @author Alvin Lin (alvin.lin@stuypulse.com)
+ * @author Alvin Lin (alin18@stuy.edu)
  */
 
 var HashMap = require('hashmap');
@@ -34,6 +34,8 @@ function Game() {
    * @type {Entity}
    */
   this.projectiles = [];
+  this.turrets = [];
+  this.praesidium = [];
 }
 
 /**
@@ -84,18 +86,18 @@ Game.prototype.getPlayerNameBySocketId = function(id) {
  * input state sent by that player's client.
  * @param {string} id The socket ID of the player to update.
  * @param {Object} keyboardState The state of the player's keyboard.
- * @param {number} turretAngle The angle of the player's tank's turret
- *   in radians.
+ * @param {number} orientation The angle between the player's mouse and the
+ *   player's position on the canvas.
  * @param {boolean} shot The state of the player's left click determining
  *   if they shot.
  * @param {number} timestamp The timestamp of the packet sent.
  */
-Game.prototype.updatePlayer = function(id, keyboardState, turretAngle,
+Game.prototype.updatePlayer = function(id, keyboardState, orientation,
                                        shot, timestamp) {
   var player = this.players.get(id);
   var client = this.clients.get(id);
   if (player) {
-    player.updateOnInput(keyboardState, turretAngle);
+    player.updateOnInput(keyboardState, orientation);
     if (shot && player.canShoot()) {
       this.projectiles = this.projectiles.concat(
         player.getProjectilesShot());
@@ -130,9 +132,6 @@ Game.prototype.update = function() {
       this.projectiles[i].update(this.players);
     } else {
       var removedProjectile = this.projectiles.splice(i, 1);
-      this.addExplosion(new Explosion(removedProjectile.x,
-                                      removedProjectile.y,
-                                      100, 1000));
       i--;
     }
   }

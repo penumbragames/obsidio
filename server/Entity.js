@@ -1,6 +1,6 @@
 /**
  * Wrapper class for all entities on the server.
- * @author Alvin Lin (alvin.lin@stuypulse.com)
+ * @author Alvin Lin (alin18@stuy.edu)
  */
 
 var Constants = require('../shared/Constants');
@@ -13,16 +13,33 @@ var Util = require('../shared/Util');
  * @param {number} y The y coordinate of the entity.
  * @param {number} vx The velocity in the x direction of the entity.
  * @param {number} vy The velocity in the y direction of the entity.
+ * @param {number} hitboxSize The size of the hitbox of the entity. All
+ *   entities will have a circular hitbox where the hitboxSize defines the
+ *   radius of the hitbox.
+ * @param {[number, number]} drawSize The width and height of this entity
+ *   in pixels when it is drawn on the client side.
  */
-function Entity(x, y, vx, vy) {
+function Entity(x, y, vx, vy, hitboxSize, drawSize) {
   this.x = x || 0;
   this.y = y || 0;
   this.vx = vx || 0;
   this.vy = vy || 0;
+  this.hitboxSize = hitboxSize || 0;
+  this.drawSize = drawSize || [];
 
   this.lastUpdateTime = 0;
   this.updateTimeDifference = 0;
 }
+
+/**
+ * Returns true if this entity has collided with the given entity.
+ * @param {Entity} other The entity to check collision against.
+ */
+Entity.prototype.isCollidedWith = function(other) {
+  var minDistance = this.hitboxSize + other.hitboxSize;
+  return Util.getEuclideanDistance2(this.x, this.y, other.x, other.y) <
+    (minDistance * minDistance);
+};
 
 /**
  * Returns true if this entity is visible to the given player.

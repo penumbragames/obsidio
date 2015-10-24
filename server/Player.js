@@ -1,7 +1,7 @@
 /**
  * Stores the state of the player on the server. This class will also store
  * other important information such as socket ID, packet number, and latency.
- * @author Alvin Lin (alvin.lin@stuypulse.com)
+ * @author Alvin Lin (alin18@stuy.edu)
  */
 
 var Bullet = require('./Bullet');
@@ -22,6 +22,8 @@ var Util = require('../shared/Util');
 function Player(x, y, orientation, name, id) {
   this.x = x;
   this.y = y;
+  this.vx = 0;
+  this.vy = 0;
   this.orientation = orientation;
   this.name = name;
   this.id = id;
@@ -36,7 +38,10 @@ function Player(x, y, orientation, name, id) {
   this.lastShotTime = 0;
   this.health = Player.MAX_HEALTH;
   this.hitboxSize = Player.DEFAULT_HITBOX_SIZE;
+  this.drawSize = Player.DEFAULT_DRAW_SIZE;
 
+  // Resource
+  this.praesidium = 0;
   this.kills = 0;
   this.deaths = 0;
 }
@@ -48,13 +53,14 @@ Player.inheritsFrom(Entity);
  * DEFAULT_VELOCITY_MAGNITUDE is in pixels per millisecond.
  * DEFAULT_SHOT_COOLDOWN is in milliseconds.
  * DEFAULT_HITBOX_SIZE is in pixels.
- * SHIELD_HITBOX_SIZE is in pixels.
+ * DEFAULT_DRAW_SIZE is in pixels.
  * MAX_HEALTH is in health units.
  * MINIMUM_RESPAWN_BUFFER is a distance in pixels.
  */
 Player.DEFAULT_VELOCITY_MAGNITUDE = 0.3;
 Player.DEFAULT_SHOT_COOLDOWN = 800;
 Player.DEFAULT_HITBOX_SIZE = 20;
+Player.DEFAULT_DRAW_SIZE = [32, 32];
 Player.MAX_HEALTH = 10;
 Player.MINIMUM_RESPAWN_BUFFER = 1000;
 
@@ -79,7 +85,7 @@ Player.generateNewPlayer = function(name, id) {
  * @param {number} turretAngle The angle of the client's mouse with respect
  *   to the tank.
  */
-Player.prototype.updateOnInput = function(keyboardState) {
+Player.prototype.updateOnInput = function(keyboardState, orientation) {
   if (keyboardState.up) {
     this.vy = -this.vmag;
   }
@@ -97,6 +103,8 @@ Player.prototype.updateOnInput = function(keyboardState) {
     this.vx = 0;
     this.vy = 0;
   }
+
+  this.orientation = orientation;
 };
 
 /**
@@ -142,23 +150,6 @@ Player.prototype.getProjectilesShot = function() {
   var bullets = [Bullet.create(this.x, this.y, this.turretAngle, this.id)];
   this.lastShotTime = (new Date()).getTime();
   return bullets;
-};
-
-/**
- * Used to determine if two objects have collided, factors in shields, since
- * they increase the player's hitbox. This collision detection method assumes
- * all objects have circular hitboxes.
- * @param {number} x The x-coordinate of the center of the object's circular
- *   hitbox.
- * @param {number} y The y-coordinate of the center of the object's circular
- *   hitbox.
- * @param {number} hitboxSize The radius of the object's circular
- *   hitbox.
- */
-Player.prototype.isCollidedWith = function(x, y, hitboxSize) {
-  var minDistance = this.hitboxSize + hitboxSize;
-  return Util.getEuclideanDistance2(this.x, this.y, x, y) <
-    (minDistance * minDistance);
 };
 
 /**
