@@ -21,28 +21,43 @@ Drawing.HP_COLOR = 'green';
 Drawing.HP_MISSING_COLOR = 'red';
 
 Drawing.BASE_IMG_URL = '/static/img/';
-Drawing.PLAYER_SRC = Drawing.BASE_IMG_URL + 'player.png';
+Drawing.SELF_PLAYER_SRC = Drawing.BASE_IMG_URL + 'self_player.png';
+Drawing.OTHER_PLAYER_SRC = Drawing.BASE_IMG_URL + 'other_player.png';
 Drawing.PROJECTILE_SRC = Drawing.BASE_IMG_URL + 'bullet.png';
+Drawing.PLAYER_SIZE = [64, 64];
+Drawing.PROJECTILE_SIZE = [24, 24];
 Drawing.TILE_SRC = Drawing.BASE_IMG_URL + 'tile.png';
 Drawing.TILE_SIZE = 100;
 
-Drawing.prototype.drawPlayer = function(isSelf, coords, size, orientation, name) {
+Drawing.prototype.drawPlayer = function(isSelf, coords, orientation, name) {
   this.context.save();
   this.context.translate(coords[0], coords[1]);
   this.context.rotate(orientation);
-  var player = new Image(size[0], size[1]);
-  player.src = Drawing.PLAYER_SRC;
-  this.context.drawImage(player, -size[0] / 2, -size[1] / 2);
+  var player = new Image();
+  if (isSelf) {
+    player.src = Drawing.SELF_PLAYER_SRC;
+  } else {
+    player.src = Drawing.OTHER_PLAYER_SRC;
+  }
+  this.context.drawImage(player,
+                         -Drawing.PLAYER_SIZE[0] / 2,
+                         -Drawing.PLAYER_SIZE[1] / 2,
+                         Drawing.PLAYER_SIZE[0],
+                         Drawing.PLAYER_SIZE[1]);
   this.context.restore();
 };
 
-Drawing.prototype.drawProjectile = function(coords, size, orientation) {
+Drawing.prototype.drawProjectile = function(coords, orientation) {
   this.context.save();
   this.context.translate(coords[0], coords[1]);
   this.context.rotate(orientation);
-  var bullet = new Image(size[0], size[1]);
+  var bullet = new Image();
   bullet.src = Drawing.PROJECTILE_SRC;
-  this.context.drawImage(bullet, -size[0] / 2, -size[1] / 2);
+  this.context.drawImage(bullet,
+                         -Drawing.PROJECTILE_SIZE[0] / 2,
+                         -Drawing.PROJECTILE_SIZE[1] / 2,
+                         Drawing.PROJECTILE_SIZE[0],
+                         Drawing.PROJECTILE_SIZE[1]);
   this.context.restore();
 };
 
