@@ -34,7 +34,7 @@ Praesidium.MAX_VALUE = 10;
 
 Praesidium.generateRandomPraesidium = function() {
   var point = Util.getRandomWorldPoint();
-  var quantity = Util.randRange(Praesidium.MIN_VALUE, Praesidium.MAX_VALUE);
+  var quantity = Util.randRangeInt(Praesidium.MIN_VALUE, Praesidium.MAX_VALUE);
   return new Praesidium(point[0], point[1], quantity);
 }
 

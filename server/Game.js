@@ -195,7 +195,9 @@ Game.prototype.sendState = function() {
       projectiles: this.projectiles.filter(function(projectile) {
         return projectile.isVisibleTo(currentPlayer);
       }),
-      praesidium: this.praesidium,
+      praesidium: this.praesidium.filter(function(praesidium) {
+        return praesidium.isVisibleTo(currentPlayer);
+      }),
       latency: currentClient.latency
     });
   }
