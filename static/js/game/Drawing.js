@@ -20,13 +20,20 @@ Drawing.FONT_COLOR = 'black';
 Drawing.HP_COLOR = 'green';
 Drawing.HP_MISSING_COLOR = 'red';
 
+Drawing.UI_COLOR = '#AAAAAA';
+
 Drawing.BASE_IMG_URL = '/static/img/';
 Drawing.SELF_PLAYER_SRC = Drawing.BASE_IMG_URL + 'self_player.png';
 Drawing.OTHER_PLAYER_SRC = Drawing.BASE_IMG_URL + 'other_player.png';
 Drawing.PROJECTILE_SRC = Drawing.BASE_IMG_URL + 'bullet.png';
+Drawing.PRAESIDIUM_SRC = Drawing.BASE_IMG_URL + 'praesidium.png';
+Drawing.TURRET_SRC = Drawing.BASE_IMG_URL + 'turret.png';
+Drawing.TILE_SRC = Drawing.BASE_IMG_URL + 'tile.png';
+
 Drawing.PLAYER_SIZE = [64, 64];
 Drawing.PROJECTILE_SIZE = [24, 24];
-Drawing.TILE_SRC = Drawing.BASE_IMG_URL + 'tile.png';
+Drawing.PRAESIDIUM_SIZE = [32, 32];
+Drawing.TURRET_SIZE = [64, 64];
 Drawing.TILE_SIZE = 100;
 
 Drawing.prototype.drawPlayer = function(isSelf, coords, orientation, name) {
@@ -61,15 +68,39 @@ Drawing.prototype.drawProjectile = function(coords, orientation) {
   this.context.restore();
 };
 
-Drawing.prototype.drawPraesidium = function() {
-  
+Drawing.prototype.drawPraesidium = function(coords, quantity) {
+  this.context.save();
+  this.context.translate(coords[0], coords[1]);
+  var praesidium = new Image();
+  praesidium.src = Drawing.PRAESIDIUM_SRC;
+  this.context.drawImage(praesidium,
+                         -Drawing.PRAESIDIUM_SIZE[0] / 2,
+                         -Drawing.PRAESIDIUM_SIZE[1] / 2,
+                         Drawing.PRAESIDIUM_SIZE[0],
+                         Drawing.PRAESIDIUM_SIZE[1]);
+  this.context.restore();
 };
 
-Drawing.prototype.drawUI = function(health, praesidium) {
+Drawing.prototype.drawTurret = function(coords) {
+  this.context.save();
+  this.context.translate(coords[0], coords[1]);
+  var turret = new Image();
+  turret.src = Drawing.TURRET_SRC;
+  this.context.drawImage(turret,
+                         -Drawing.TURRET_SIZE[0] / 2,
+                         -Drawing.TURRET_SIZE[1] / 2,
+                         Drawing.TURRET_SIZE[0],
+                         Drawing.TURRET_SIZE[1]);
+  this.context.restore();
+}
+
+Drawing.prototype.drawUI = function(health, praesidia) {
+  this.context.fillStyle = Drawing.UI_COLOR;
+  this.context.fillRect(0, 0, 200, 60);
   this.context.font = Drawing.FONT;
   this.context.fillStyle = Drawing.FONT_COLOR;
   this.context.fillText("Health: ", 10, 20);
-  this.context.fillText("Praesidium: " + praesidium, 10, 40);
+  this.context.fillText("Praesidia: " + praesidia, 10, 40);
   for (var i = 0; i < 10; ++i) {
     if (i < health) {
       this.context.fillStyle = Drawing.HP_COLOR;

@@ -29,6 +29,8 @@ function Game(socket, canvas, leaderboard) {
   this.self = null;
   this.players = [];
   this.projectiles = [];
+  this.praesidia = [];
+  this.turrets = [];
   this.latency = 0;
 };
 
@@ -54,6 +56,8 @@ Game.prototype.receiveGameState = function(state) {
   this.self = state.self;
   this.players = state.players;
   this.projectiles = state.projectiles;
+  this.praesidia = state.praesidia;
+  this.turrets = state.turrets;
   this.latency = state.latency;
 };
 
@@ -96,6 +100,7 @@ Game.prototype.draw = function() {
 
   // Draw the background first.
   this.environment.draw();
+  
   // Draw the projectiles next.
   for (var i = 0; i < this.projectiles.length; ++i) {
     this.drawing.drawProjectile(
@@ -110,9 +115,8 @@ Game.prototype.draw = function() {
       this.viewPort.toCanvasCoords(this.self),
       this.self.orientation,
       this.self.name);
-    // Draw UI.
-    this.drawing.drawUI(this.self.health, this.self.praesidium);
   }
+  
   // Draw any other players.
   for (var i = 0; i < this.players.length; ++i) {
     this.drawing.drawPlayer(
@@ -120,6 +124,24 @@ Game.prototype.draw = function() {
       this.viewPort.toCanvasCoords(this.players[i]),
       this.players[i].orientation,
       this.players[i].name);
+  }
+  console.log(this);
+  
+  // Draw praesidia pallets.
+  for (var i = 0; i < this.praesidia.length; ++i) {
+    this.drawing.drawPraesidium(
+      this.viewPort.toCanvasCoords(this.praesidia[i]),
+      this.praesidia[i].quantity);
+  }
+
+  // Draw turrets.
+  for (var i = 0; i < this.turrets.length; ++i) {
+    this.drawing.drawTurrets(this.viewPort.toCanvasCoords(this.turrets[i]));
+  }
+
+  // Draw the UI last.
+  if (this.self) {
+    this.drawing.drawUI(this.self.health, this.self.praesidia);
   }
 
 };
