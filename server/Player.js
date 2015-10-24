@@ -131,15 +131,13 @@ Player.prototype.canShoot = function() {
 };
 
 /**
- * Returns an array containing projectiles that the player has fired,
- * factoring in all powerups. Assumes the shot cooldown has passed and the
- * player CAN shoot. Resets lastShotTime.
- * @return {Array.<Bullet>}
+ * Returns a bullet that the player has shot assuming that the player CAN
+ * shoot. Resets lastShotTime.
+ * @return {Bullet}
  */
-Player.prototype.getProjectilesShot = function() {
-  var bullets = [Bullet.create(this.x, this.y, this.orientation, this.id)];
+Player.prototype.getProjectileShot = function() {
   this.lastShotTime = (new Date()).getTime();
-  return bullets;
+  return Bullet.create(this.x, this.y, this.orientation, this.id);
 };
 
 /**

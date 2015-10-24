@@ -97,15 +97,15 @@ Game.prototype.getPlayerNameBySocketId = function(id) {
  *   if they shot.
  * @param {number} timestamp The timestamp of the packet sent.
  */
-Game.prototype.updatePlayer = function(id, keyboardState, orientation,
+Game.prototype.updatePlayerOnInput = function(id, keyboardState, orientation,
                                        shot, timestamp) {
   var player = this.players.get(id);
   var client = this.clients.get(id);
   if (player) {
     player.updateOnInput(keyboardState, orientation);
     if (shot && player.canShoot()) {
-      this.projectiles = this.projectiles.concat(
-        player.getProjectilesShot());
+      this.projectiles = this.projectiles.push(
+        player.getProjectileShot());
     }
   }
   if (client) {
@@ -114,19 +114,11 @@ Game.prototype.updatePlayer = function(id, keyboardState, orientation,
 };
 
 /**
- * Returns an array of the currently active players.
- * @return {Array.<Player>}
- */
-Game.prototype.getPlayers = function() {
-  return this.players.values();
-};
-
-/**
  * Updates the state of all the objects in the game.
  */
 Game.prototype.update = function() {
   // Update all the players.
-  var players = this.getPlayers();
+  var players = this.players.values();
   for (var i = 0; i < players.length; ++i) {
     players[i].update();
   }

@@ -1,6 +1,6 @@
 /**
  * Javascript Task Runner
- * @author Alvin Lin (alvin.lin@stuypulse.com)
+ * @author Alvin Lin (alin18@stuy.edu)
  */
 
 var gulp = require('gulp');
