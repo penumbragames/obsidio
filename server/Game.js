@@ -155,7 +155,7 @@ Game.prototype.update = function() {
       this.praesidium.splice(i--, 1);
     }
   }
-  if (this.praesidium.length < 10) {
+  while (this.praesidium.length < 10) {
     this.praesidium.push(Praesidium.generateRandomPraesidium());
   }
 };
@@ -195,9 +195,7 @@ Game.prototype.sendState = function() {
       projectiles: this.projectiles.filter(function(projectile) {
         return projectile.isVisibleTo(currentPlayer);
       }),
-      praesidium: this.praesidium.filter(function(praesidium) {
-        return praesidium.isVisibleTo(currentPlayer);
-      }),
+      praesidium: this.praesidium,
       latency: currentClient.latency
     });
   }
