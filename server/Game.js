@@ -41,6 +41,8 @@ function Game() {
   this.praesidia = [];
 }
 
+Game.MAX_PRAESIDIA = 20;
+
 /**
  * Creates a new player with the given name and ID.
  * @param {string} The display name of the player.
@@ -155,7 +157,7 @@ Game.prototype.update = function() {
       this.praesidia.splice(i--, 1);
     }
   }
-  while (this.praesidia.length < 10) {
+  while (this.praesidia.length < Game.MAX_PRAESIDIA) {
     this.praesidia.push(Praesidium.generateRandomPraesidium());
   }
 };

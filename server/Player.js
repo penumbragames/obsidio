@@ -34,7 +34,7 @@ function Player(x, y, orientation, name, id) {
   this.lastShotTime = 0;
 
   this.health = Player.MAX_HEALTH;
-  this.praesidium = 0;
+  this.praesidia = 0;
   this.kills = 0;
   this.deaths = 0;
 }
@@ -118,16 +118,6 @@ Player.prototype.update = function() {
   var boundedCoord = Util.boundWorld(this.x, this.y);
   this.x = boundedCoord[0];
   this.y = boundedCoord[1];
-};
-
-/**
- * Applies a powerup to this player.
- * @param {string} name The name of the powerup to apply.
- * @param {Object} powerup An object containing the powerup's associated data
- *   and expiration time.
- */
-Player.prototype.applyPowerup = function(name, powerup) {
-  this.powerups[name] = powerup;
 };
 
 /**
