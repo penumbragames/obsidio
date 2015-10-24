@@ -24,11 +24,11 @@ function Bullet(x, y, vx, vy, orientation, source) {
   this.vx = vx;
   this.vy = vy;
   this.orientation = orientation;
-  this.source = source;
-  this.damage = Bullet.DEFAULT_DAMAGE;
-
   this.hitboxSize = Bullet.HITBOX_SIZE;
   this.drawSize = Bullet.DRAW_SIZE;
+
+  this.source = source;
+  this.damage = Bullet.DEFAULT_DAMAGE;
 
   this.distanceTraveled = 0;
   this.shouldExist = true;

@@ -25,6 +25,9 @@ function Player(x, y, orientation, name, id) {
   this.vx = 0;
   this.vy = 0;
   this.orientation = orientation;
+  this.hitboxSize = Player.DEFAULT_HITBOX_SIZE;
+  this.drawSize = Player.DEFAULT_DRAW_SIZE;
+
   this.name = name;
   this.id = id;
 
@@ -37,8 +40,6 @@ function Player(x, y, orientation, name, id) {
   this.shotCooldown = Player.DEFAULT_SHOT_COOLDOWN;
   this.lastShotTime = 0;
   this.health = Player.MAX_HEALTH;
-  this.hitboxSize = Player.DEFAULT_HITBOX_SIZE;
-  this.drawSize = Player.DEFAULT_DRAW_SIZE;
 
   // Resource
   this.praesidium = 0;

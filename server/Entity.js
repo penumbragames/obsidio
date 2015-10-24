@@ -13,17 +13,19 @@ var Util = require('../shared/Util');
  * @param {number} y The y coordinate of the entity.
  * @param {number} vx The velocity in the x direction of the entity.
  * @param {number} vy The velocity in the y direction of the entity.
+ * @param {number} orientation The orientation of the entity in radians.
  * @param {number} hitboxSize The size of the hitbox of the entity. All
  *   entities will have a circular hitbox where the hitboxSize defines the
  *   radius of the hitbox.
  * @param {[number, number]} drawSize The width and height of this entity
  *   in pixels when it is drawn on the client side.
  */
-function Entity(x, y, vx, vy, hitboxSize, drawSize) {
+function Entity(x, y, vx, vy, orientation, hitboxSize, drawSize) {
   this.x = x || 0;
   this.y = y || 0;
   this.vx = vx || 0;
   this.vy = vy || 0;
+  this.orientation = orientation || 0;
   this.hitboxSize = hitboxSize || 0;
   this.drawSize = drawSize || [];
 
