@@ -98,10 +98,11 @@ Game.prototype.draw = function() {
   this.environment.draw();
 
   // Draw the projectiles next.
+  console.log(this.projectiles);
   for (var i = 0; i < this.projectiles.length; ++i) {
     this.drawing.drawProjectile(
       this.viewPort.toCanvasCoords(this.projectiles[i]),
-      this.projectiles[i].size,
+      this.projectiles[i].drawSize,
       this.projectiles[i].orientation);
   }
 
@@ -110,7 +111,7 @@ Game.prototype.draw = function() {
     this.drawing.drawPlayer(
       true,
       this.viewPort.toCanvasCoords(this.self),
-      this.self.size,
+      this.self.drawSize,
       this.self.orientation,
       this.self.name);
   }
@@ -119,7 +120,7 @@ Game.prototype.draw = function() {
     this.drawing.drawPlayer(
       false,
       this.viewPort.toCanvasCoords(this.players[i]),
-      this.self.size,
+      this.self.drawSize,
       this.players[i].orientation,
       this.players[i].name);
   }

@@ -31,7 +31,7 @@ Drawing.prototype.drawPlayer = function(isSelf, coords, size, orientation, name)
   this.context.translate(coords[0], coords[1]);
   this.context.rotate(orientation);
   var player = new Image(size[0], size[1]);
-  player.src = Drawing.PLAYER_IMG;
+  player.src = Drawing.PLAYER_SRC;
   this.context.drawImage(player, -size[0] / 2, -size[1] / 2);
   this.context.restore();
 };
@@ -41,7 +41,7 @@ Drawing.prototype.drawProjectile = function(coords, size, orientation) {
   this.context.translate(coords[0], coords[1]);
   this.context.rotate(orientation);
   var bullet = new Image(size[0], size[1]);
-  bullet.src = Drawing.PROJECTILE_IMG;
+  bullet.src = Drawing.PROJECTILE_SRC;
   this.context.drawImage(bullet, -size[0] / 2, -size[1] / 2);
   this.context.restore();
 };
