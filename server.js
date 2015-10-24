@@ -33,6 +33,8 @@ app.use('/bower_components',
         express.static(__dirname + '/bower_components'));
 app.use('/static',
         express.static(__dirname + '/static'));
+app.use('/shared',
+        express.static(__dirname + '/shared'));
 
 // Routing
 app.get('/', function(request, response) {
