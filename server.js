@@ -5,6 +5,7 @@
  */
 
 var PORT_NUMBER = process.env.PORT || 5000;
+var IP = process.env.IP || 'localhost';
 var FRAME_RATE = 1000.0 / 60.0;
 
 // Dependencies.
@@ -69,6 +70,6 @@ setInterval(function() {
 }, FRAME_RATE);
 
 // Starts the server.
-server.listen(PORT_NUMBER, function() {
+server.listen(PORT_NUMBER, IP, function() {
   console.log('Starting server on port ' + PORT_NUMBER);
 });
