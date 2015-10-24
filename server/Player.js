@@ -6,7 +6,6 @@
 
 var Bullet = require('./Bullet');
 var Entity = require('./Entity');
-var Powerup = require('./Powerup');
 
 var Util = require('../shared/Util');
 
@@ -24,7 +23,6 @@ function Player(x, y, orientation, name, id) {
   this.x = x;
   this.y = y;
   this.orientation = orientation;
-  this.turretAngle = orientation;
   this.name = name;
   this.id = id;
 
@@ -37,17 +35,6 @@ function Player(x, y, orientation, name, id) {
   this.shotCooldown = Player.DEFAULT_SHOT_COOLDOWN;
   this.lastShotTime = 0;
   this.health = Player.MAX_HEALTH;
-  /**
-   * this.powerups is a JSON Object of the format:
-   * { 'powerup' : { 'name' : name,
-   *                 'data' : data,
-   *                 'expirationTime' : expirationTime },
-   *   'powerup' : { 'name' : name,
-   *                 'data' : data,
-   *                 'expirationTime' : expirationTime }
-   * }
-   */
-  this.powerups = {};
   this.hitboxSize = Player.DEFAULT_HITBOX_SIZE;
 
   this.kills = 0;
@@ -65,15 +52,9 @@ Player.inheritsFrom(Entity);
  * MAX_HEALTH is in health units.
  * MINIMUM_RESPAWN_BUFFER is a distance in pixels.
  */
-Player.TURN_RATE = 0.005;
 Player.DEFAULT_VELOCITY_MAGNITUDE = 0.3;
 Player.DEFAULT_SHOT_COOLDOWN = 800;
 Player.DEFAULT_HITBOX_SIZE = 20;
-/**
- * Note: The shield hit distance does NOT match the size of the shield
- * in shield.png.
- */
-Player.SHIELD_HITBOX_SIZE = 45;
 Player.MAX_HEALTH = 10;
 Player.MINIMUM_RESPAWN_BUFFER = 1000;
 
@@ -98,30 +79,24 @@ Player.generateNewPlayer = function(name, id) {
  * @param {number} turretAngle The angle of the client's mouse with respect
  *   to the tank.
  */
-Player.prototype.updateOnInput = function(keyboardState, turretAngle) {
+Player.prototype.updateOnInput = function(keyboardState) {
   if (keyboardState.up) {
-    this.vx = this.vmag * Math.sin(this.orientation);
-    this.vy = -this.vmag * Math.cos(this.orientation);
+    this.vy = -this.vmag;
   }
   if (keyboardState.down) {
-    this.vx = -this.vmag * Math.sin(this.orientation);
-    this.vy = this.vmag * Math.cos(this.orientation);
+    this.vy = this.vmag;
   }
-  if (!keyboardState.up && !keyboardState.down) {
+  if (keyboardState.left) {
+    this.vx = -this.vmag;
+  }
+  if (keyboardState.right) {
+    this.vx = this.vmag;
+  }
+  if (!keyboardState.up && !keyboardState.down &&
+      !keyboardState.left && !keyboardState.right) {
     this.vx = 0;
     this.vy = 0;
   }
-  if (keyboardState.right) {
-    this.turnRate = Player.TURN_RATE;
-  }
-  if (keyboardState.left) {
-    this.turnRate = -Player.TURN_RATE;
-  }
-  if (!keyboardState.right && !keyboardState.left) {
-    this.turnRate = 0;
-  }
-
-  this.turretAngle = turretAngle;
 };
 
 /**
@@ -131,59 +106,10 @@ Player.prototype.updateOnInput = function(keyboardState, turretAngle) {
  */
 Player.prototype.update = function() {
   this.parent.update.call(this);
-  this.orientation += this.turnRate * this.updateTimeDifference;
 
   var boundedCoord = Util.boundWorld(this.x, this.y);
   this.x = boundedCoord[0];
   this.y = boundedCoord[1];
-
-  // Loops through and applies powerups to the player. Removes them
-  // when they expire.
-  for (var powerup in this.powerups) {
-    switch (powerup) {
-      case Powerup.HEALTHPACK:
-        this.health = Math.min(this.health + this.powerups[powerup].data,
-                               Player.MAX_HEALTH);
-        delete this.powerups[powerup];
-        continue;
-      case Powerup.SHOTGUN:
-        break;
-      case Powerup.RAPIDFIRE:
-        this.shotCooldown = Player.DEFAULT_SHOT_COOLDOWN /
-                            this.powerups[powerup].data;
-        break;
-      case Powerup.SPEEDBOOST:
-        this.vmag = Player.DEFAULT_VELOCITY_MAGNITUDE *
-            this.powerups[powerup].data;
-        break;
-      case Powerup.SHIELD:
-        this.hitboxSize = Player.SHIELD_HITBOX_SIZE;
-        if (this.powerups[powerup].data <= 0) {
-          delete this.powerups[powerup];
-          this.hitboxSize = Player.DEFAULT_HITBOX_SIZE;
-          continue;
-        }
-        break;
-    }
-    if ((new Date()).getTime() > this.powerups[powerup].expirationTime) {
-      switch (powerup) {
-        case Powerup.HEALTHPACK:
-          break;
-        case Powerup.SHOTGUN:
-          break;
-        case Powerup.RAPIDFIRE:
-          this.shotCooldown = Player.DEFAULT_SHOT_COOLDOWN;
-          break;
-        case Powerup.SPEEDBOOST:
-          this.vmag = Player.DEFAULT_VELOCITY_MAGNITUDE;
-          break;
-        case Powerup.SHIELD:
-          this.hitboxSize = Player.DEFAULT_HITBOX_SIZE;
-          break;
-      }
-      delete this.powerups[powerup];
-    }
-  }
 };
 
 /**
@@ -214,16 +140,6 @@ Player.prototype.canShoot = function() {
  */
 Player.prototype.getProjectilesShot = function() {
   var bullets = [Bullet.create(this.x, this.y, this.turretAngle, this.id)];
-  if (this.powerups[Powerup.SHOTGUN]) {
-    for (var i = 1; i < this.powerups[Powerup.SHOTGUN].data + 1; ++i) {
-      bullets.push(
-        Bullet.create(this.x, this.y, this.turretAngle - (i * Math.PI / 9),
-                      this.id));
-      bullets.push(
-        Bullet.create(this.x, this.y, this.turretAngle + (i * Math.PI / 9),
-                      this.id));
-    }
-  }
   this.lastShotTime = (new Date()).getTime();
   return bullets;
 };
@@ -258,11 +174,7 @@ Player.prototype.isDead = function() {
  * @param {number} amount The amount to damage the player by.
  */
 Player.prototype.damage = function(amount) {
-  if (this.powerups[Powerup.SHIELD]) {
-    this.powerups[Powerup.SHIELD].data -= 1;
-  } else {
-    this.health -= amount;
-  }
+  this.health -= amount;
 };
 
 /**

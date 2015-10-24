@@ -8,8 +8,6 @@ var HashMap = require('hashmap');
 
 var Player = require('./Player');
 var Bullet = require('./Bullet');
-var Powerup = require('./Powerup');
-var Explosion = require('./Explosion');
 
 /**
  * Constructor for the server side Game class.
@@ -36,15 +34,7 @@ function Game() {
    * @type {Entity}
    */
   this.projectiles = [];
-  this.powerups = [];
-  this.explosions = [];
 }
-
-/**
- * MAX_MAP_POWERUPS is the maximum of number of powerups that can be active
- *   on the map at any given point in time.
- */
-Game.MAX_MAP_POWERUPS = 10;
 
 /**
  * Creates a new player with the given name and ID.
@@ -72,9 +62,6 @@ Game.prototype.removePlayer = function(id) {
   var player = {};
   if (this.players.has(id)) {
     player = this.players.get(id);
-    // todo: Finish Explosion class
-    this.explosions.push(new Explosion(player.x, player.y,
-                                       100, 1000));
     this.players.remove(id);
   }
   return player.name;
@@ -120,14 +107,6 @@ Game.prototype.updatePlayer = function(id, keyboardState, turretAngle,
 };
 
 /**
- * Adds an explosion to the internally maintained array.
- * @param {Explosion} explosion The explosion to add.
- */
-Game.prototype.addExplosion = function(explosion) {
-  this.explosions.push(explosion);
-};
-
-/**
  * Returns an array of the currently active players.
  * @return {Array.<Player>}
  */
@@ -154,28 +133,6 @@ Game.prototype.update = function() {
       this.addExplosion(new Explosion(removedProjectile.x,
                                       removedProjectile.y,
                                       100, 1000));
-      i--;
-    }
-  }
-
-  // Update the powerups and ensure that there are always 10 powerups on
-  // the map.
-  while (this.powerups.length < Game.MAX_MAP_POWERUPS) {
-    this.powerups.push(Powerup.generateRandomPowerup());
-  }
-  for (var i = 0; i < this.powerups.length; ++i) {
-    if (this.powerups[i].shouldExist) {
-      this.powerups[i].update(this.getPlayers());
-    } else {
-      this.powerups.splice(i, 1);
-      i--;
-    }
-  }
-
-  // Update the explosions.
-  for (var i = 0; i < this.explosions.length; ++i) {
-    if (this.explosions[i].isExpired()) {
-      this.explosions.splice(i, 1);
       i--;
     }
   }
@@ -215,12 +172,6 @@ Game.prototype.sendState = function() {
       }),
       projectiles: this.projectiles.filter(function(projectile) {
         return projectile.isVisibleTo(currentPlayer);
-      }),
-      powerups: this.powerups.filter(function(powerup) {
-        return powerup.isVisibleTo(currentPlayer);
-      }),
-      explosions: this.explosions.filter(function(explosion) {
-        return explosion.isVisibleTo(currentPlayer);
       }),
       latency: currentClient.latency
     });

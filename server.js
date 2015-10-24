@@ -8,7 +8,6 @@ var PORT_NUMBER = process.env.PORT || 5000;
 var FRAME_RATE = 1000.0 / 60.0;
 
 // Dependencies.
-var bodyParser = require('body-parser');
 var express = require('express');
 var http = require('http');
 var morgan = require('morgan');
@@ -32,10 +31,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan(':date[web] :method :url :req[header] :remote-addr :status'));
 app.use('/bower_components',
         express.static(__dirname + '/bower_components'));
-app.use('/static/dist',
-        express.static(__dirname + '/static/dist'));
-app.use('/static/img',
-        express.static(__dirname + '/static/img'));
+app.use('/static',
+        express.static(__dirname + '/static'));
 
 // Routing
 app.get('/', function(request, response) {
@@ -48,14 +45,9 @@ app.get('/', function(request, response) {
 io.on('connection', function(socket) {
   // When a new player joins, the server adds a new player to the game.
   socket.on('new-player', function(data) {
-    game.addNewPlayer(data.name, socket);
-    socket.emit('received-new-player');
-    io.sockets.emit('chat-server-to-clients', {
-      name: '[Tank Anarchy]',
-      message: data.name + ' has joined the game.',
-      isNotification: true
-    });
-  });
+   game.addNewPlayer(data.name, socket);
+   socket.emit('received-new-player');
+ });
 
   // Update the internal object states every time a player sends an intent
   // packet.
@@ -64,21 +56,9 @@ io.on('connection', function(socket) {
                       data.shot, data.timestamp);
   });
 
-  socket.on('chat-client-to-server', function(data) {
-    io.sockets.emit('chat-server-to-clients', {
-      name: game.getPlayerNameBySocketId(socket.id),
-      message: data
-    });
-  });
-
   // When a player disconnects, remove them from the game.
   socket.on('disconnect', function() {
     var name = game.removePlayer(socket.id);
-    io.sockets.emit('chat-server-to-clients', {
-      name: '[Tank Anarchy]',
-      message: name + ' has left the game.',
-      isNotification: true
-    });
   });
 });
 
