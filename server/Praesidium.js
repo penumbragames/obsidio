@@ -50,7 +50,7 @@ Praesidium.prototype.update = function(clients) {
   var players = clients.values();
   for (var i = 0; i < players.length; ++i) {
     if (players[i].isCollidedWith(this)) {
-      players[i].praesidium += this.quantity;
+      players[i].praesidia += this.quantity;
       this.shouldExist = false;
       return;
     }
