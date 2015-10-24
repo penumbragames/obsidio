@@ -78,21 +78,26 @@ Player.generateNewPlayer = function(name, id) {
  */
 Player.prototype.updateOnInput = function(keyboardState, orientation) {
   if (keyboardState.up) {
-    this.vy = -this.vmag;
+    this.vy = (keyboardState.left || keyboardState.right) ?
+        -this.vmag / Math.SQRT2 : -this.vmag;
   }
   if (keyboardState.down) {
-    this.vy = this.vmag;
-  }
-  if ((!keyboardState.up && !keyboardState.down) ||
-      (keyboardState.up && keyboardState.down)) {
-    this.vy = 0;
+    this.vy = (keyboardState.left || keyboardState.right) ?
+        this.vmag / Math.SQRT2 : this.vmag;
   }
 
   if (keyboardState.left) {
-    this.vx = -this.vmag;
+    this.vx = (keyboardState.up || keyboardState.down) ?
+        -this.vmag / Math.SQRT2 : -this.vmag;
   }
   if (keyboardState.right) {
-    this.vx = this.vmag;
+    this.vx = (keyboardState.up || keyboardState.down) ?
+        this.vmag / Math.SQRT2 : this.vmag;
+  }
+
+  if ((!keyboardState.up && !keyboardState.down) ||
+      (keyboardState.up && keyboardState.down)) {
+    this.vy = 0;
   }
   if ((!keyboardState.left && !keyboardState.right) ||
       (keyboardState.left && keyboardState.right)) {

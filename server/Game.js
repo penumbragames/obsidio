@@ -147,7 +147,7 @@ Game.prototype.update = function() {
     }
   }
 
-  // Update all the praesidium pallets.
+  // Update all the praesidia pallets.
   for (var i = 0; i < this.praesidia.length; ++i) {
     if (this.praesidia[i].shouldExist) {
       this.praesidia[i].update(this.players);
