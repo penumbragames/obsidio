@@ -61,7 +61,7 @@ Player.inheritsFrom(Entity);
 Player.DEFAULT_VELOCITY_MAGNITUDE = 0.3;
 Player.DEFAULT_SHOT_COOLDOWN = 800;
 Player.DEFAULT_HITBOX_SIZE = 20;
-Player.DEFAULT_DRAW_SIZE = [20, 20];
+Player.DEFAULT_DRAW_SIZE = [64, 64];
 Player.MAX_HEALTH = 10;
 Player.MINIMUM_RESPAWN_BUFFER = 1000;
 
@@ -83,8 +83,8 @@ Player.generateNewPlayer = function(name, id) {
  * for setting the tank turret.
  * @param {Object} keyboardState A JSON Object storing the state of the
  *   client keyboard.
- * @param {number} turretAngle The angle of the client's mouse with respect
- *   to the tank.
+ * @param {number} orientation The angle of the client's mouse with respect
+ *   to their player sprite.
  */
 Player.prototype.updateOnInput = function(keyboardState, orientation) {
   if (keyboardState.up) {
