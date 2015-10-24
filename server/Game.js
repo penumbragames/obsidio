@@ -104,7 +104,7 @@ Game.prototype.updatePlayerOnInput = function(id, keyboardState, orientation,
   if (player) {
     player.updateOnInput(keyboardState, orientation);
     if (shot && player.canShoot()) {
-      this.projectiles = this.projectiles.push(
+      this.projectiles.push(
         player.getProjectileShot());
     }
   }
