@@ -7,6 +7,7 @@
 var HashMap = require('hashmap');
 
 var Player = require('./Player');
+var Praesidium = require('./Praesidium');
 var Bullet = require('./Bullet');
 
 /**
@@ -151,6 +152,9 @@ Game.prototype.update = function() {
     } else {
       this.praesidium.splice(i--, 1);
     }
+  }
+  if (this.praesidium.length < 10) {
+    this.praesidium.push(Praesidium.generateRandomPraesidium());
   }
 };
 

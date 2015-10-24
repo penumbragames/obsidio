@@ -27,6 +27,14 @@ require('./inheritable');
 Praesidium.inheritsFrom(Entity);
 
 Praesidium.HITBOX_SIZE = 10;
+Praesidium.MIN_VALUE = 5;
+Praesidium.MAX_VALUE = 10;
+
+Praesidium.generateRandomPraesidium = function() {
+  var point = Util.getRandomWorldPoint();
+  var quantity = Util.randRange(Praesidium.MIN_VALUE, Praesidium.MAX_VALUE);
+  return new Praesidium(point[0], point[1], quantity);
+}
 
 /**
  * This method updates this praesidium pallet and adds its value to a player's
