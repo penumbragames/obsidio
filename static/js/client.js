@@ -22,7 +22,8 @@ $(document).ready(function() {
       // any move commands will be sent with our ID after the server
       // sends back our ID.
       socket.emit('new-player', {
-        name: name
+        name: "test"
+        // name: name
       });
       $('#name-prompt-container').empty();
       $('#name-prompt-container').append(

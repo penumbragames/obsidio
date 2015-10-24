@@ -29,8 +29,6 @@ function Game(socket, canvas, leaderboard) {
   this.self = null;
   this.players = [];
   this.projectiles = [];
-  this.powerups = [];
-  this.explosions = [];
   this.latency = 0;
 };
 
@@ -56,8 +54,6 @@ Game.prototype.receiveGameState = function(state) {
   this.self = state.self;
   this.players = state.players;
   this.projectiles = state.projectiles;
-  this.powerups = state.powerups;
-  this.explosions = state.explosions;
   this.latency = state.latency;
 };
 
@@ -69,7 +65,7 @@ Game.prototype.update = function() {
   if (this.self) {
     this.viewPort.update(this.self.x, this.self.y);
 
-    var turretAngle = Math.atan2(
+    var orientation = Math.atan2(
       Input.MOUSE[1] - Constants.CANVAS_HEIGHT / 2,
       Input.MOUSE[0] - Constants.CANVAS_WIDTH / 2) + Math.PI / 2;
 
@@ -82,7 +78,7 @@ Game.prototype.update = function() {
         down: Input.DOWN,
         left: Input.LEFT
       },
-      turretAngle: turretAngle,
+      orientation: orientation,
       shot: Input.LEFT_CLICK || Input.TOUCH,
       timestamp: (new Date()).getTime()
     };
@@ -103,38 +99,28 @@ Game.prototype.draw = function() {
 
   // Draw the projectiles next.
   for (var i = 0; i < this.projectiles.length; ++i) {
-    this.drawing.drawBullet(
+    this.drawing.drawProjectile(
       this.viewPort.toCanvasCoords(this.projectiles[i]),
+      this.projectiles[i].size,
       this.projectiles[i].orientation);
   }
 
-  // Draw the powerups next.
-  for (var i = 0; i < this.powerups.length; ++i) {
-    this.drawing.drawPowerup(
-      this.viewPort.toCanvasCoords(this.powerups[i]),
-      this.powerups[i].name);
-  }
-
-  // Draw the tank that represents the player.
+  // Draw the player.
   if (this.self) {
-    this.drawing.drawTank(
+    this.drawing.drawPlayer(
       true,
       this.viewPort.toCanvasCoords(this.self),
+      this.self.size,
       this.self.orientation,
-      this.self.turretAngle,
-      this.self.name,
-      this.self.health,
-      this.self.powerups['shield_powerup']);
+      this.self.name);
   }
-  // Draw any other tanks.
+  // Draw any other players.
   for (var i = 0; i < this.players.length; ++i) {
-    this.drawing.drawTank(
+    this.drawing.drawPlayer(
       false,
       this.viewPort.toCanvasCoords(this.players[i]),
+      this.self.size,
       this.players[i].orientation,
-      this.players[i].turretAngle,
-      this.players[i].name,
-      this.players[i].health,
-      this.players[i].powerups['shield_powerup']);
+      this.players[i].name);
   }
 };
