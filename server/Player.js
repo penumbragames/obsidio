@@ -93,16 +93,18 @@ Player.prototype.updateOnInput = function(keyboardState, orientation) {
   if (keyboardState.down) {
     this.vy = this.vmag;
   }
+  if (!keyboardState.up && !keyboardState.down) {
+    this.vy = 0;
+  }
+
   if (keyboardState.left) {
     this.vx = -this.vmag;
   }
   if (keyboardState.right) {
     this.vx = this.vmag;
   }
-  if (!keyboardState.up && !keyboardState.down &&
-      !keyboardState.left && !keyboardState.right) {
+  if (!keyboardState.left && !keyboardState.right) {
     this.vx = 0;
-    this.vy = 0;
   }
 
   this.orientation = orientation;
