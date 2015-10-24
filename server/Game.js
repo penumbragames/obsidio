@@ -131,8 +131,16 @@ Game.prototype.update = function() {
     if (this.projectiles[i].shouldExist) {
       this.projectiles[i].update(this.players);
     } else {
-      var removedProjectile = this.projectiles.splice(i, 1);
-      i--;
+      this.projectiles.splice(i--, 1);
+    }
+  }
+
+  // Update all the turrets.
+  for (var i = 0; i < this.turrets.length; ++i) {
+    if (this.turrets[i].shouldExist) {
+      this.turrets.update(this.players);
+    } else {
+      this.turrets.splice(i--, 1);
     }
   }
 };

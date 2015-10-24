@@ -12,7 +12,6 @@ function Praesidium(x, y, quantity) {
   this.quantity = quantity;
 
   this.hitboxSize = Praesidium.HITBOX_SIZE;
-  this.drawSize = Praesidium.DRAW_SIZE;
 
   this.shouldExist = true;
 }

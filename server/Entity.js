@@ -27,7 +27,6 @@ function Entity(x, y, vx, vy, orientation, hitboxSize, drawSize) {
   this.vy = vy || 0;
   this.orientation = orientation || 0;
   this.hitboxSize = hitboxSize || 0;
-  this.drawSize = drawSize || [];
 
   this.lastUpdateTime = 0;
   this.updateTimeDifference = 0;

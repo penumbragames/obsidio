@@ -26,22 +26,14 @@ function Player(x, y, orientation, name, id) {
   this.vy = 0;
   this.orientation = orientation;
   this.hitboxSize = Player.DEFAULT_HITBOX_SIZE;
-  this.drawSize = Player.DEFAULT_DRAW_SIZE;
 
   this.name = name;
   this.id = id;
-
-  /**
-   * vmag represents the magnitude of the velocity and determines vx and vy
-   * (inherited from Entity). turnRate is a rate of change for the orientation.
-   */
   this.vmag = Player.DEFAULT_VELOCITY_MAGNITUDE;
-  this.turnRate = 0;
   this.shotCooldown = Player.DEFAULT_SHOT_COOLDOWN;
   this.lastShotTime = 0;
-  this.health = Player.MAX_HEALTH;
 
-  // Resource
+  this.health = Player.MAX_HEALTH;
   this.praesidium = 0;
   this.kills = 0;
   this.deaths = 0;
@@ -54,14 +46,12 @@ Player.inheritsFrom(Entity);
  * DEFAULT_VELOCITY_MAGNITUDE is in pixels per millisecond.
  * DEFAULT_SHOT_COOLDOWN is in milliseconds.
  * DEFAULT_HITBOX_SIZE is in pixels.
- * DEFAULT_DRAW_SIZE is in pixels.
  * MAX_HEALTH is in health units.
  * MINIMUM_RESPAWN_BUFFER is a distance in pixels.
  */
 Player.DEFAULT_VELOCITY_MAGNITUDE = 0.3;
 Player.DEFAULT_SHOT_COOLDOWN = 800;
 Player.DEFAULT_HITBOX_SIZE = 20;
-Player.DEFAULT_DRAW_SIZE = [64, 64];
 Player.MAX_HEALTH = 10;
 Player.MINIMUM_RESPAWN_BUFFER = 1000;
 

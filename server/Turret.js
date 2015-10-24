@@ -15,11 +15,12 @@ function Turret(x, y, orientation, owner) {
   this.vx = 0;
   this.vy = 0;
   this.orientation = orientation;
+  this.hitboxSize = Turret.HITBOX_SIZE;
+
   this.owner = owner;
 
   this.shotCooldown = Turret.SHOT_COOLDOWN;
   this.health = Turret.MAX_HEALTH;
-  this.hitboxSize = Turret.HITBOX_SIZE;
 }
 require('./inheritable');
 Turret.inheritsFrom(Entity);
@@ -29,4 +30,8 @@ Turret.MAX_HEALTH = 10;
 Turret.HITBOX_SIZE = 10;
 
 Turret.prototype.update = function(players) {
+};
+
+Turret.prototype.damage = function(amount) {
+  this.health -= amount;
 };
