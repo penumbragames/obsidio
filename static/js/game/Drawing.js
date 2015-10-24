@@ -21,17 +21,18 @@ Drawing.HP_COLOR = 'green';
 Drawing.HP_MISSING_COLOR = 'red';
 
 Drawing.UI_COLOR = '#AAAAAA';
+Drawing.UI_ITEM_COLOR = '#DDDDDD';
 
 Drawing.BASE_IMG_URL = '/static/img/';
 Drawing.SELF_PLAYER_SRC = Drawing.BASE_IMG_URL + 'self_player.png';
 Drawing.OTHER_PLAYER_SRC = Drawing.BASE_IMG_URL + 'other_player.png';
-Drawing.PROJECTILE_SRC = Drawing.BASE_IMG_URL + 'bullet.png';
+Drawing.PROJECTILE_SRC = Drawing.BASE_IMG_URL + 'projectile.png';
 Drawing.PRAESIDIUM_SRC = Drawing.BASE_IMG_URL + 'praesidium.png';
 Drawing.TURRET_SRC = Drawing.BASE_IMG_URL + 'turret.png';
 Drawing.TILE_SRC = Drawing.BASE_IMG_URL + 'tile.png';
 
 Drawing.PLAYER_SIZE = [64, 64];
-Drawing.PROJECTILE_SIZE = [24, 24];
+Drawing.PROJECTILE_SIZE = [32, 32];
 Drawing.PRAESIDIUM_SIZE = [32, 32];
 Drawing.TURRET_SIZE = [64, 64];
 Drawing.TILE_SIZE = 100;
@@ -58,9 +59,9 @@ Drawing.prototype.drawProjectile = function(coords, orientation) {
   this.context.save();
   this.context.translate(coords[0], coords[1]);
   this.context.rotate(orientation);
-  var bullet = new Image();
-  bullet.src = Drawing.PROJECTILE_SRC;
-  this.context.drawImage(bullet,
+  var projectile = new Image();
+  projectile.src = Drawing.PROJECTILE_SRC;
+  this.context.drawImage(projectile,
                          -Drawing.PROJECTILE_SIZE[0] / 2,
                          -Drawing.PROJECTILE_SIZE[1] / 2,
                          Drawing.PROJECTILE_SIZE[0],
@@ -109,6 +110,10 @@ Drawing.prototype.drawUI = function(health, praesidia) {
     }
     this.context.fillRect(70 + 10 * i, 10, 10, 10)
   }
+  this.context.fillStyle = Drawing.UI_COLOR;
+  this.context.fillRect(700, 0, 100, 600);
+  this.context.fillStyle = Drawing.UI_ITEM_COLOR;
+  this.context.fillRect(710, 10, 80, 80);
 };
 
 /**
@@ -129,4 +134,16 @@ Drawing.prototype.drawTiles = function(topLeft, bottomRight) {
     }
   }
   this.context.restore();
+}
+
+function roundedRect(context, x, y, width, height, radius, fill, stroke) {
+  context.beginPath();
+  context.moveTo(x + radius, y);
+  context.lineTo(x + width - radius, y);
+  context.quadraticCurveTo(x + width, y, x + width, y + radius);
+  context.lineTo(x + width, y + height - radius);
+  context.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+  context.lineTo(x + radius, y + height);
+  context.quadraticCurveTo(x, y + height);
+  
 }

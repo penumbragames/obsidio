@@ -100,8 +100,15 @@ Game.prototype.draw = function() {
 
   // Draw the background first.
   this.environment.draw();
+
+  // Draw praesidia pallets.
+  for (var i = 0; i < this.praesidia.length; ++i) {
+    this.drawing.drawPraesidium(
+      this.viewPort.toCanvasCoords(this.praesidia[i]),
+      this.praesidia[i].quantity);
+  }
   
-  // Draw the projectiles next.
+  // Draw the projectiles.
   for (var i = 0; i < this.projectiles.length; ++i) {
     this.drawing.drawProjectile(
       this.viewPort.toCanvasCoords(this.projectiles[i]),
@@ -124,14 +131,6 @@ Game.prototype.draw = function() {
       this.viewPort.toCanvasCoords(this.players[i]),
       this.players[i].orientation,
       this.players[i].name);
-  }
-  console.log(this);
-  
-  // Draw praesidia pallets.
-  for (var i = 0; i < this.praesidia.length; ++i) {
-    this.drawing.drawPraesidium(
-      this.viewPort.toCanvasCoords(this.praesidia[i]),
-      this.praesidia[i].quantity);
   }
 
   // Draw turrets.
