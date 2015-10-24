@@ -14,8 +14,8 @@ function Drawing(context) {
   this.context = context;
 };
 
-Drawing.NAME_FONT = '14px Helvetica';
-Drawing.NAME_COLOR = 'black';
+Drawing.FONT = '14px Helvetica';
+Drawing.FONT_COLOR = 'black';
 
 Drawing.HP_COLOR = 'green';
 Drawing.HP_MISSING_COLOR = 'red';
@@ -61,6 +61,25 @@ Drawing.prototype.drawProjectile = function(coords, orientation) {
   this.context.restore();
 };
 
+Drawing.prototype.drawPraesidium = function() {
+  
+};
+
+Drawing.prototype.drawUI = function(health, praesidium) {
+  this.context.font = Drawing.FONT;
+  this.context.fillStyle = Drawing.FONT_COLOR;
+  this.context.fillText("Health: ", 10, 20);
+  this.context.fillText("Praesidium: " + praesidium, 10, 40);
+  for (var i = 0; i < 10; ++i) {
+    if (i < health) {
+      this.context.fillStyle = Drawing.HP_COLOR;
+    } else {
+      this.context.fillStyle = Drawing.HP_MISSING_COLOR;
+    }
+    this.context.fillRect(70 + 10 * i, 10, 10, 10)
+  }
+};
+
 /**
  * Draws the background tiles.
  * @param {[number, number]} topLeft The coordinates of the top-leftmost
@@ -68,6 +87,7 @@ Drawing.prototype.drawProjectile = function(coords, orientation) {
  * @param {[number, number]} bottomRight The coordinates of the
  *   bottom-rightmost point to stop laying the tiles down at.
  */
+
 Drawing.prototype.drawTiles = function(topLeft, bottomRight) {
   this.context.save();
   var tile = new Image();

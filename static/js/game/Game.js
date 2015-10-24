@@ -96,7 +96,6 @@ Game.prototype.draw = function() {
 
   // Draw the background first.
   this.environment.draw();
-
   // Draw the projectiles next.
   for (var i = 0; i < this.projectiles.length; ++i) {
     this.drawing.drawProjectile(
@@ -111,6 +110,8 @@ Game.prototype.draw = function() {
       this.viewPort.toCanvasCoords(this.self),
       this.self.orientation,
       this.self.name);
+    // Draw UI.
+    this.drawing.drawUI(this.self.health, this.self.praesidium);
   }
   // Draw any other players.
   for (var i = 0; i < this.players.length; ++i) {
@@ -120,4 +121,5 @@ Game.prototype.draw = function() {
       this.players[i].orientation,
       this.players[i].name);
   }
+
 };
