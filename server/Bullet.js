@@ -10,11 +10,12 @@ var Util = require('../shared/Util');
 /**
  * Constructor for a bullet.
  * @constructor
- * @param {number} x The x coordinate of the entity.
- * @param {number} y The y coordinate of the entity.
- * @param {number} vx The velocity in the x direction of the entity.
- * @param {number} vy The velocity in the y direction of the entity.
- * @param {string} source The socket ID of the player that fired the
+ * @param {number} x The x coordinate of this bullet.
+ * @param {number} y The y coordinate of this bullet.
+ * @param {number} vx The velocity in the x direction of this bullet.
+ * @param {number} vy The velocity in the y direction of this bullet.
+ * @param {number} orientation The orientation of this bullet in radians.
+ * @param {string} source The socket ID of the player that fired this
  *   bullet.
  * @extends Entity
  */

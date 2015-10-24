@@ -12,8 +12,8 @@ var Util = require('../shared/Util');
 /**
  * Constructor for a Player.
  * @constructor
- * @param {number} x X-coordinate to generate the player at.
- * @param {number} y Y-coordinate to generate the player at.
+ * @param {number} x The x coordinate to generate the player at.
+ * @param {number} y The y coordinate to generate the player at.
  * @param {number} orientation Direction to face the player from 0 to 2 * PI.
  * @param {string} name The display name of the player.
  * @param {string} id The socket ID of the client associated with this
@@ -83,7 +83,8 @@ Player.prototype.updateOnInput = function(keyboardState, orientation) {
   if (keyboardState.down) {
     this.vy = this.vmag;
   }
-  if (!keyboardState.up && !keyboardState.down) {
+  if ((!keyboardState.up && !keyboardState.down) ||
+      (keyboardState.up && keyboardState.down)) {
     this.vy = 0;
   }
 
@@ -93,7 +94,8 @@ Player.prototype.updateOnInput = function(keyboardState, orientation) {
   if (keyboardState.right) {
     this.vx = this.vmag;
   }
-  if (!keyboardState.left && !keyboardState.right) {
+  if ((!keyboardState.left && !keyboardState.right) ||
+      (keyboardState.left && keyboardState.right)) {
     this.vx = 0;
   }
 

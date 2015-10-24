@@ -9,18 +9,16 @@ var Util = require('../shared/Util');
 /**
  * All entities will inherit from this class.
  * @constructor
- * @param {number} x The x coordinate of the entity.
- * @param {number} y The y coordinate of the entity.
- * @param {number} vx The velocity in the x direction of the entity.
- * @param {number} vy The velocity in the y direction of the entity.
- * @param {number} orientation The orientation of the entity in radians.
- * @param {number} hitboxSize The size of the hitbox of the entity. All
+ * @param {number} x The x coordinate of this entity.
+ * @param {number} y The y coordinate of this entity.
+ * @param {number} vx The velocity in the x direction of this entity.
+ * @param {number} vy The velocity in the y direction of this entity.
+ * @param {number} orientation The orientation of this entity in radians.
+ * @param {number} hitboxSize The size of the hitbox of this entity. All
  *   entities will have a circular hitbox where the hitboxSize defines the
  *   radius of the hitbox.
- * @param {[number, number]} drawSize The width and height of this entity
- *   in pixels when it is drawn on the client side.
  */
-function Entity(x, y, vx, vy, orientation, hitboxSize, drawSize) {
+function Entity(x, y, vx, vy, orientation, hitboxSize) {
   this.x = x || 0;
   this.y = y || 0;
   this.vx = vx || 0;

@@ -6,6 +6,14 @@
 
 var Entity = require('./Entity');
 
+/**
+ * Constructor for a Praesidium object.
+ * @constructor
+ * @param {number} x The x coordinate of this praesidium pallet.
+ * @param {number} y The y coordinate of this praesidium pallet.
+ * @param {number} quantity The amount of praesidium that this pallet will
+ *   give upon pickup.
+ */
 function Praesidium(x, y, quantity) {
   this.x = x;
   this.y = y;
@@ -19,8 +27,12 @@ require('./inheritable');
 Praesidium.inheritsFrom(Entity);
 
 Praesidium.HITBOX_SIZE = 10;
-Praesidium.DRAW_SIZE = [10, 10];
 
+/**
+ * This method updates this praesidium pallet and adds its value to a player's
+ * praesidium count if the player has collided with it.
+ * @param {Hashmap} clients The hashmap of connected players.
+ */
 Praesidium.prototype.update = function(clients) {
   var players = clients.values();
   for (var i = 0; i < this.players.length; ++i) {
