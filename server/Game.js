@@ -10,6 +10,8 @@ var Player = require('./Player');
 var Praesidium = require('./Praesidium');
 var Bullet = require('./Bullet');
 
+var Util = require('../shared/Util');
+
 /**
  * Constructor for the server side Game class.
  * Instantiates the data structures to track all the objects
