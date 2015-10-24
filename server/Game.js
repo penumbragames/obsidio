@@ -38,7 +38,7 @@ function Game() {
    */
   this.projectiles = [];
   this.turrets = [];
-  this.praesidium = [];
+  this.praesidia = [];
 }
 
 /**
@@ -148,15 +148,15 @@ Game.prototype.update = function() {
   }
 
   // Update all the praesidium pallets.
-  for (var i = 0; i < this.praesidium.length; ++i) {
-    if (this.praesidium[i].shouldExist) {
-      this.praesidium[i].update(this.players);
+  for (var i = 0; i < this.praesidia.length; ++i) {
+    if (this.praesidia[i].shouldExist) {
+      this.praesidia[i].update(this.players);
     } else {
-      this.praesidium.splice(i--, 1);
+      this.praesidia.splice(i--, 1);
     }
   }
-  while (this.praesidium.length < 10) {
-    this.praesidium.push(Praesidium.generateRandomPraesidium());
+  while (this.praesidia.length < 10) {
+    this.praesidia.push(Praesidium.generateRandomPraesidium());
   }
 };
 
@@ -195,7 +195,10 @@ Game.prototype.sendState = function() {
       projectiles: this.projectiles.filter(function(projectile) {
         return projectile.isVisibleTo(currentPlayer);
       }),
-      praesidium: this.praesidium.filter(function(praesidium) {
+      turrets: this.turrets.filter(function(turret) {
+        return turret.isVisibleTo(currentPlayer);
+      }),
+      praesidia: this.praesidia.filter(function(praesidium) {
         return praesidium.isVisibleTo(currentPlayer);
       }),
       latency: currentClient.latency
