@@ -23,7 +23,8 @@ var Util = require('../shared/Util');
  * @param {number} health This is the amount of health the construct starts
  *   with.
  */
-function Construct(x, y, orientation, hitboxSize, owner, type, health) {
+function Construct(x, y, orientation, hitboxSize, owner, type, shotCooldown,
+                   health) {
   this.x = x;
   this.y = y;
   this.orientation = orientation;
@@ -33,6 +34,7 @@ function Construct(x, y, orientation, hitboxSize, owner, type, health) {
   this.type = type;
 
   this.lastShotTime = 0;
+  this.shotCooldown = shotCooldown;
   this.health = health;
 
   this.shouldExist = true;
@@ -49,8 +51,8 @@ Construct.inheritsFrom(Entity);
  */
 Construct.MAX_HEALTH = 5;
 Construct.HITBOX_SIZE = 32;
-Construct.TURRET_SHOT_COOLDOWN = 500;
-Construct.TURRET_MINIMUM_SHOOTING_DISTANCE_SQUARED = 200;
+Construct.TURRET_SHOT_COOLDOWN = 750;
+Construct.TURRET_MINIMUM_SHOOTING_DISTANCE_SQUARED = 562500;
 
 /**
  * Factory method to create a Construct.
@@ -63,8 +65,10 @@ Construct.TURRET_MINIMUM_SHOOTING_DISTANCE_SQUARED = 200;
  */
 Construct.create = function(x, y, orientation, owner, type) {
   var hitboxSize = Construct.HITBOX_SIZE;
+  var shotCooldown = Construct.TURRET_SHOT_COOLDOWN;
   var health = Construct.MAX_HEALTH;
-  return new Construct(x, y, orientation, hitboxSize, owner, type, health);
+  return new Construct(x, y, orientation, hitboxSize, owner, type, shotCooldown,
+                       health);
 };
 
 /**
@@ -87,7 +91,7 @@ Construct.prototype.getTarget = function(players) {
       target = players[i];
     } else if (Util.getEuclideanDistance2(this.x, this.y,
                                           players[i].x, players[i].y) <
-               Construct.MINIMUM_SHOOTING_DISTANCE_SQUARED) {
+               Construct.TURRET_MINIMUM_SHOOTING_DISTANCE_SQUARED) {
       target = players[i];
     }
   }
@@ -108,8 +112,8 @@ Construct.prototype.update = function(clients, addBulletCallback) {
       var players = clients.values();
       var target = this.getTarget(players);
       if (target) {
-        this.orientation = Math.atan2(target.y - this.y,
-                                      target.x - this.x);
+        this.orientation = -Math.atan2(target.x - this.x, target.y - this.y) +
+            Math.PI;
         if ((new Date()).getTime() > this.lastShotTime + this.shotCooldown) {
           this.lastShotTime = (new Date()).getTime();
           addBulletCallback(Bullet.create(
