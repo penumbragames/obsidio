@@ -35,9 +35,6 @@ Drawing.CONSTRUCT_SIZE = [64, 64];
 Drawing.TILE_SIZE = 100;
 
 Drawing.CONSTRUCT_SRC = [Drawing.TURRET_SRC, '', '', '', '', ''];
-Drawing.CONSTRUCTS = {
-  TURRET: 0
-}
   
 Drawing.prototype.init = function(startBuild, cancelBuild) {
   this.ui.setAttribute('id', 'ui');
