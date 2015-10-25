@@ -55,12 +55,10 @@ Player.inheritsFrom(Entity);
  * DEFAULT_VELOCITY_MAGNITUDE is in pixels per millisecond.
  * DEFAULT_SHOT_COOLDOWN is in milliseconds.
  * DEFAULT_HITBOX_SIZE is in pixels.
- * MAX_HEALTH is in health units.
  */
 Player.DEFAULT_VELOCITY_MAGNITUDE = 0.3;
 Player.DEFAULT_SHOT_COOLDOWN = 400;
 Player.DEFAULT_HITBOX_SIZE = 32;
-Player.MAX_HEALTH = 10;
 
 /**
  * Returns a new Player object given a name and id.
@@ -75,7 +73,7 @@ Player.generateNewPlayer = function(name, id) {
   var hitboxSize = Player.DEFAULT_HITBOX_SIZE;
   var vmag = Player.DEFAULT_VELOCITY_MAGNITUDE;
   var shotCooldown = Player.DEFAULT_SHOT_COOLDOWN;
-  var health = Player.MAX_HEALTH;
+  var health = Constants.PLAYER_MAX_HEALTH;
   return new Player(point[0], point[1], orientation, hitboxSize, name, id,
                     vmag, shotCooldown, health);
 };

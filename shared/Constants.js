@@ -60,6 +60,11 @@ Constants.CONSTRUCT_MAX_HEALTH = [6, 0, 0, 10, 0, 0];
  */
 Constants.CONSTRUCT_BUILD_RADIUS = 128;
 
+/**
+ * This is the maximum health of a Player.
+ */
+Constants.PLAYER_MAX_HEALTH = 10;
+
 try {
   module.exports = Constants;
 } catch (err) {}
