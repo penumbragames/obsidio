@@ -104,6 +104,7 @@ Game.prototype.update = function() {
           Input.MOUSE[1] >= 0 && Input.MOUSE[1] < 600) {
         if (this.currentActionState == Game.ACTION_STATES.BUILD_PENDING) {
           var coords = this.viewPort.toAbsoluteCoords(Input.MOUSE);
+          console.log(coords);
           build = {
             type: this.currentBuildType,
             x: coords[0],
@@ -148,14 +149,14 @@ Game.prototype.draw = function() {
   // Draw praesidia pallets.
   for (var i = 0; i < this.praesidia.length; ++i) {
     this.drawing.drawPraesidium(
-      this.viewPort.toCanvasCoords(this.praesidia[i]),
+      this.viewPort.toCanvasCoords([this.praesidia[i].x, this.praesidia[i].y]),
       this.praesidia[i].quantity);
   }
   
   // Draw the projectiles.
   for (var i = 0; i < this.projectiles.length; ++i) {
     this.drawing.drawProjectile(
-      this.viewPort.toCanvasCoords(this.projectiles[i]),
+      this.viewPort.toCanvasCoords([this.projectiles[i].x, this.projectiles[i].y]),
       this.projectiles[i].orientation);
   }
   
@@ -163,14 +164,16 @@ Game.prototype.draw = function() {
   for (var i = 0; i < this.players.length; ++i) {
     this.drawing.drawPlayer(
       false,
-      this.viewPort.toCanvasCoords(this.players[i]),
+      this.viewPort.toCanvasCoords([this.players[i].x, this.players[i].y]),
       this.players[i].orientation,
       this.players[i].name);
   }
 
   // Draw constructs.
   for (var i = 0; i < this.constructs.length; ++i) {
-    this.drawing.drawConstruct(this.viewPort.toCanvasCoords(this.constructs[i]),
+    var constructCoords = this.viewPort.toCanvasCoords([this.constructs[i].x,
+                                                        this.constructs[i].y]);
+    this.drawing.drawConstruct(constructCoords,
                                this.constructs[i].orientation,
                                this.currentBuildType);
   }

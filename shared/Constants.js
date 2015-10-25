@@ -45,6 +45,8 @@ Constants.CONSTRUCT_TYPES = {
  */
 Constants.CONSTRUCT_REQUIREMENT = [ 15 ];
 
+Constants.CONSTRUCT_BUILD_RADIUS = 128;
+
 try {
   module.exports = Constants;
 } catch (err) {}
