@@ -141,15 +141,15 @@ Player.prototype.update = function(addPraesidiumCallback) {
   this.y = boundedCoord[1];
 
   if (this.isDead()) {
+    var praesidiaPenalty = Math.floor(this.praesidia / 2);
+    this.praesidia -= praesidiaPenalty;
+    addPraesidiumCallback(this.x, this.y, praesidiaPenalty);
+
     var point = Util.getRandomWorldPoint();
     this.x = point[0];
     this.y = point[1];
     this.health = Player.MAX_HEALTH;
     this.deaths++;
-
-    var praesidiaPenalty = Math.floor(this.praesidia / 2);
-    this.praesidia -= praesidiaPenalty;
-    addPraesidiumCallback(this.x, this.y, praesidiaPenalty);
   }
 };
 
