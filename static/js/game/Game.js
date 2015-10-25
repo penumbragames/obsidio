@@ -104,7 +104,6 @@ Game.prototype.update = function() {
           Input.MOUSE[1] >= 0 && Input.MOUSE[1] < 600) {
         if (this.currentActionState == Game.ACTION_STATES.BUILD_PENDING) {
           var coords = this.viewPort.toAbsoluteCoords(Input.MOUSE);
-          console.log(coords);
           build = {
             type: this.currentBuildType,
             x: coords[0],

@@ -37,7 +37,7 @@ ViewPort.prototype.toCanvasCoords = function(coords) {
 
 ViewPort.prototype.toAbsoluteCoords = function(coords) {
   var translateX = this.selfCoords[0] - Constants.CANVAS_WIDTH / 2;
-  var translateY = this.selfCoords[0] - Constants.CANVAS_HEIGHT / 2;
+  var translateY = this.selfCoords[1] - Constants.CANVAS_HEIGHT / 2;
   return [coords[0] + translateX,
           coords[1] + translateY];
 };
