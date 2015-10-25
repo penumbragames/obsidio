@@ -48,6 +48,12 @@ io.on('connection', function(socket) {
   // When a new player joins, the server adds a new player to the game.
   socket.on('new-player', function(data) {
    game.addNewPlayer(data.name, socket);
+   io.sockets.emit('chat-server-to-clients', {
+      name: '[Obsidio]',
+      message: data.name + ' has joined the game.',
+      isNotification: true
+   });
+
    socket.emit('received-new-player');
  });
 
@@ -58,9 +64,22 @@ io.on('connection', function(socket) {
                              data.shot, data.build, data.timestamp);
   });
 
+  socket.on('chat-client-to-server', function(data) {
+    io.sockets.emit('chat-server-to-clients', {
+      name: game.getPlayerNameBySocketId(socket.id),
+      message: data
+    });
+  });
+
+
   // When a player disconnects, remove them from the game.
   socket.on('disconnect', function() {
     var name = game.removePlayer(socket.id);
+    io.sockets.emit('chat-server-to-clients', {
+      name: '[Obsidio]',
+      message: name + ' has left the game.',
+      isNotification: true
+    });
   });
 });
 
