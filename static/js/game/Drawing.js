@@ -45,7 +45,7 @@ Drawing.prototype.init = function(startBuild, cancelBuild) {
   for (var i = 0; i < 6; ++i) {
     var buildOption = document.createElement('div');
     buildOption.setAttribute('class', 'ui-build-option');
-    buildOption.style.backgroundImage = 'url(' + Drawing.BUILD_IMAGES[i] + ')';
+    buildOption.style.backgroundImage = 'url(' + Drawing.CONSTRUCT_SRC[i] + ')';
     (function(j) {
       buildOption.onclick = function(e) {
         startBuild(j);
@@ -112,7 +112,7 @@ Drawing.prototype.drawConstruct = function(coords, orientation, type) {
   this.context.translate(coords[0], coords[1]);
   this.context.rotate(orientation);
   var construct = new Image();
-  construct.src = Drawing.BUILD_IMAGES[type];
+  construct.src = Drawing.CONSTRUCT_SRC[type];
   this.context.drawImage(construct,
                          -Drawing.CONSTRUCT_SIZE[0] / 2,
                          -Drawing.CONSTRUCT_SIZE[1] / 2,
