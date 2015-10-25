@@ -83,7 +83,8 @@ Turret.prototype.getTarget = function(players) {
 
 /**
  * Updates this turret.
- * @param {Hashmap} clients The hashmap of currently active clients.
+ * @param {Hashmap} clients The Hashmap of active IDs and players stored on
+ *   the server.
  * @param {function()} addBulletCallback The callback function to call if
  *   this turret fires a bullet.
  */

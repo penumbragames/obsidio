@@ -93,7 +93,7 @@ Bullet.prototype.update = function(clients) {
   for (var i = 0; i < players.length; ++i) {
     if (this.source != players[i].id &&
         players[i].isCollidedWith(this)) {
-      players[i].damage(1);
+      players[i].damage(this.damage);
       if (players[i].isDead()) {
         var killingPlayer = clients.get(this.source);
         killingPlayer.kills++;

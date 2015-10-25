@@ -49,18 +49,15 @@ require('./inheritable');
 Player.inheritsFrom(Entity);
 
 /**
- * TURN_RATE is in radians per millisecond.
  * DEFAULT_VELOCITY_MAGNITUDE is in pixels per millisecond.
  * DEFAULT_SHOT_COOLDOWN is in milliseconds.
  * DEFAULT_HITBOX_SIZE is in pixels.
  * MAX_HEALTH is in health units.
- * MINIMUM_RESPAWN_BUFFER is a distance in pixels.
  */
 Player.DEFAULT_VELOCITY_MAGNITUDE = 0.3;
 Player.DEFAULT_SHOT_COOLDOWN = 800;
 Player.DEFAULT_HITBOX_SIZE = 24;
 Player.MAX_HEALTH = 10;
-Player.MINIMUM_RESPAWN_BUFFER = 1000;
 
 /**
  * Returns a new Player object given a name and id.
@@ -165,7 +162,7 @@ Player.prototype.isDead = function() {
 };
 
 /**
- * Damages the player by the given amount, factoring in shields.
+ * Damages the player by the given amount.
  * @param {number} amount The amount to damage the player by.
  */
 Player.prototype.damage = function(amount) {
