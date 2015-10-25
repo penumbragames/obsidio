@@ -173,7 +173,7 @@ Player.prototype.update = function(constructs, addPraesidiumCallback) {
     var point = Util.getRandomWorldPoint();
     this.x = point[0];
     this.y = point[1];
-    this.health = Player.MAX_HEALTH;
+    this.health = Constants.PLAYER_MAX_HEALTH;
     this.deaths++;
   }
 };
