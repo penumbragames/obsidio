@@ -31,12 +31,19 @@ Constants.VISIBILITY_THRESHOLD_X = 425;
  */
 Constants.VISIBILITY_THRESHOLD_Y = 325;
 
+/**
+ * Construct types indicate the global index of that construct in other arrays.
+ */
 Constants.CONSTRUCT_TYPES = {
   NONE: -1,
   TURRET: 0
 };
 
-Constants.CONSTRUCT_REQ = [ 75 ];
+/**
+ * Indicates the praesidium cost of the construct, indexed by the above array.
+ * TURRET: 75
+ */
+Constants.CONSTRUCT_REQUIREMENT = [ 75 ];
 
 try {
   module.exports = Constants;
