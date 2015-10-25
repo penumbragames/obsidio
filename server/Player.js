@@ -129,8 +129,11 @@ Player.prototype.updateOnInput = function(keyboardState, orientation, shot,
   }
 
   if (build) {
-    addConstructCallback(Construct.create(build.x, build.y, 0, this.id,
-                                          build.type));
+    if (this.praesidia >= Constants.CONSTRUCT_REQUIREMENT[build.type]) {
+      addConstructCallback(Construct.create(build.x, build.y, 0, this.id,
+                                            build.type));
+      this.praesidia -= Constants.CONSTRUCT_REQUIREMENT[build.type]);
+    }
   }
 };
 

@@ -46,10 +46,10 @@ Construct.inheritsFrom(Entity);
  * MINIMUM_SHOOTING_DISTANCE_SQUARED is the squared distance at which the
  * the Construct will start shooting at a player if it is a turret.
  */
-Construct.SHOT_COOLDOWN = 500;
 Construct.MAX_HEALTH = 10;
 Construct.HITBOX_SIZE = 10;
-Construct.MINIMUM_SHOOTING_DISTANCE_SQUARED = 200;
+Construct.TURRET_SHOT_COOLDOWN = 500;
+Construct.TURRET_MINIMUM_SHOOTING_DISTANCE_SQUARED = 200;
 
 /**
  * Factory method to create a Construct.
@@ -58,6 +58,7 @@ Construct.MINIMUM_SHOOTING_DISTANCE_SQUARED = 200;
  * @param {number} orientation The orientation of this construct in radians.
  * @param {string} owner The socket ID of the player that placed this
  *   construct.
+ * @param {string} type The type of construct to create.
  */
 Construct.create = function(x, y, orientation, owner, type) {
   var hitboxSize = Construct.HITBOX_SIZE;
@@ -67,12 +68,16 @@ Construct.create = function(x, y, orientation, owner, type) {
 
 /**
  * Given an array of players, this function returns a player that the construct
- * will fire at if this construct is a turret.
+ * will fire at if this construct is a turret. This does not perform a type
+ * check on the construct object and will assume it is of type turret.
  * @param {Array.<Player>} players The array of players to check.
  */
 Construct.prototype.getTarget = function(players) {
   var target = null;
   for (var i = 0; i < players.length; ++i) {
+    if (players[i].id == this.owner) {
+      continue;
+    }
     if (target &&
         Util.getEuclideanDistance2(this.x, this.y,
                                    players[i].x, players[i].y) <
