@@ -103,6 +103,7 @@ Construct.prototype.getTarget = function(players) {
  */
 Construct.prototype.update = function(clients, addBulletCallback) {
   switch (this.type) {
+    // Behavior if this construct is a turret.
     case Constants.CONSTRUCT_TYPES.TURRET:
       var players = clients.values();
       var target = this.getTarget(players);
