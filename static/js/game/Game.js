@@ -52,20 +52,38 @@ Game.prototype.init = function() {
   this.socket.on('update', function(data) {
     context.receiveGameState(data);
   });
-  this.drawing.init(function(type) { // startBuild(type)
-    if (context.currentActionState == Game.ACTION_STATES.BUILD_PENDING) {
-      context.currentActionState = Game.ACTION_STATES.CONTROL;
-      context.currentBuildType = Constants.CONSTRUCT_TYPES.NONE;
-    } else {
-      context.currentActionState = Game.ACTION_STATES.BUILD_PENDING;
-      context.currentBuildType = type;
+  this.drawing.init(
+    function(type) { // startBuild(type)
+      if (context.currentActionState == Game.ACTION_STATES.BUILD_PENDING) {
+        cancelBuild(context);
+      } else {
+        startBuild(context, type);
+      }
+    },
+    function() { // cancelBuild()
+      cancelBuild(context);
     }
-  }, function() { // cancelBuild()
-    if (context.currentActionState == Game.ACTION_STATES.BUILD_PENDING) {
-      context.currentActionState = Game.ACTION_STATES.CONTROL;
-      context.currentBuildType = Constants.CONSTRUCT_TYPES.NONE;
-    }
-  });
+  );
+};
+
+function startBuild(context, type) {
+  var buildOptions = document.getElementsByClassName('ui-build-option');
+  context.currentActionState = Game.ACTION_STATES.BUILD_PENDING;
+  context.currentBuildType = type;
+  for (var i = 0; i < buildOptions.length; ++i) {
+    buildOptions[i].style.backgroundImage =
+      'url(' + Drawing.CANCEL_SRC + '), url(' + Drawing.NEUTRAL_CONSTRUCT_SRC[i] + ')';
+  }      
+};
+
+function cancelBuild(context) {  
+  var buildOptions = document.getElementsByClassName('ui-build-option');
+  context.currentActionState = Game.ACTION_STATES.CONTROL;
+  context.currentBuildType = Constants.CONSTRUCT_TYPES.NONE;
+  for (var i = 0; i < buildOptions.length; ++i) {
+    buildOptions[i].style.backgroundImage =
+      'url(' + Drawing.NEUTRAL_CONSTRUCT_SRC[i] + ')';
+  }
 };
 
 /**
@@ -109,7 +127,7 @@ Game.prototype.update = function() {
             x: coords[0],
             y: coords[1]
           }
-          this.currentActionState = Game.ACTION_STATES.CONTROL;
+          cancelBuild(this);
         } else {
           shot = true;
         }
@@ -167,24 +185,38 @@ Game.prototype.draw = function() {
       this.players[i].orientation,
       this.players[i].name);
   }
-  
-  // Draw constructs.
-  for (var i = 0; i < this.constructs.length; ++i) {
-    var constructCoords = this.viewPort.toCanvasCoords([this.constructs[i].x,
-                                                        this.constructs[i].y]);
-    this.drawing.drawConstruct(constructCoords,
-                               this.constructs[i].orientation,
-                               this.constructs[i].type);
-  }
-  
-  // Draw the UI last.
+    
+  // Draw the UI and self player last.
   if (this.self) {
+    // Draw constructs.
+    for (var i = 0; i < this.constructs.length; ++i) {
+      var constructCoords = this.viewPort.toCanvasCoords([this.constructs[i].x,
+                                                          this.constructs[i].y]);
+      console.log(this.self);
+      var owner = (this.self.id == this.constructs[i].id) ? 'self' : 'other';
+      this.drawing.drawConstruct(owner,
+                                 constructCoords,
+                                 this.constructs[i].orientation,
+                                 this.constructs[i].type);
+    }
+    
     // Draw build HUD.
     if (this.currentActionState == Game.ACTION_STATES.BUILD_PENDING) {
-      this.drawing.drawRange(this.viewPort.toCanvasCoords([this.self.x, this.self.y]),
-                             Constants.CONSTRUCT_BUILD_RADIUS);
+      var requirement = Constants.CONSTRUCT_REQUIREMENT[this.currentBuildType];
+      var mouseCoords = this.viewPort.toAbsoluteCoords(Input.MOUSE);
+      var color = (this.self.praesidia >= requirement &&
+                   Util.getEuclideanDistance2(mouseCoords[0], mouseCoords[1],
+                                              this.self.x, this.self.y) <=
+                   Constants.CONSTRUCT_BUILD_RADIUS *
+                   Constants.CONSTRUCT_BUILD_RADIUS) ?
+        '#00FF00' : '#FF0000';
+      this.drawing.drawRange(this.viewPort.toCanvasCoords([this.self.x,
+                                                           this.self.y]),
+                             Constants.CONSTRUCT_BUILD_RADIUS,
+                             color);
       this.drawing.context.globalAlpha = 0.7;
-      this.drawing.drawConstruct(Input.MOUSE, 0, this.currentBuildType);
+      this.drawing.drawConstruct('neutral', Input.MOUSE, 0,
+                                 this.currentBuildType);
       this.drawing.context.globalAlpha = 1;
     }
     this.drawing.drawUI(this.self.health, this.self.praesidia);
@@ -195,7 +227,6 @@ Game.prototype.draw = function() {
       this.viewPort.toCanvasCoords([this.self.x, this.self.y]),
       this.self.orientation,
       this.self.name);
-
   }
   
 };

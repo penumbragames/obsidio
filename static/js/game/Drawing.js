@@ -25,8 +25,11 @@ Drawing.SELF_PLAYER_SRC = Drawing.BASE_IMG_URL + 'self_player.png';
 Drawing.OTHER_PLAYER_SRC = Drawing.BASE_IMG_URL + 'other_player.png';
 Drawing.PROJECTILE_SRC = Drawing.BASE_IMG_URL + 'projectile.png';
 Drawing.PRAESIDIUM_SRC = Drawing.BASE_IMG_URL + 'praesidium.png';
-Drawing.TURRET_SRC = Drawing.BASE_IMG_URL + 'turret.png';
+Drawing.NEUTRAL_TURRET_SRC = Drawing.BASE_IMG_URL + 'neutral_turret.png';
+Drawing.SELF_TURRET_SRC = Drawing.BASE_IMG_URL + 'self_turret.png';
+Drawing.OTHER_TURRET_SRC = Drawing.BASE_IMG_URL + 'other_turret.png';
 Drawing.TILE_SRC = Drawing.BASE_IMG_URL + 'tile.png';
+Drawing.CANCEL_SRC = Drawing.BASE_IMG_URL + 'cancel.png';
 
 Drawing.PLAYER_SIZE = [64, 64];
 Drawing.PROJECTILE_SIZE = [8, 8];
@@ -34,7 +37,17 @@ Drawing.PRAESIDIUM_SIZE = [32, 32];
 Drawing.CONSTRUCT_SIZE = [64, 64];
 Drawing.TILE_SIZE = 100;
 
-Drawing.CONSTRUCT_SRC = [Drawing.TURRET_SRC, '', '', '', '', ''];
+Drawing.NEUTRAL_CONSTRUCT_SRC = [Drawing.NEUTRAL_TURRET_SRC, '', '', '', '', ''];
+Drawing.NEUTRAL_CONSTRUCT_IMG = [new Image(), new Image(), new Image(),
+                                 new Image(), new Image(), new Image()];
+
+Drawing.SELF_CONSTRUCT_SRC = [Drawing.SELF_TURRET_SRC, '', '', '', '', ''];
+Drawing.SELF_CONSTRUCT_IMG = [new Image(), new Image(), new Image(),
+                              new Image(), new Image(), new Image()];
+
+Drawing.OTHER_CONSTRUCT_SRC = [Drawing.OTHER_TURRET_SRC, '', '', '', '', ''];
+Drawing.OTHER_CONSTRUCT_IMG = [new Image(), new Image(), new Image(),
+                               new Image(), new Image(), new Image()];
   
 Drawing.prototype.init = function(startBuild, cancelBuild) {
   this.ui.setAttribute('id', 'ui');
@@ -42,7 +55,7 @@ Drawing.prototype.init = function(startBuild, cancelBuild) {
   for (var i = 0; i < 6; ++i) {
     var buildOption = document.createElement('div');
     buildOption.setAttribute('class', 'ui-build-option');
-    buildOption.style.backgroundImage = 'url(' + Drawing.CONSTRUCT_SRC[i] + ')';
+    buildOption.style.backgroundImage = 'url(' + Drawing.SELF_CONSTRUCT_SRC[i] + ')';
     (function(j) {
       buildOption.onclick = function(e) {
         startBuild(j);
@@ -57,6 +70,12 @@ Drawing.prototype.init = function(startBuild, cancelBuild) {
   };
   
   document.getElementById('game-container').appendChild(this.ui);
+
+  for (var i = 0; i < Drawing.NEUTRAL_CONSTRUCT_IMG.length; ++i) {
+    Drawing.NEUTRAL_CONSTRUCT_IMG[i].src = Drawing.NEUTRAL_CONSTRUCT_SRC[i];
+    Drawing.SELF_CONSTRUCT_IMG[i].src = Drawing.SELF_CONSTRUCT_SRC[i];
+    Drawing.OTHER_CONSTRUCT_IMG[i].src = Drawing.OTHER_CONSTRUCT_SRC[i];
+  }
 }
 
 Drawing.prototype.drawPlayer = function(isSelf, coords, orientation, name) {
@@ -104,12 +123,18 @@ Drawing.prototype.drawPraesidium = function(coords, quantity) {
   this.context.restore();
 };
 
-Drawing.prototype.drawConstruct = function(coords, orientation, type) {
+Drawing.prototype.drawConstruct = function(owner, coords, orientation, type) {
   this.context.save();
   this.context.translate(coords[0], coords[1]);
   this.context.rotate(orientation);
-  var construct = new Image();
-  construct.src = Drawing.CONSTRUCT_SRC[type];
+  if (owner == 'self') {
+    var construct = Drawing.SELF_CONSTRUCT_IMG[type];
+  } else if (owner == 'other') {
+    var construct = Drawing.OTHER_CONSTRUCT_IMG[type];
+  } else {
+    var construct = Drawing.NEUTRAL_CONSTRUCT_IMG[type];
+  }
+  console.log(owner);
   this.context.drawImage(construct,
                          -Drawing.CONSTRUCT_SIZE[0] / 2,
                          -Drawing.CONSTRUCT_SIZE[1] / 2,
@@ -118,8 +143,8 @@ Drawing.prototype.drawConstruct = function(coords, orientation, type) {
   this.context.restore();
 }
 
-Drawing.prototype.drawRange = function(coords, radius) {
-  this.context.fillStyle = '#00FF00';
+Drawing.prototype.drawRange = function(coords, radius, color) {
+  this.context.fillStyle = color;
   this.context.globalAlpha = 0.3;
   this.context.beginPath();
   this.context.arc(coords[0], coords[1], radius, 0, 2 * Math.PI);
