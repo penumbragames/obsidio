@@ -34,19 +34,23 @@ Constants.VISIBILITY_THRESHOLD_Y = 325;
  */
 Constants.CONSTRUCT_TYPES = {
   NONE: -1,
-  TURRET: 0
+  TURRET: 0,
+  WALL: 3
 };
 
 /**
  * Indicates the praesidium cost of the construct, indexed by the above array.
  * TURRET: 75
  */
-Constants.CONSTRUCT_REQUIREMENT = [ 15 ];
+Constants.CONSTRUCT_REQUIREMENT = [30, 0, 0, 5, 0, 0];
 
 /**
  * This is the maximum distance away from the player that a construct can be
  * created.
  */
+
+Constants.CONSTRUCT_MAX_HEALTH = [6, 0, 0, 10, 0, 0];
+
 Constants.CONSTRUCT_BUILD_RADIUS = 128;
 
 try {
