@@ -123,7 +123,7 @@ Drawing.prototype.drawPraesidium = function(coords, quantity) {
   this.context.restore();
 };
 
-Drawing.prototype.drawConstruct = function(owner, coords, orientation, type) {
+Drawing.prototype.drawConstruct = function(owner, coords, orientation, health, type) {
   this.context.save();
   this.context.translate(coords[0], coords[1]);
   this.context.rotate(orientation);
@@ -134,12 +134,23 @@ Drawing.prototype.drawConstruct = function(owner, coords, orientation, type) {
   } else {
     var construct = Drawing.NEUTRAL_CONSTRUCT_IMG[type];
   }
-  console.log(owner);
   this.context.drawImage(construct,
                          -Drawing.CONSTRUCT_SIZE[0] / 2,
                          -Drawing.CONSTRUCT_SIZE[1] / 2,
                          Drawing.CONSTRUCT_SIZE[0],
                          Drawing.CONSTRUCT_SIZE[1]);
+  if (owner != 'neutral') {
+    var healthBarInterval = 96 / Constants.CONSTRUCT_MAX_HEALTH[type];
+    for (var i = 0; i < Constants.CONSTRUCT_MAX_HEALTH[type]; ++i) {
+      if (i < health) {
+        this.context.fillStyle = Drawing.HP_COLOR;
+      } else {
+        this.context.fillStyle = Drawing.HP_MISSING_COLOR;
+      }
+      this.context.fillRect(-48 + healthBarInterval * i, -48,
+                            healthBarInterval, 8);
+    }
+  }
   this.context.restore();
 }
 
