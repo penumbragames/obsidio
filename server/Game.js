@@ -165,7 +165,7 @@ Game.prototype.update = function() {
   // Update all the projectiles.
   for (var i = 0; i < this.projectiles.length; ++i) {
     if (this.projectiles[i].shouldExist) {
-      this.projectiles[i].update(this.players);
+      this.projectiles[i].update(this.players, this.constructs);
     } else {
       this.projectiles.splice(i--, 1);
     }

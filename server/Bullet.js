@@ -49,7 +49,7 @@ Bullet.inheritsFrom(Entity);
 Bullet.VELOCITY_MAGNITUDE = 0.85;
 Bullet.DEFAULT_DAMAGE = 1;
 Bullet.MAX_TRAVEL_DISTANCE = 1000;
-Bullet.DEFAULT_HITBOX_SIZE = 16;
+Bullet.DEFAULT_HITBOX_SIZE = 4;
 
 /**
  * Factory method for the Bullet object. This is meant to be called from the
@@ -77,8 +77,9 @@ Bullet.create = function(x, y, direction, source) {
  * this.direction always is stored in radians.
  * @param {Hashmap} clients The Hashmap of active IDs and players stored on
  *   the server.
+ * @param {Array.<Construct>} An array of the currently existing constructs.
  */
-Bullet.prototype.update = function(clients) {
+Bullet.prototype.update = function(clients, constructs) {
   this.parent.update.call(this);
 
   this.distanceTraveled += Bullet.VELOCITY_MAGNITUDE *
@@ -98,6 +99,15 @@ Bullet.prototype.update = function(clients) {
         var killingPlayer = clients.get(this.source);
         killingPlayer.kills++;
       }
+      this.shouldExist = false;
+      return;
+    }
+  }
+
+  for (var i = 0; i < constructs.length; ++i) {
+    if (this.source != constructs[i].owner &&
+        constructs[i].isCollidedWith(this)) {
+      constructs[i].damage(this.damage);
       this.shouldExist = false;
       return;
     }

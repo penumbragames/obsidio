@@ -48,7 +48,7 @@ Construct.inheritsFrom(Entity);
  * the Construct will start shooting at a player if it is a turret.
  */
 Construct.MAX_HEALTH = 10;
-Construct.HITBOX_SIZE = 10;
+Construct.HITBOX_SIZE = 32;
 Construct.TURRET_SHOT_COOLDOWN = 500;
 Construct.TURRET_MINIMUM_SHOOTING_DISTANCE_SQUARED = 200;
 
