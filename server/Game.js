@@ -177,7 +177,8 @@ Game.prototype.update = function() {
   // Update all the constructs.
   for (var i = 0; i < this.constructs.length; ++i) {
     if (this.constructs[i].shouldExist) {
-      this.constructs[i].update(this.players, this.constructs, function(bullet) {
+      this.constructs[i].update(this.players, this.constructs,
+                                function(bullet) {
         context.addBullet(bullet);
       }, function(praesidium) {
         context.addPraesidium(praesidium);

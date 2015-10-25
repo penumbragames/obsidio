@@ -60,13 +60,6 @@ Constants.CONSTRUCT_MAX_HEALTH = [6, 0, 0, 10, 0, 0];
  */
 Constants.CONSTRUCT_BUILD_RADIUS = 128;
 
-/**
- * This is the hitbox size for a Construct
- */
-Constants.CONSTRUCT_HITBOX_SIZE = 24;
-
-
-
 try {
   module.exports = Constants;
 } catch (err) {}
