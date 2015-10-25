@@ -52,7 +52,7 @@ Construct.inheritsFrom(Entity);
 Construct.MAX_HEALTH = 5;
 Construct.HITBOX_SIZE = 32;
 Construct.TURRET_SHOT_COOLDOWN = 750;
-Construct.TURRET_MINIMUM_SHOOTING_DISTANCE_SQUARED = 562500;
+Construct.TURRET_MINIMUM_SHOOTING_DISTANCE_SQUARED = 100000;
 
 /**
  * Factory method to create a Construct.
@@ -76,9 +76,11 @@ Construct.create = function(x, y, orientation, owner, type) {
  * will fire at if this construct is a turret. This does not perform a type
  * check on the construct object and will assume it is of type turret.
  * @param {Array.<Player>} players The array of players to check.
+ * @param {Array.<Construct>} constructs The array of constructs to check.
  */
-Construct.prototype.getTarget = function(players) {
+Construct.prototype.getTarget = function(players, constructs) {
   var target = null;
+
   for (var i = 0; i < players.length; ++i) {
     if (players[i].id == this.owner) {
       continue;
@@ -95,6 +97,27 @@ Construct.prototype.getTarget = function(players) {
       target = players[i];
     }
   }
+  if (target) {
+    return target;
+  }
+
+  for (var i = 0; i < constructs.length; ++i) {
+    if (constructs[i].owner == this.owner) {
+      continue;
+    }
+    if (target &&
+        Util.getEuclideanDistance2(this.x, this.y,
+                                   constructs[i].x, constructs[i].y) <
+        Util.getEuclideanDistance2(this.x, this.y,
+                                   target.x, target.y)) {
+      target = constructs[i];
+    } else if (Util.getEuclideanDistance2(this.x, this.y,
+                                          constructs[i].x, constructs[i].y) <
+               Construct.TURRET_MINIMUM_SHOOTING_DISTANCE_SQUARED) {
+      target = constructs[i];
+    }
+  }
+
   return target;
 };
 
@@ -104,13 +127,14 @@ Construct.prototype.getTarget = function(players) {
  *   the server.
  * @param {function()} addBulletCallback The callback function to call if
  *   this construct fires a bullet.
+ * @param {Array.<Construct>} The array of existing constructs on the server.
  */
-Construct.prototype.update = function(clients, addBulletCallback) {
+Construct.prototype.update = function(clients, constructs, addBulletCallback) {
   switch (this.type) {
     // Behavior if this construct is a turret.
     case Constants.CONSTRUCT_TYPES.TURRET:
       var players = clients.values();
-      var target = this.getTarget(players);
+      var target = this.getTarget(players, constructs);
       if (target) {
         this.orientation = -Math.atan2(target.x - this.x, target.y - this.y) +
             Math.PI;

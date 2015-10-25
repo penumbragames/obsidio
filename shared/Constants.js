@@ -43,7 +43,7 @@ Constants.CONSTRUCT_TYPES = {
  * Indicates the praesidium cost of the construct, indexed by the above array.
  * TURRET: 75
  */
-Constants.CONSTRUCT_REQUIREMENT = [ 0 ];
+Constants.CONSTRUCT_REQUIREMENT = [ 15 ];
 
 /**
  * This is the maximum distance away from the player that a construct can be
