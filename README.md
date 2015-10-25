@@ -1,7 +1,10 @@
-# Tank Anarchy
-Tank Anarchy is an online multiplayer tank battle arena game that takes place
-in a single large world. Anyone who logs on can battle anyone else that's online at
-the same time.
+# Obsidio
+Obsidio is an online multiplayer battle arena game that takes place
+in a single large world. Anyone who logs on can battle anyone else that's
+online at the same time. To play, you move around and shoot other players
+while collecting the in-game resource, Praesidium. Once you have enough
+Praesidium, you can build turrets and other structures to help you control
+the map.
 
 # Technical:
   - Made with NodeJS and Socket.IO
@@ -21,22 +24,22 @@ the same time.
   bower install
   gulp
   ```
-  The project Gulpfile already has a few custom processes to run.  
+  The project Gulpfile already has a few custom processes to run.
   ```bash
   gulp            # will compile the JS and LESS assets
-  
+
   gulp js         # will compile only the JS assets
-  
+
   gulp less       # will compile only the LESS assets
-  
+
   gulp watch      # will watch the JS and LESS assets and compile them when
                   # they are modified, recommended during development
-                
+
   gulp watch-js   # will only watch the JS assets
-  
+
   gulp watch-less # will only watch the LESS assets
   ```
-  
+
 # Contributing:
   - Fork this repository and set it up on your computer.
   - Commit to your own fork and send a pull request to the master repository.
