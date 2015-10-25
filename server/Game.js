@@ -175,7 +175,7 @@ Game.prototype.update = function() {
   // Update all the turrets.
   for (var i = 0; i < this.turrets.length; ++i) {
     if (this.turrets[i].shouldExist) {
-      this.turrets.update(this.players, function(bullet) {
+      this.turrets[i].update(this.players, function(bullet) {
         context.addBullet(bullet);
       });
     } else {

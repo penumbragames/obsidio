@@ -6,6 +6,8 @@
 var Bullet = require('./Bullet');
 var Entity = require('./Entity');
 
+var Util = require('../shared/Util');
+
 /**
  * Constructor for a Turret.
  * @constructor
@@ -113,3 +115,5 @@ Turret.prototype.isDead = function() {
 Turret.prototype.damage = function(amount) {
   this.health -= amount;
 };
+
+module.exports = Turret;

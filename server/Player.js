@@ -7,6 +7,7 @@
 var Bullet = require('./Bullet');
 var Entity = require('./Entity');
 var Praesidium = require('./Praesidium');
+var Turret = require('./Turret');
 
 var Util = require('../shared/Util');
 
