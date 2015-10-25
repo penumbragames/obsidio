@@ -160,8 +160,8 @@ Game.prototype.update = function() {
   // Update all the players.
   var players = this.players.values();
   for (var i = 0; i < players.length; ++i) {
-    players[i].update(function(praesidium) {
-      context.addPraesidium(praesidium);
+    players[i].update(this.constructs, function(praesidium) {
+      context.addPraesidium(this.praesidium);
     });
   }
 
