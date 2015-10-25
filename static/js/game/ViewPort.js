@@ -34,3 +34,10 @@ ViewPort.prototype.toCanvasCoords = function(object) {
   return [object.x - translateX,
           object.y - translateY];
 };
+
+ViewPort.prototype.toAbsoluteCoords = function(object) {
+  var translateX = this.selfCoords[0] - Constants.CANVAS_WIDTH / 2;
+  var translateY = this.selfCoords[0] - Constants.CANVAS_HEIGHT / 2;
+  return [object.x + translateX,
+          object.y + translateY];
+};

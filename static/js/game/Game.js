@@ -34,18 +34,13 @@ function Game(socket, canvas, leaderboard) {
   this.latency = 0;
 
   this.currentActionState = Game.ACTION_STATES.NONE;
-  this.currentBuildType = Game.BUILD_TYPES.NONE;
+  this.currentBuildType = Constants.CONSTRUCT_TYPES.NONE;
 };
 
 Game.ACTION_STATES = {
   NONE: -1,
   CONTROL: 0,
   BUILD_PENDING: 1
-}
-
-Game.BUILD_TYPES = {
-  NONE: -1,
-  TURRET: 0
 }
 
 /**
@@ -60,7 +55,7 @@ Game.prototype.init = function() {
   this.drawing.init(function(type) { // startBuild(type)
     if (context.currentActionState == Game.ACTION_STATES.BUILD_PENDING) {
       context.currentActionState = Game.ACTION_STATES.CONTROL;
-      context.currentBuildType = Game.BUILD_TYPES.NONE;
+      context.currentBuildType = Constants.CONSTRUCT_TYPES.NONE;
     } else {
       context.currentActionState = Game.ACTION_STATES.BUILD_PENDING;
       context.currentBuildType = type;
@@ -68,7 +63,7 @@ Game.prototype.init = function() {
   }, function() { // cancelBuild()
     if (context.currentActionState == Game.ACTION_STATES.BUILD_PENDING) {
       context.currentActionState = Game.ACTION_STATES.CONTROL;
-      context.currentBuildType = Game.BUILD_TYPES.NONE;
+      context.currentBuildType = Constants.CONSTRUCT_TYPES.NONE;
     }
   });
 };
@@ -108,10 +103,11 @@ Game.prototype.update = function() {
       if (Input.MOUSE[0] >= 0 && Input.MOUSE[0] < 700 &&
           Input.MOUSE[1] >= 0 && Input.MOUSE[1] < 600) {
         if (this.currentActionState == Game.ACTION_STATES.BUILD_PENDING) {
+          var coords = this.viewPort.toAbsoluteCoords(Input.MOUSE);
           build = {
             type: this.currentBuildType,
-            x: Input.MOUSE[0],
-            y: Input.MOUSE[1]
+            x: coords[0],
+            y: coords[1]
           }
           this.currentActionState = Game.ACTION_STATES.CONTROL;
         } else {
