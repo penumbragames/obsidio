@@ -36,7 +36,7 @@ Drawing.TILE_SIZE = 100;
 
 Drawing.CONSTRUCT_SRC = [Drawing.TURRET_SRC, '', '', '', '', ''];
 Drawing.CONSTRUCTS = {
-  turret: 0
+  TURRET: 0
 }
   
 Drawing.prototype.init = function(startBuild, cancelBuild) {
