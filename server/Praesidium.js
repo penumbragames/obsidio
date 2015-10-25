@@ -109,6 +109,9 @@ Praesidium.prototype.update = function(clients) {
   this.vmag = Math.max(0, this.vmag + this.deceleration);
   this.vx = this.vmag * Math.cos(this.orientation);
   this.vy = this.vmag * Math.sin(this.orientation);
+  var boundedCoord = Util.boundWorld(this.x, this.y);
+  this.x = boundedCoord[0];
+  this.y = boundedCoord[1];
 
   var players = clients.values();
   for (var i = 0; i < players.length; ++i) {
