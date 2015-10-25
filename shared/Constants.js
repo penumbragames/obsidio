@@ -47,7 +47,7 @@ Constants.CONSTRUCT_TYPES = {
  * WALL: 15
  * HEALER: 50
  */
-Constants.CONSTRUCT_REQUIREMENT = [30, 0, 0, 15, 0, 0];
+Constants.CONSTRUCT_REQUIREMENT = [30, 0, 0, 15, 50, 0];
 
 /**
  * Indicates the cooldown of the action of a Construct in milliseconds, indexed
