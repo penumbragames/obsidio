@@ -45,6 +45,10 @@ Constants.CONSTRUCT_TYPES = {
  */
 Constants.CONSTRUCT_REQUIREMENT = [ 15 ];
 
+/**
+ * This is the maximum distance away from the player that a construct can be
+ * created.
+ */
 Constants.CONSTRUCT_BUILD_RADIUS = 128;
 
 try {
