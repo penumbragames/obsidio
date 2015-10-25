@@ -3,6 +3,7 @@
  * @author Alvin Lin (alin18@stuy.edu)
  */
 
+var Bullet = require('./Bullet');
 var Entity = require('./Entity');
 
 /**
@@ -96,7 +97,8 @@ Turret.prototype.update = function(clients, addBulletCallback) {
                                   target.x - this.x);
     if ((new Date()).getTime() > this.lastShotTime + this.shotCooldown) {
       this.lastShotTime = (new Date()).getTime();
-      addBulletCallback(this.x, this.y, this.orientation, this.owner);
+      addBulletCallback(Bullet.create(
+          this.x, this.y, this.orientation, this.owner));
     }
   }
   if (this.isDead()) {

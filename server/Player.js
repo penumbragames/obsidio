@@ -6,6 +6,7 @@
 
 var Bullet = require('./Bullet');
 var Entity = require('./Entity');
+var Praesidium = require('./Praesidium');
 
 var Util = require('../shared/Util');
 
@@ -122,7 +123,7 @@ Player.prototype.updateOnInput = function(keyboardState, orientation, shot,
 
   if (shot && (new Date()).getTime() > this.lastShotTime + this.shotCooldown) {
     this.lastShotTime = (new Date()).getTime();
-    addBulletCallback(this.x, this.y, this.orientation, this.id);
+    addBulletCallback(Bullet.create(this.x, this.y, this.orientation, this.id));
   }
 };
 
@@ -143,7 +144,10 @@ Player.prototype.update = function(addPraesidiumCallback) {
   if (this.isDead()) {
     var praesidiaPenalty = Math.floor(this.praesidia / 2);
     this.praesidia -= praesidiaPenalty;
-    addPraesidiumCallback(this.x, this.y, praesidiaPenalty);
+    var praesidia = Praesidium.createBurst(this.x, this.y, praesidiaPenalty);
+    for (var i = 0; i < praesidia.length; ++i) {
+      addPraesidiumCallback(praesidia[i]);
+    }
 
     var point = Util.getRandomWorldPoint();
     this.x = point[0];
