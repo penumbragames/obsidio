@@ -5,6 +5,7 @@
 
 var Entity = require('./Entity');
 
+var Constants = require('../shared/Constants');
 var Util = require('../shared/Util');
 
 /**
