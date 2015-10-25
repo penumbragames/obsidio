@@ -197,6 +197,7 @@ Game.prototype.draw = function() {
       this.drawing.drawConstruct(owner,
                                  constructCoords,
                                  this.constructs[i].orientation,
+                                 this.constructs[i].health,
                                  this.constructs[i].type);
     }
     
@@ -215,7 +216,7 @@ Game.prototype.draw = function() {
                              Constants.CONSTRUCT_BUILD_RADIUS,
                              color);
       this.drawing.context.globalAlpha = 0.7;
-      this.drawing.drawConstruct('neutral', Input.MOUSE, 0,
+      this.drawing.drawConstruct('neutral', Input.MOUSE, 0, 0,
                                  this.currentBuildType);
       this.drawing.context.globalAlpha = 1;
     }
