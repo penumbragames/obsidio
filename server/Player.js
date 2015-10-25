@@ -58,7 +58,7 @@ Player.inheritsFrom(Entity);
  * MAX_HEALTH is in health units.
  */
 Player.DEFAULT_VELOCITY_MAGNITUDE = 0.3;
-Player.DEFAULT_SHOT_COOLDOWN = 800;
+Player.DEFAULT_SHOT_COOLDOWN = 400;
 Player.DEFAULT_HITBOX_SIZE = 32;
 Player.MAX_HEALTH = 10;
 
@@ -146,12 +146,22 @@ Player.prototype.updateOnInput = function(keyboardState, orientation, shot,
  * @param {function()} addPraesidiumCallback The function to call if the
  *   player is dead and should drop a praesidium pallet.
  */
-Player.prototype.update = function(addPraesidiumCallback) {
+Player.prototype.update = function(constructs, addPraesidiumCallback) {
   this.parent.update.call(this);
-
   var boundedCoord = Util.boundWorld(this.x, this.y);
   this.x = boundedCoord[0];
   this.y = boundedCoord[1];
+  for (var i = 0; i < constructs.length; ++i) {
+    if (this.isCollidedWith(constructs[i])) {
+      var angle = Math.atan2(constructs[i].y - this.y,
+                             constructs[i].x - this.x) + Math.PI;
+      var offset = constructs[i].hitboxSize + this.hitboxSize;
+      this.x = constructs[i].x + offset * Math.cos(angle);
+      this.y = constructs[i].y + offset * Math.sin(angle);
+      break;
+    }
+  }
+
 
   if (this.isDead()) {
     var praesidiaPenalty = Math.floor(this.praesidia / 2);
