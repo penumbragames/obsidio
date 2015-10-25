@@ -30,7 +30,7 @@ function Game(socket, canvas, leaderboard) {
   this.players = [];
   this.projectiles = [];
   this.praesidia = [];
-  this.turrets = [];
+  this.constructs = [];
   this.latency = 0;
 
   this.currentActionState = Game.ACTION_STATES.NONE;
@@ -85,7 +85,7 @@ Game.prototype.receiveGameState = function(state) {
   this.players = state.players;
   this.projectiles = state.projectiles;
   this.praesidia = state.praesidia;
-  this.turrets = state.turrets;
+  this.constructs = state.constructs;
   this.latency = state.latency;
 };
 
@@ -103,18 +103,20 @@ Game.prototype.update = function() {
       Input.MOUSE[0] - Constants.CANVAS_WIDTH / 2) + Math.PI / 2;
     var shot = false;
 
-    // TODO: Fix shooting after placing turret
+    // TODO: Fix shooting after placing construct
     if (Input.LEFT_CLICK || Input.TOUCH) {
-      if (this.currentActionState == Game.ACTION_STATES.BUILD_PENDING) {
-        build = {
-          type: this.currentBuildType,
-          x: this.self.x,
-          y: this.self.y
+      if (Input.MOUSE[0] >= 0 && Input.MOUSE[0] < 700 &&
+          Input.MOUSE[1] >= 0 && Input.MOUSE[1] < 600) {
+        if (this.currentActionState == Game.ACTION_STATES.BUILD_PENDING) {
+          build = {
+            type: this.currentBuildType,
+            x: Input.MOUSE[0],
+            y: Input.MOUSE[1]
+          }
+          this.currentActionState = Game.ACTION_STATES.CONTROL;
+        } else {
+          shot = true;
         }
-        this.currentActionState = Game.ACTION_STATES.CONTROL;
-      } else if (Input.MOUSE[0] >= 0 && Input.MOUSE[0] < 700 &&
-                 Input.MOUSE[1] >= 0 && Input.MOUSE[1] < 600) {
-        shot = true;
       }
     }
     
@@ -170,9 +172,11 @@ Game.prototype.draw = function() {
       this.players[i].name);
   }
 
-  // Draw turrets.
-  for (var i = 0; i < this.turrets.length; ++i) {
-    this.drawing.drawTurrets(this.viewPort.toCanvasCoords(this.turrets[i]));
+  // Draw constructs.
+  for (var i = 0; i < this.constructs.length; ++i) {
+    this.drawing.drawConstruct(this.viewPort.toCanvasCoords(this.constructs[i]),
+                               this.constructs[i].orientation,
+                               this.currentBuildType);
   }
   
   // Draw the UI last.
@@ -181,7 +185,7 @@ Game.prototype.draw = function() {
     if (this.currentActionState == Game.ACTION_STATES.BUILD_PENDING) {
       this.drawing.drawRange(this.viewPort.toCanvasCoords(this.self), 128);
       this.drawing.context.globalAlpha = 0.7;
-      this.drawing.drawTurret(Input.MOUSE);
+      this.drawing.drawConstruct(Input.MOUSE, 0, this.currentBuildType);
       this.drawing.context.globalAlpha = 1;
     }
     this.drawing.drawUI(this.self.health, this.self.praesidia);
