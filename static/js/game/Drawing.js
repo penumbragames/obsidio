@@ -32,7 +32,7 @@ Drawing.TURRET_SRC = Drawing.BASE_IMG_URL + 'turret.png';
 Drawing.TILE_SRC = Drawing.BASE_IMG_URL + 'tile.png';
 
 Drawing.PLAYER_SIZE = [64, 64];
-Drawing.PROJECTILE_SIZE = [32, 32];
+Drawing.PROJECTILE_SIZE = [8, 8];
 Drawing.PRAESIDIUM_SIZE = [32, 32];
 Drawing.TURRET_SIZE = [64, 64];
 Drawing.TILE_SIZE = 100;
