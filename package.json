@@ -4,7 +4,8 @@
   "description": "2D siege battle game",
   "main": "server.js",
   "scripts": {
-    "test": "node server.js"
+    "test": "node server.js",
+    "postinstall": "bower install; gulp"
   },
   "repository": {
     "type": "git",
