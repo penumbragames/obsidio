@@ -150,10 +150,12 @@ Construct.prototype.update = function(clients, constructs, addBulletCallback,
   if (this.isDead()) {
     this.shouldExist = false;
 
-    var destroyPraesidia = Util.randRangeInt(0, Math.floor(
-        Constants.CONSTRUCT_REQUIREMENT[this.type] * 0.8));
-    addPraesidiumCallback(Praesidium.create(this.x, this.y,
-                                            destroyPraesidia));
+    var dropPraesidia = Util.randRangeInt(0, Math.floor(
+        Constants.CONSTRUCT_REQUIREMENT[this.type] * 0.5));
+    var praesidia = Praesidium.createBurst(this.x, this.y, dropPraesidia);
+    for (var i = 0; i < praesidia.length; ++i) {
+      addPraesidiumCallback(praesidia[i]);
+    }
   }
 };
 
