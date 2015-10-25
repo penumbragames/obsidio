@@ -51,6 +51,7 @@ Input.onMouseMove = function(e) {
   var rect = canvas.getBoundingClientRect();
   Input.MOUSE = [e.pageX - rect.left,
                  e.pageY - rect.top];
+  console.log(Input.MOUSE);
 };
 
 Input.onKeyDown = function(e) {

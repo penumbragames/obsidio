@@ -168,7 +168,7 @@ Game.prototype.draw = function() {
       this.players[i].orientation,
       this.players[i].name);
   }
-
+  
   // Draw constructs.
   for (var i = 0; i < this.constructs.length; ++i) {
     var constructCoords = this.viewPort.toCanvasCoords([this.constructs[i].x,
@@ -182,7 +182,8 @@ Game.prototype.draw = function() {
   if (this.self) {
     // Draw build HUD.
     if (this.currentActionState == Game.ACTION_STATES.BUILD_PENDING) {
-      this.drawing.drawRange(this.viewPort.toCanvasCoords(this.self), 128);
+      this.drawing.drawRange(this.viewPort.toCanvasCoords([this.self.x, this.self.y]),
+                             Constants.CONSTRUCT_BUILD_RADIUS);
       this.drawing.context.globalAlpha = 0.7;
       this.drawing.drawConstruct(Input.MOUSE, 0, this.currentBuildType);
       this.drawing.context.globalAlpha = 1;
@@ -192,7 +193,7 @@ Game.prototype.draw = function() {
     // Draw the player.
     this.drawing.drawPlayer(
       true,
-      this.viewPort.toCanvasCoords(this.self),
+      this.viewPort.toCanvasCoords([this.self.x, this.self.y]),
       this.self.orientation,
       this.self.name);
 
