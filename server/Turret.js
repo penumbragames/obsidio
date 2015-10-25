@@ -28,8 +28,11 @@ function Turret(x, y, orientation, hitboxSize, owner, shotCooldown,
 
   this.owner = owner;
 
+  this.lastShotTime = 0;
   this.shotCooldown = shotCooldown;
   this.health = health;
+
+  this.shouldExist = true;
 }
 require('./inheritable');
 Turret.inheritsFrom(Entity);
@@ -80,14 +83,28 @@ Turret.prototype.getTarget = function(players) {
 
 /**
  * Updates this turret.
+ * @param {Hashmap} clients The hashmap of currently active clients.
+ * @param {function()} addBulletCallback The callback function to call if
+ *   this turret fires a bullet.
  */
-Turret.prototype.update = function(clients) {
+Turret.prototype.update = function(clients, addBulletCallback) {
   var players = clients.values();
   var target = this.getTarget(players);
   if (target) {
     this.orientation = Math.atan2(target.y - this.y,
                                   target.x - this.x);
+    if ((new Date()).getTime() > this.lastShotTime + this.shotCooldown) {
+      this.lastShotTime = (new Date()).getTime();
+      addBulletCallback(this.x, this.y, this.orientation, this.owner);
+    }
   }
+  if (this.isDead()) {
+    this.shouldExist = false;
+  }
+};
+
+Turret.prototype.isDead = function() {
+  return this.health <= 0;
 };
 
 Turret.prototype.damage = function(amount) {

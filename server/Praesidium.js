@@ -35,6 +35,19 @@ Praesidium.MIN_VALUE = 5;
 Praesidium.MAX_VALUE = 10;
 
 /**
+ * Factory method to create a Praesidium.
+ * @param {number} x The x coordinate of this praesidium pallet.
+ * @param {number} y The y coordinate of this praesidium pallet.
+ * @param {number} quantity The amount of praesidium that this pallet will
+ *   give upon pickup.
+ * @return {Praesidium}
+ */
+Praesidium.create = function(x, y, quantity) {
+  var hitboxSize = Praesidium.HITBOX_SIZE;
+  return new Praesidium(x, y, quantity, hitboxSize);
+}
+
+/**
  * This function returns a randomly generated praesidium pallet.
  */
 Praesidium.generateRandomPraesidium = function() {

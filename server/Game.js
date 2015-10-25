@@ -99,15 +99,15 @@ Game.prototype.getPlayerNameBySocketId = function(id) {
  * @param {number} timestamp The timestamp of the packet sent.
  */
 Game.prototype.updatePlayerOnInput = function(id, keyboardState, orientation,
-                                       shot, timestamp) {
+                                              shot, timestamp) {
   var player = this.players.get(id);
   var client = this.clients.get(id);
   if (player) {
-    player.updateOnInput(keyboardState, orientation);
-    if (shot && player.canShoot()) {
-      this.projectiles.push(
-        player.getProjectileShot());
-    }
+    var context = this;
+    player.updateOnInput(keyboardState, orientation, shot,
+                         function(x, y, orientation, id) {
+      context.addBullet(x, y, orientation, id);
+    });
   }
   if (client) {
     client.latency = (new Date()).getTime() - timestamp;
@@ -116,8 +116,12 @@ Game.prototype.updatePlayerOnInput = function(id, keyboardState, orientation,
 
 /**
  * This function adds a bullet to the game's internal object arrays.
- * It is meant to be used as a callback in the update methods for the game's
- * internal objects.
+ * @param {number} x The starting x-coordinate of the bullet.
+ * @param {number} y The starting y-coordinate of the bullet.
+ * @param {number} direction The direction the bullet will travel, as an
+ *   angle in radians.
+ * @param {string} source The socket ID of the player that fired the
+ *   bullet.
  */
 Game.prototype.addBullet = function(x, y, direction, source) {
   this.projectiles.push(Bullet.create(x, y, direction, source));
@@ -125,21 +129,39 @@ Game.prototype.addBullet = function(x, y, direction, source) {
 
 /**
  * This function adds a turret to the game's internal object arrays.
- * It is meant to be used as a callback in the update methods for the game's
- * internal objects.
+ * @param {number} x The x coordinate of this turret.
+ * @param {number} y The y coordinate of this turret.
+ * @param {number} orientation The orientation of this turret in radians.
+ * @param {string} owner The socket ID of the player that placed this
+ *   turret.
  */
 Game.prototype.addTurret = function(x, y, orientation, owner) {
   this.turrets.push(Turret.create(x, y, orientation, owner));
 };
 
 /**
+ * This function adds a praesidium pallet to the game's internal object arrays.
+ * @param {number} x The x coordinate of this praesidium pallet.
+ * @param {number} y The y coordinate of this praesidium pallet.
+ * @param {number} quantity The amount of praesidium that this pallet will
+ *   give upon pickup.
+ */
+Game.prototype.addPraesidium = function(x, y, quantity) {
+  this.praesidia.push(Praesidium.create(x, y, quantity));
+};
+
+/**
  * Updates the state of all the objects in the game.
  */
 Game.prototype.update = function() {
+  var context = this;
+
   // Update all the players.
   var players = this.players.values();
   for (var i = 0; i < players.length; ++i) {
-    players[i].update();
+    players[i].update(function(x, y, quantity) {
+      context.addPraesidium(x, y, quantity);
+    });
   }
 
   // Update all the projectiles.
@@ -154,7 +176,9 @@ Game.prototype.update = function() {
   // Update all the turrets.
   for (var i = 0; i < this.turrets.length; ++i) {
     if (this.turrets[i].shouldExist) {
-      this.turrets.update(this.players);
+      this.turrets.update(this.players, function(x, y, direction, source) {
+        context.addBullet(x, y, direction, source);
+      });
     } else {
       this.turrets.splice(i--, 1);
     }

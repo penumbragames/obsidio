@@ -87,8 +87,13 @@ Player.generateNewPlayer = function(name, id) {
  *   client keyboard.
  * @param {number} orientation The angle of the client's mouse with respect
  *   to their player sprite.
+ * @param {boolean} shot This is true when the player is attempting to shoot.
+ *   It is equivalent to the state of the player's left click.
+ * @param {function()} addBulletCallback The function to call if the player
+ *   can shoot and has shot.
  */
-Player.prototype.updateOnInput = function(keyboardState, orientation) {
+Player.prototype.updateOnInput = function(keyboardState, orientation, shot,
+                                          addBulletCallback) {
   if (keyboardState.up) {
     this.vy = (keyboardState.left || keyboardState.right) ?
         -this.vmag / Math.SQRT2 : -this.vmag;
@@ -117,39 +122,38 @@ Player.prototype.updateOnInput = function(keyboardState, orientation) {
   }
 
   this.orientation = orientation;
+
+  if (shot && (new Date()).getTime() > this.lastShotTime + this.shotCooldown) {
+    this.lastShotTime = (new Date()).getTime();
+    addBulletCallback(this.x, this.y, this.orientation, this.id);
+  }
 };
 
 /**
  * Updates the player's position and powerup states, this runs in the 60Hz
  * server side loop so that powerups expire even when the player is not
  * moving or shooting.
+ * @param {function()} addPraesidiumCallback The function to call if the
+ *   player is dead and should drop a praesidium pallet.
  */
-Player.prototype.update = function() {
+Player.prototype.update = function(addPraesidiumCallback) {
   this.parent.update.call(this);
 
   var boundedCoord = Util.boundWorld(this.x, this.y);
   this.x = boundedCoord[0];
   this.y = boundedCoord[1];
-};
 
-/**
- * Returns a boolean indicating if the player's shot cooldown has passed and
- * the player can shoot.
- * @return {boolean}
- */
-Player.prototype.canShoot = function() {
-  return (new Date()).getTime() >
-    this.lastShotTime + this.shotCooldown;
-};
+  if (this.isDead()) {
+    var point = Util.getRandomWorldPoint();
+    this.x = point[0];
+    this.y = point[1];
+    this.health = Player.MAX_HEALTH;
+    this.deaths++;
 
-/**
- * Returns a bullet that the player has shot assuming that the player CAN
- * shoot. Resets lastShotTime.
- * @return {Bullet}
- */
-Player.prototype.getProjectileShot = function() {
-  this.lastShotTime = (new Date()).getTime();
-  return Bullet.create(this.x, this.y, this.orientation, this.id);
+    var praesidiaPenalty = Math.floor(this.praesidia / 2);
+    this.praesidia -= praesidiaPenalty;
+    addPraesidiumCallback(this.x, this.y, praesidiaPenalty);
+  }
 };
 
 /**
@@ -166,37 +170,6 @@ Player.prototype.isDead = function() {
  */
 Player.prototype.damage = function(amount) {
   this.health -= amount;
-};
-
-/**
- * Handles the respawning of the player when killed.
- * @param {Array.<Player>} players An array of players to check against for
- *   smart respawning.
- * @todo The player respawn calculation with the minimum buffer doesn't quite
- *   work.
- */
-Player.prototype.respawn = function(players) {
-  var point = Util.getRandomWorldPoint();
-  var isValidSpawn = false;
-  var iter = 0;
-  while (!isValidSpawn || iter < 15) {
-    isValidSpawn = true;
-    for (var i = 0; i < players; ++i) {
-      if (Util.getEuclideanDistance2(point[0], point[1],
-                                     players[i].x, players[i].y) <
-          Player.MINIMUM_RESPAWN_BUFFER * Player.MINIMUM_RESPAWN_BUFFER) {
-        isValidSpawn = false;
-        continue;
-      }
-    }
-    point = Util.getRandomWorldPoint();
-    iter++;
-  }
-
-  this.x = point[0];
-  this.y = point[1];
-  this.health = Player.MAX_HEALTH;
-  this.deaths++;
 };
 
 module.exports = Player;
