@@ -7,7 +7,7 @@
 var Bullet = require('./Bullet');
 var Entity = require('./Entity');
 var Praesidium = require('./Praesidium');
-var Turret = require('./Turret');
+var Construct = require('./Construct');
 
 var Util = require('../shared/Util');
 
@@ -93,7 +93,7 @@ Player.generateNewPlayer = function(name, id) {
  */
 Player.prototype.updateOnInput = function(keyboardState, orientation, shot,
                                           build, addBulletCallback,
-                                          addTurretCallback) {
+                                          addConstructCallback) {
   if (keyboardState.up) {
     this.vy = (keyboardState.left || keyboardState.right) ?
         -this.vmag / Math.SQRT2 : -this.vmag;
@@ -129,7 +129,8 @@ Player.prototype.updateOnInput = function(keyboardState, orientation, shot,
   }
 
   if (build) {
-    addTurretCallback(Turret.create(build.x, build.y, 0, this.id));
+    addConstructCallback(Turret.create(build.type, build.x, build.y, 0,
+                                       this.id));
   }
 };
 

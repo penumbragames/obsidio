@@ -37,7 +37,7 @@ function Game() {
    * @type {Entity}
    */
   this.projectiles = [];
-  this.turrets = [];
+  this.constructs = [];
   this.praesidia = [];
 }
 
@@ -113,8 +113,8 @@ Game.prototype.updatePlayerOnInput = function(id, keyboardState, orientation,
     player.updateOnInput(keyboardState, orientation, shot, build,
                          function(bullet) {
       context.addBullet(bullet);
-    }, function(turret) {
-      context.addTurret(turret);
+    }, function(construct) {
+      context.addConstruct(construct);
     });
   }
   if (client) {
@@ -132,12 +132,11 @@ Game.prototype.addBullet = function(bullet) {
 };
 
 /**
- * This function adds a turret to the game's internal object arrays.
- * @param {Turret} turret The turret to add to the game's internal object
- *   array.
+ * This function adds a construct to the game's internal object arrays.
+ * @param {Construct}
  */
-Game.prototype.addTurret = function(turret) {
-  this.turrets.push(turret);
+Game.prototype.addConstruct = function(construct) {
+  this.constructs.push(construct);
 };
 
 /**
@@ -172,14 +171,14 @@ Game.prototype.update = function() {
     }
   }
 
-  // Update all the turrets.
-  for (var i = 0; i < this.turrets.length; ++i) {
-    if (this.turrets[i].shouldExist) {
-      this.turrets[i].update(this.players, function(bullet) {
+  // Update all the constructs.
+  for (var i = 0; i < this.constructs.length; ++i) {
+    if (this.constructs[i].shouldExist) {
+      this.constructs[i].update(this.players, function(bullet) {
         context.addBullet(bullet);
       });
     } else {
-      this.turrets.splice(i--, 1);
+      this.constructs.splice(i--, 1);
     }
   }
 
@@ -231,8 +230,8 @@ Game.prototype.sendState = function() {
       projectiles: this.projectiles.filter(function(projectile) {
         return projectile.isVisibleTo(currentPlayer);
       }),
-      turrets: this.turrets.filter(function(turret) {
-        return turret.isVisibleTo(currentPlayer);
+      constructs: this.constructs.filter(function(construct) {
+        return construct.isVisibleTo(currentPlayer);
       }),
       praesidia: this.praesidia.filter(function(praesidium) {
         return praesidium.isVisibleTo(currentPlayer);
