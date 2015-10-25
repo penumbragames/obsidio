@@ -28,16 +28,16 @@ ViewPort.prototype.update = function(x, y) {
  *   returned.
  * @return {[number, number]}
  */
-ViewPort.prototype.toCanvasCoords = function(object) {
+ViewPort.prototype.toCanvasCoords = function(coords) {
   var translateX = this.selfCoords[0] - Constants.CANVAS_WIDTH / 2;
   var translateY = this.selfCoords[1] - Constants.CANVAS_HEIGHT / 2;
-  return [object.x - translateX,
-          object.y - translateY];
+  return [coords[0] - translateX,
+          coords[1] - translateY];
 };
 
-ViewPort.prototype.toAbsoluteCoords = function(object) {
+ViewPort.prototype.toAbsoluteCoords = function(coords) {
   var translateX = this.selfCoords[0] - Constants.CANVAS_WIDTH / 2;
   var translateY = this.selfCoords[0] - Constants.CANVAS_HEIGHT / 2;
-  return [object.x + translateX,
-          object.y + translateY];
+  return [coords[0] + translateX,
+          coords[1] + translateY];
 };
