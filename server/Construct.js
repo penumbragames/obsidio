@@ -47,7 +47,7 @@ Construct.inheritsFrom(Entity);
  * MINIMUM_SHOOTING_DISTANCE_SQUARED is the squared distance at which the
  * the Construct will start shooting at a player if it is a turret.
  */
-Construct.MAX_HEALTH = 10;
+Construct.MAX_HEALTH = 5;
 Construct.HITBOX_SIZE = 32;
 Construct.TURRET_SHOT_COOLDOWN = 500;
 Construct.TURRET_MINIMUM_SHOOTING_DISTANCE_SQUARED = 200;

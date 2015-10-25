@@ -47,7 +47,7 @@ Praesidium.inheritsFrom(Entity);
  * EXPLOSION_DECELERATION is the deceleration of the outward burst if the
  * pallets are generated in a burst.
  */
-Praesidium.HITBOX_SIZE = 10;
+Praesidium.HITBOX_SIZE = 12;
 Praesidium.MIN_VALUE = 5;
 Praesidium.MAX_VALUE = 10;
 Praesidium.EXPLOSION_VELOCITY = 0.75;

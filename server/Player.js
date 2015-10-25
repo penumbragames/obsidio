@@ -59,7 +59,7 @@ Player.inheritsFrom(Entity);
  */
 Player.DEFAULT_VELOCITY_MAGNITUDE = 0.3;
 Player.DEFAULT_SHOT_COOLDOWN = 800;
-Player.DEFAULT_HITBOX_SIZE = 24;
+Player.DEFAULT_HITBOX_SIZE = 32;
 Player.MAX_HEALTH = 10;
 
 /**
