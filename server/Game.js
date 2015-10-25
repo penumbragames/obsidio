@@ -78,6 +78,9 @@ Game.prototype.removePlayer = function(id) {
     player = this.players.get(id);
     this.players.remove(id);
   }
+  this.constructs = this.constructs.filter(function(construct) {
+    return construct.owner != id;
+  });
   return player.name;
 };
 
