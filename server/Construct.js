@@ -11,15 +11,15 @@ var Util = require('../shared/Util');
 /**
  * Constructor for a Construct.
  * @constructor
- * @param {number} x The x coordinate of this Construct.
- * @param {number} y The y coordinate of this Construct.
- * @param {number} orientation The orientation of this Construct in radians.
- * @param {number} hitboxSize The size of the Construct's hitbox. This
- *   represents the radius of the Construct's circular hitbox.
+ * @param {number} x The x coordinate of this construct.
+ * @param {number} y The y coordinate of this construct.
+ * @param {number} orientation The orientation of this construct in radians.
+ * @param {number} hitboxSize The size of the construct's hitbox. This
+ *   represents the radius of the construct's circular hitbox.
  * @param {string} owner The socket ID of the player that placed this
- *   Construct.
- * @param {string} type The type that this Construct is.
- * @param {number} health This is the amount of health the Construct starts
+ *   construct.
+ * @param {string} type The type that this construct is.
+ * @param {number} health This is the amount of health the construct starts
  *   with.
  */
 function Construct(x, y, orientation, hitboxSize, owner, type, health) {
@@ -41,10 +41,10 @@ Construct.inheritsFrom(Entity);
 
 /**
  * SHOT_COOLDOWN is the time in milliseconds between each construct shot.
- * MAX_HEALTH is the maximum health of the construct.
- * HITBOX_SIZE is the radial size of the construct's circular hitbox.
+ * MAX_HEALTH is the maximum health of the Construct.
+ * HITBOX_SIZE is the radial size of the Construct's circular hitbox.
  * MINIMUM_SHOOTING_DISTANCE_SQUARED is the squared distance at which the
- * the construct will start shooting at a player.2
+ * the Construct will start shooting at a player if it is a turret.
  */
 Construct.SHOT_COOLDOWN = 500;
 Construct.MAX_HEALTH = 10;
@@ -67,7 +67,7 @@ Construct.create = function(x, y, orientation, owner, type) {
 
 /**
  * Given an array of players, this function returns a player that the construct
- * will fire at.
+ * will fire at if this construct is a turret.
  * @param {Array.<Player>} players The array of players to check.
  */
 Construct.prototype.getTarget = function(players) {
@@ -89,7 +89,7 @@ Construct.prototype.getTarget = function(players) {
 };
 
 /**
- * Updates this construct.
+ * Updates this Construct.
  * @param {Hashmap} clients The Hashmap of active IDs and players stored on
  *   the server.
  * @param {function()} addBulletCallback The callback function to call if
