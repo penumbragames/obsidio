@@ -139,6 +139,10 @@ Drawing.prototype.drawConstruct = function(owner, coords, orientation, health, t
                          -Drawing.CONSTRUCT_SIZE[1] / 2,
                          Drawing.CONSTRUCT_SIZE[0],
                          Drawing.CONSTRUCT_SIZE[1]);
+  this.context.restore();
+
+  this.context.save();
+  this.context.translate(coords[0], coords[1]);
   if (owner != 'neutral') {
     var healthBarInterval = 96 / Constants.CONSTRUCT_MAX_HEALTH[type];
     for (var i = 0; i < Constants.CONSTRUCT_MAX_HEALTH[type]; ++i) {
