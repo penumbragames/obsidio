@@ -162,7 +162,6 @@ Player.prototype.update = function(constructs, addPraesidiumCallback) {
     }
   }
 
-
   if (this.isDead()) {
     var praesidiaPenalty = Math.floor(this.praesidia / 2);
     this.praesidia -= praesidiaPenalty;

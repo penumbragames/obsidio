@@ -44,12 +44,10 @@ require('./inheritable');
 Construct.inheritsFrom(Entity);
 
 /**
- * HITBOX_SIZE is the radial size of the Construct's circular hitbox.
  * TURRET_SHOT_COOLDOWN is the time in milliseconds between each construct shot.
  * TURRET_MINIMUM_SHOOTING_DISTANCE_SQUARED is the squared distance at which
  * the Construct will start shooting at a player if it is a turret.
  */
-Construct.HITBOX_SIZE = 24;
 Construct.TURRET_SHOT_COOLDOWN = 750;
 Construct.TURRET_MINIMUM_SHOOTING_DISTANCE_SQUARED = 100000;
 
@@ -63,7 +61,7 @@ Construct.TURRET_MINIMUM_SHOOTING_DISTANCE_SQUARED = 100000;
  * @param {string} type The type of construct to create.
  */
 Construct.create = function(x, y, orientation, owner, type) {
-  var hitboxSize = Construct.HITBOX_SIZE;
+  var hitboxSize = Constants.CONSTRUCT_HITBOX_SIZE;
   var shotCooldown = Construct.TURRET_SHOT_COOLDOWN;
   var health = Constants.CONSTRUCT_MAX_HEALTH[type];
   return new Construct(x, y, orientation, hitboxSize, owner, type, shotCooldown,

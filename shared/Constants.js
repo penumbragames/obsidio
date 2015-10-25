@@ -29,8 +29,9 @@ Constants.VISIBILITY_THRESHOLD_X = 425;
  */
 Constants.VISIBILITY_THRESHOLD_Y = 325;
 
+
 /**
- * Construct types indicate the global index of that construct in other arrays.
+ * Construct types indicate the global index of that Construct in other arrays.
  */
 Constants.CONSTRUCT_TYPES = {
   NONE: -1,
@@ -39,19 +40,32 @@ Constants.CONSTRUCT_TYPES = {
 };
 
 /**
- * Indicates the praesidium cost of the construct, indexed by the above array.
+ * Indicates the praesidium cost of a Construct, indexed by the
+ * CONSTRUCT_TYPES
  * TURRET: 75
+ * WALL: 15
  */
-Constants.CONSTRUCT_REQUIREMENT = [30, 0, 0, 5, 0, 0];
+Constants.CONSTRUCT_REQUIREMENT = [30, 0, 0, 15, 0, 0];
 
 /**
- * This is the maximum distance away from the player that a construct can be
- * created.
+ * Indicates the maximum health of a Construct, indexed by CONSTRUCT_TYPES
+ * TURRET: 6
+ * WALL: 10
  */
-
 Constants.CONSTRUCT_MAX_HEALTH = [6, 0, 0, 10, 0, 0];
 
+/**
+ * This is the maximum distance away from the player that a Construct can be
+ * created.
+ */
 Constants.CONSTRUCT_BUILD_RADIUS = 128;
+
+/**
+ * This is the hitbox size for a Construct
+ */
+Constants.CONSTRUCT_HITBOX_SIZE = 24;
+
+
 
 try {
   module.exports = Constants;
