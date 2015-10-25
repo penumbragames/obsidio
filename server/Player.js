@@ -133,6 +133,9 @@ Player.prototype.updateOnInput = function(keyboardState, orientation, shot,
       Util.getEuclideanDistance(this.x, this.y, build.x, build.y) <
       Constants.CONSTRUCT_BUILD_RADIUS &&
       this.praesidia >= Constants.CONSTRUCT_REQUIREMENT[build.type]) {
+    // We reset the shot cooldown after building a construct to prevent the
+    // player from shooting instantly during that click event.
+    this.lastShotTime = (new Date()).getTime();
     addConstructCallback(Construct.create(build.x, build.y, 0, this.id,
                                           build.type));
     this.praesidia -= Constants.CONSTRUCT_REQUIREMENT[build.type];
