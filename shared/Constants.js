@@ -43,7 +43,7 @@ Constants.CONSTRUCT_TYPES = {
  * Indicates the praesidium cost of the construct, indexed by the above array.
  * TURRET: 75
  */
-Constants.CONSTRUCT_REQUIREMENT = [ 75 ];
+Constants.CONSTRUCT_REQUIREMENT = [ 15 ];
 
 try {
   module.exports = Constants;
