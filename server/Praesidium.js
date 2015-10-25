@@ -15,13 +15,15 @@ var Util = require('../shared/Util');
  * @param {number} y The y coordinate of this praesidium pallet.
  * @param {number} quantity The amount of praesidium that this pallet will
  *   give upon pickup.
+ * @param {number} hitboxSize The hitbox size of this praesidium pallet.
+ *   This number represents the radius of the circular hitbox in pixels.
  */
-function Praesidium(x, y, quantity) {
+function Praesidium(x, y, quantity, hitboxSize) {
   this.x = x;
   this.y = y;
   this.quantity = quantity;
 
-  this.hitboxSize = Praesidium.HITBOX_SIZE;
+  this.hitboxSize = hitboxSize;
 
   this.shouldExist = true;
 }
@@ -38,7 +40,8 @@ Praesidium.MAX_VALUE = 10;
 Praesidium.generateRandomPraesidium = function() {
   var point = Util.getRandomWorldPoint();
   var quantity = Util.randRangeInt(Praesidium.MIN_VALUE, Praesidium.MAX_VALUE);
-  return new Praesidium(point[0], point[1], quantity);
+  var hitboxSize = Praesidium.HITBOX_SIZE;
+  return new Praesidium(point[0], point[1], quantity, hitboxSize);
 }
 
 /**

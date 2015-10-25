@@ -42,6 +42,7 @@ function Game() {
 }
 
 Game.MAX_PRAESIDIA = 20;
+Game.MAX_LEADERBOARD_PLAYERS = 15;
 
 /**
  * Creates a new player with the given name and ID.
@@ -114,6 +115,24 @@ Game.prototype.updatePlayerOnInput = function(id, keyboardState, orientation,
 };
 
 /**
+ * This function adds a bullet to the game's internal object arrays.
+ * It is meant to be used as a callback in the update methods for the game's
+ * internal objects.
+ */
+Game.prototype.addBullet = function(x, y, direction, source) {
+  this.projectiles.push(Bullet.create(x, y, direction, source));
+};
+
+/**
+ * This function adds a turret to the game's internal object arrays.
+ * It is meant to be used as a callback in the update methods for the game's
+ * internal objects.
+ */
+Game.prototype.addTurret = function(x, y, orientation, owner) {
+  this.turrets.push(Turret.create(x, y, orientation, owner));
+};
+
+/**
  * Updates the state of all the objects in the game.
  */
 Game.prototype.update = function() {
@@ -167,7 +186,7 @@ Game.prototype.sendState = function() {
     }
   }).sort(function(a, b) {
     return b.kills - a.kills;
-  }).slice(0, 10);
+  }).slice(0, Game.MAX_LEADERBOARD_PLAYERS);
 
   var ids = this.clients.keys();
   for (var i = 0; i < ids.length; ++i) {

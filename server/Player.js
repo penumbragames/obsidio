@@ -14,26 +14,33 @@ var Util = require('../shared/Util');
  * @constructor
  * @param {number} x The x coordinate to generate the player at.
  * @param {number} y The y coordinate to generate the player at.
- * @param {number} orientation Direction to face the player from 0 to 2 * PI.
+ * @param {number} orientation This represents the direction the player will
+ *   face and is a radian measure.
+ * @param {number} hitboxSize The hitbox size of this player. This number
+ *   represents the radius of the circular hitbox in pixels.
  * @param {string} name The display name of the player.
  * @param {string} id The socket ID of the client associated with this
  *   player.
+ * @param {number} vmag The magnitude of the player's velocity in
+ *   pixels/millisecond.
+ * @param {number} shotCooldown The time between the player's shots in
+ *   milliseconds.
+ * @param {number} health The amount of health that the player starts with.
  */
-function Player(x, y, orientation, name, id) {
+function Player(x, y, orientation, hitboxSize, name, id,
+                vmag, shotCooldown, health) {
   this.x = x;
   this.y = y;
-  this.vx = 0;
-  this.vy = 0;
   this.orientation = orientation;
-  this.hitboxSize = Player.DEFAULT_HITBOX_SIZE;
+  this.hitboxSize = hitboxSize;
 
   this.name = name;
   this.id = id;
-  this.vmag = Player.DEFAULT_VELOCITY_MAGNITUDE;
-  this.shotCooldown = Player.DEFAULT_SHOT_COOLDOWN;
+  this.vmag = vmag;
+  this.shotCooldown = shotCooldown;
   this.lastShotTime = 0;
 
-  this.health = Player.MAX_HEALTH;
+  this.health = health;
   this.praesidia = 0;
   this.kills = 0;
   this.deaths = 0;
@@ -65,7 +72,12 @@ Player.MINIMUM_RESPAWN_BUFFER = 1000;
 Player.generateNewPlayer = function(name, id) {
   var point = Util.getRandomWorldPoint();
   var orientation = Util.randRange(0, 2 * Math.PI);
-  return new Player(point[0], point[1], orientation, name, id);
+  var hitboxSize = Player.DEFAULT_HITBOX_SIZE;
+  var vmag = Player.DEFAULT_VELOCITY_MAGNITUDE;
+  var shotCooldown = Player.DEFAULT_SHOT_COOLDOWN;
+  var health = Player.MAX_HEALTH;
+  return new Player(point[0], point[1], orientation, hitboxSize, name, id,
+                    vmag, shotCooldown, health);
 };
 
 /**
