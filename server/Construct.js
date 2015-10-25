@@ -18,16 +18,18 @@ var Util = require('../shared/Util');
  *   represents the radius of the Construct's circular hitbox.
  * @param {string} owner The socket ID of the player that placed this
  *   Construct.
+ * @param {string} type The type that this Construct is.
  * @param {number} health This is the amount of health the Construct starts
  *   with.
  */
-function Construct(x, y, orientation, hitboxSize, owner, health) {
+function Construct(x, y, orientation, hitboxSize, owner, type, health) {
   this.x = x;
   this.y = y;
   this.orientation = orientation;
   this.hitboxSize = hitboxSize;
 
   this.owner = owner;
+  this.type = type;
 
   this.lastShotTime = 0;
   this.health = health;
@@ -57,10 +59,10 @@ Construct.MINIMUM_SHOOTING_DISTANCE_SQUARED = 200;
  * @param {string} owner The socket ID of the player that placed this
  *   construct.
  */
-Construct.create = function(x, y, orientation, owner) {
+Construct.create = function(x, y, orientation, owner, type) {
   var hitboxSize = Construct.HITBOX_SIZE;
   var health = Construct.MAX_HEALTH;
-  return new Construct(x, y, orientation, hitboxSize, owner, health);
+  return new Construct(x, y, orientation, hitboxSize, owner, type, health);
 };
 
 /**
