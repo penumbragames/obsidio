@@ -9,6 +9,7 @@ var Entity = require('./Entity');
 var Praesidium = require('./Praesidium');
 var Construct = require('./Construct');
 
+var Constants = require('../shared/Constants');
 var Util = require('../shared/Util');
 
 /**
@@ -132,7 +133,7 @@ Player.prototype.updateOnInput = function(keyboardState, orientation, shot,
     if (this.praesidia >= Constants.CONSTRUCT_REQUIREMENT[build.type]) {
       addConstructCallback(Construct.create(build.x, build.y, 0, this.id,
                                             build.type));
-      this.praesidia -= Constants.CONSTRUCT_REQUIREMENT[build.type]);
+      this.praesidia -= Constants.CONSTRUCT_REQUIREMENT[build.type];
     }
   }
 };

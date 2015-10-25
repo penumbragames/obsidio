@@ -101,17 +101,22 @@ Construct.prototype.getTarget = function(players) {
  *   this construct fires a bullet.
  */
 Construct.prototype.update = function(clients, addBulletCallback) {
-  var players = clients.values();
-  var target = this.getTarget(players);
-  if (target) {
-    this.orientation = Math.atan2(target.y - this.y,
-                                  target.x - this.x);
-    if ((new Date()).getTime() > this.lastShotTime + this.shotCooldown) {
-      this.lastShotTime = (new Date()).getTime();
-      addBulletCallback(Bullet.create(
-          this.x, this.y, this.orientation, this.owner));
-    }
+  switch (this.type) {
+    case Constants.CONSTRUCT_TYPES.TURRET:
+      var players = clients.values();
+      var target = this.getTarget(players);
+      if (target) {
+        this.orientation = Math.atan2(target.y - this.y,
+                                      target.x - this.x);
+        if ((new Date()).getTime() > this.lastShotTime + this.shotCooldown) {
+          this.lastShotTime = (new Date()).getTime();
+          addBulletCallback(Bullet.create(
+              this.x, this.y, this.orientation, this.owner));
+        }
+      }
+      break;
   }
+
   if (this.isDead()) {
     this.shouldExist = false;
   }
