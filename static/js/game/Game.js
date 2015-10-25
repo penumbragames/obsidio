@@ -174,7 +174,7 @@ Game.prototype.draw = function() {
                                                         this.constructs[i].y]);
     this.drawing.drawConstruct(constructCoords,
                                this.constructs[i].orientation,
-                               this.currentBuildType);
+                               this.constructs[i].type);
   }
   
   // Draw the UI last.
