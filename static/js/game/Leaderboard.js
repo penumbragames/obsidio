@@ -29,7 +29,9 @@ Leaderboard.prototype.update = function(players) {
   for (var i = 0; i < this.players.length; ++i) {
     var playerElement = document.createElement('li');
     playerElement.appendChild(document.createTextNode(
-      this.players[i].name + "___:" + this.players[i].kills + "___:"  + this.players[i].deaths));
+      this.players[i].name +
+        "  Kills: "   + this.players[i].kills +
+        "  Deaths: "  + this.players[i].deaths));
     this.element.appendChild(playerElement);
   };
 };
