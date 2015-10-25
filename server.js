@@ -55,7 +55,7 @@ io.on('connection', function(socket) {
   // packet.
   socket.on('player-action', function(data) {
     game.updatePlayerOnInput(socket.id, data.keyboardState, data.orientation,
-                             data.shot, data.timestamp);
+                             data.shot, data.build, data.timestamp);
   });
 
   // When a player disconnects, remove them from the game.

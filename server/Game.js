@@ -105,13 +105,16 @@ Game.prototype.getPlayerNameBySocketId = function(id) {
  * @param {number} timestamp The timestamp of the packet sent.
  */
 Game.prototype.updatePlayerOnInput = function(id, keyboardState, orientation,
-                                              shot, timestamp) {
+                                              shot, build, timestamp) {
   var player = this.players.get(id);
   var client = this.clients.get(id);
   if (player) {
     var context = this;
-    player.updateOnInput(keyboardState, orientation, shot, function(bullet) {
+    player.updateOnInput(keyboardState, orientation, shot, build,
+                         function(bullet) {
       context.addBullet(bullet);
+    }, function(turret) {
+      context.addTurret(turret);
     });
   }
   if (client) {

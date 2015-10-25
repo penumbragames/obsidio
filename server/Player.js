@@ -91,7 +91,8 @@ Player.generateNewPlayer = function(name, id) {
  *   can shoot and has shot.
  */
 Player.prototype.updateOnInput = function(keyboardState, orientation, shot,
-                                          addBulletCallback) {
+                                          build, addBulletCallback,
+                                          addTurretCallback) {
   if (keyboardState.up) {
     this.vy = (keyboardState.left || keyboardState.right) ?
         -this.vmag / Math.SQRT2 : -this.vmag;
@@ -124,6 +125,10 @@ Player.prototype.updateOnInput = function(keyboardState, orientation, shot,
   if (shot && (new Date()).getTime() > this.lastShotTime + this.shotCooldown) {
     this.lastShotTime = (new Date()).getTime();
     addBulletCallback(Bullet.create(this.x, this.y, this.orientation, this.id));
+  }
+
+  if (build) {
+    addTurretCallback(Turret.create(build.x, build.y, 0, this.id));
   }
 };
 
