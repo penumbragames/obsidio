@@ -145,6 +145,10 @@ Construct.prototype.update = function(clients, constructs, addBulletCallback,
         }
       }
       break;
+
+    // Behavior if this construct is a wall.
+    case Constants.CONSTRUCT_TYPES.WALL:
+      break;
   }
 
   if (this.isDead()) {

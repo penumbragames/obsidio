@@ -105,7 +105,8 @@ Bullet.prototype.update = function(clients, constructs) {
   }
 
   for (var i = 0; i < constructs.length; ++i) {
-    if (this.source != constructs[i].owner &&
+    if ((this.source != constructs[i].owner ||
+         constructs[i].type == Constants.CONSTRUCT_TYPES.WALL) &&
         constructs[i].isCollidedWith(this)) {
       constructs[i].damage(this.damage);
       this.shouldExist = false;
