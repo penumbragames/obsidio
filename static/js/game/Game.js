@@ -32,6 +32,9 @@ function Game(socket, canvas, leaderboard) {
   this.praesidia = [];
   this.turrets = [];
   this.latency = 0;
+
+  this.currentActionState = Game.ACTION_STATES.NONE;
+  this.currentBuildType = Game.BUILD_TYPES.NONE;
 };
 
 Game.ACTION_STATES = {
@@ -54,14 +57,18 @@ Game.prototype.init = function() {
   this.socket.on('update', function(data) {
     context.receiveGameState(data);
   });
-  this.drawing.init(function(type) {
-    console.log('Building ' + type);
+  this.drawing.init(function(type) { // startBuild(type)
     if (context.currentActionState == Game.ACTION_STATES.BUILD_PENDING) {
       context.currentActionState = Game.ACTION_STATES.CONTROL;
       context.currentBuildType = Game.BUILD_TYPES.NONE;
     } else {
       context.currentActionState = Game.ACTION_STATES.BUILD_PENDING;
       context.currentBuildType = type;
+    }
+  }, function() { // cancelBuild()
+    if (context.currentActionState == Game.ACTION_STATES.BUILD_PENDING) {
+      context.currentActionState = Game.ACTION_STATES.CONTROL;
+      context.currentBuildType = Game.BUILD_TYPES.NONE;
     }
   });
 };
@@ -80,9 +87,6 @@ Game.prototype.receiveGameState = function(state) {
   this.praesidia = state.praesidia;
   this.turrets = state.turrets;
   this.latency = state.latency;
-
-  this.currentActionState = Game.ACTION_STATES.NONE;
-  this.currentBuildType = Game.BUILD_TYPES.NONE;
 };
 
 /**
@@ -99,15 +103,17 @@ Game.prototype.update = function() {
       Input.MOUSE[0] - Constants.CANVAS_WIDTH / 2) + Math.PI / 2;
     var shot = false;
 
-    if (Input.LEFT_CLICKED || Input.TOUCH) {
+    // TODO: Fix shooting after placing turret
+    if (Input.LEFT_CLICK || Input.TOUCH) {
       if (this.currentActionState == Game.ACTION_STATES.BUILD_PENDING) {
         build = {
           type: this.currentBuildType,
           x: this.self.x,
           y: this.self.y
         }
-        gameState = Game.ACTION_STATES.CONTROL;
-      } else {
+        this.currentActionState = Game.ACTION_STATES.CONTROL;
+      } else if (Input.MOUSE[0] >= 0 && Input.MOUSE[0] < 700 &&
+                 Input.MOUSE[1] >= 0 && Input.MOUSE[1] < 600) {
         shot = true;
       }
     }
@@ -154,15 +160,6 @@ Game.prototype.draw = function() {
       this.viewPort.toCanvasCoords(this.projectiles[i]),
       this.projectiles[i].orientation);
   }
-
-  // Draw the player.
-  if (this.self) {
-    this.drawing.drawPlayer(
-      true,
-      this.viewPort.toCanvasCoords(this.self),
-      this.self.orientation,
-      this.self.name);
-  }
   
   // Draw any other players.
   for (var i = 0; i < this.players.length; ++i) {
@@ -177,10 +174,25 @@ Game.prototype.draw = function() {
   for (var i = 0; i < this.turrets.length; ++i) {
     this.drawing.drawTurrets(this.viewPort.toCanvasCoords(this.turrets[i]));
   }
-
+  
   // Draw the UI last.
   if (this.self) {
+    // Draw build HUD.
+    if (this.currentActionState == Game.ACTION_STATES.BUILD_PENDING) {
+      this.drawing.drawRange(this.viewPort.toCanvasCoords(this.self), 128);
+      this.drawing.context.globalAlpha = 0.7;
+      this.drawing.drawTurret(Input.MOUSE);
+      this.drawing.context.globalAlpha = 1;
+    }
     this.drawing.drawUI(this.self.health, this.self.praesidia);
-  }
+    
+    // Draw the player.
+    this.drawing.drawPlayer(
+      true,
+      this.viewPort.toCanvasCoords(this.self),
+      this.self.orientation,
+      this.self.name);
 
+  }
+  
 };
