@@ -31,6 +31,15 @@ Constants.VISIBILITY_THRESHOLD_X = 425;
  */
 Constants.VISIBILITY_THRESHOLD_Y = 325;
 
+Constants.CONSTRUCT_TYPES = {
+  NONE: -1,
+  TURRET: 0
+};
+
+Constants.CONSTRUCT_REQ = [
+  0: 75
+];
+
 try {
   module.exports = Constants;
 } catch (err) {}
