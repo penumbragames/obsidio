@@ -34,21 +34,27 @@ Drawing.PRAESIDIUM_SIZE = [32, 32];
 Drawing.TURRET_SIZE = [64, 64];
 Drawing.TILE_SIZE = 100;
 
-Drawing.prototype.init = function(build) {
+Drawing.BUILD_IMAGES = [Drawing.TURRET_SRC, '', '', '', '', ''];
+  
+Drawing.prototype.init = function(startBuild, cancelBuild) {
   this.ui.setAttribute('id', 'ui');
 
   for (var i = 0; i < 6; ++i) {
     var buildOption = document.createElement('div');
     buildOption.setAttribute('class', 'ui-build-option');
-    buildOption.style.top = '30px';
-    buildOption.style.marginTop = '5px';
+    buildOption.style.backgroundImage = 'url(' + Drawing.BUILD_IMAGES[i] + ')';
     (function(j) {
-      buildOption.onclick = function() {
-        build(j);
+      buildOption.onclick = function(e) {
+        startBuild(j);
+        e.stopPropagation();
       }
     }(i));
     this.ui.appendChild(buildOption);
   }
+
+  this.ui.onclick = function() {
+    cancelBuild();
+  };
   
   document.getElementById('game-container').appendChild(this.ui);
 }
@@ -109,6 +115,16 @@ Drawing.prototype.drawTurret = function(coords) {
                          Drawing.TURRET_SIZE[0],
                          Drawing.TURRET_SIZE[1]);
   this.context.restore();
+}
+
+Drawing.prototype.drawRange = function(coords, radius) {
+  this.context.fillStyle = '#00FF00';
+  this.context.globalAlpha = 0.3;
+  this.context.beginPath();
+  this.context.arc(coords[0], coords[1], radius, 0, 2 * Math.PI);
+  this.context.closePath();
+  this.context.fill();
+  this.context.globalAlpha = 1;
 }
 
 Drawing.prototype.drawUI = function(health, praesidia) {  

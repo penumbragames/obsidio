@@ -17,7 +17,6 @@ Input.LEFT = false;
 Input.UP = false;
 Input.RIGHT = false;
 Input.DOWN = false;
-Input.LEFT_CLICKED = false;
 
 Input.onTouchStart = function(e) {
   Input.TOUCH = true;
@@ -32,11 +31,6 @@ Input.onMouseDown = function(e) {
   var canvas = document.getElementById('canvas');
   var rect = canvas.getBoundingClientRect();
   if (e.which == 1) {
-    if (Input.LEFT_CLICK) {
-      Input.LEFT_CLICKED = false;
-    } else {
-      Input.LEFT_CLICKED = true;
-    }
     Input.LEFT_CLICK = true;
   } else if (e.which == 3) {
     Input.RIGHT_CLICK = true;
