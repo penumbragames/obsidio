@@ -1,7 +1,6 @@
 /**
  * Methods for drawing all the sprites onto the HTML5 canvas.
  * @author Kenneth Li (kennethli.3470@gmail.com)
- * @todo Add explosion drawing.
  */
 
 /**
@@ -12,6 +11,7 @@
  */
 function Drawing(context) {
   this.context = context;
+  this.ui = document.createElement('div');
 };
 
 Drawing.FONT = '14px Helvetica';
@@ -19,9 +19,6 @@ Drawing.FONT_COLOR = 'black';
 
 Drawing.HP_COLOR = 'green';
 Drawing.HP_MISSING_COLOR = 'red';
-
-Drawing.UI_COLOR = '#AAAAAA';
-Drawing.UI_ITEM_COLOR = '#DDDDDD';
 
 Drawing.BASE_IMG_URL = '/static/img/';
 Drawing.SELF_PLAYER_SRC = Drawing.BASE_IMG_URL + 'self_player.png';
@@ -36,6 +33,25 @@ Drawing.PROJECTILE_SIZE = [8, 8];
 Drawing.PRAESIDIUM_SIZE = [32, 32];
 Drawing.TURRET_SIZE = [64, 64];
 Drawing.TILE_SIZE = 100;
+
+Drawing.prototype.init = function(build) {
+  this.ui.setAttribute('id', 'ui');
+
+  for (var i = 0; i < 6; ++i) {
+    var buildOption = document.createElement('div');
+    buildOption.setAttribute('class', 'ui-build-option');
+    buildOption.style.top = '30px';
+    buildOption.style.marginTop = '5px';
+    (function(j) {
+      buildOption.onclick = function() {
+        build(j);
+      }
+    }(i));
+    this.ui.appendChild(buildOption);
+  }
+  
+  document.getElementById('game-container').appendChild(this.ui);
+}
 
 Drawing.prototype.drawPlayer = function(isSelf, coords, orientation, name) {
   this.context.save();
@@ -95,9 +111,9 @@ Drawing.prototype.drawTurret = function(coords) {
   this.context.restore();
 }
 
-Drawing.prototype.drawUI = function(health, praesidia) {
-  this.context.fillStyle = Drawing.UI_COLOR;
-  this.context.fillRect(0, 0, 200, 60);
+Drawing.prototype.drawUI = function(health, praesidia) {  
+  this.context.fillStyle = '#AAAAAA';
+  this.context.fillRect(0, 0, 200, 50);
   this.context.font = Drawing.FONT;
   this.context.fillStyle = Drawing.FONT_COLOR;
   this.context.fillText("Health: ", 10, 20);
@@ -110,10 +126,6 @@ Drawing.prototype.drawUI = function(health, praesidia) {
     }
     this.context.fillRect(70 + 10 * i, 10, 10, 10)
   }
-  this.context.fillStyle = Drawing.UI_COLOR;
-  this.context.fillRect(700, 0, 100, 600);
-  this.context.fillStyle = Drawing.UI_ITEM_COLOR;
-  this.context.fillRect(710, 10, 80, 80);
 };
 
 /**
@@ -134,16 +146,4 @@ Drawing.prototype.drawTiles = function(topLeft, bottomRight) {
     }
   }
   this.context.restore();
-}
-
-function roundedRect(context, x, y, width, height, radius, fill, stroke) {
-  context.beginPath();
-  context.moveTo(x + radius, y);
-  context.lineTo(x + width - radius, y);
-  context.quadraticCurveTo(x + width, y, x + width, y + radius);
-  context.lineTo(x + width, y + height - radius);
-  context.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-  context.lineTo(x + radius, y + height);
-  context.quadraticCurveTo(x, y + height);
-  
 }

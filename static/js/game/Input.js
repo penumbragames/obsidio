@@ -1,6 +1,6 @@
 /**
  * This class keeps track of the user input in global variables.
- * @author Alvin Lin (alvin.lin@stuypulse.com)
+ * @author Kenneth Li (kennethli.3470@gmail.com)
  */
 
 /**
@@ -17,9 +17,11 @@ Input.LEFT = false;
 Input.UP = false;
 Input.RIGHT = false;
 Input.DOWN = false;
+Input.LEFT_CLICKED = false;
 
 Input.onTouchStart = function(e) {
   Input.TOUCH = true;
+  Input.onMouseMove(e);
 };
 
 Input.onTouchEnd = function(e) {
@@ -27,7 +29,14 @@ Input.onTouchEnd = function(e) {
 };
 
 Input.onMouseDown = function(e) {
+  var canvas = document.getElementById('canvas');
+  var rect = canvas.getBoundingClientRect();
   if (e.which == 1) {
+    if (Input.LEFT_CLICK) {
+      Input.LEFT_CLICKED = false;
+    } else {
+      Input.LEFT_CLICKED = true;
+    }
     Input.LEFT_CLICK = true;
   } else if (e.which == 3) {
     Input.RIGHT_CLICK = true;
@@ -36,6 +45,7 @@ Input.onMouseDown = function(e) {
 
 Input.onMouseUp = function(e) {
   if (e.which == 1) {
+    Input.LEFT_CLICKED = false;
     Input.LEFT_CLICK = false;
   } else if (e.which == 3) {
     Input.RIGHT_CLICK = false;

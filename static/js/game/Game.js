@@ -34,6 +34,17 @@ function Game(socket, canvas, leaderboard) {
   this.latency = 0;
 };
 
+Game.ACTION_STATES = {
+  NONE: -1,
+  CONTROL: 0,
+  BUILD_PENDING: 1
+}
+
+Game.BUILD_TYPES = {
+  NONE: -1,
+  TURRET: 0
+}
+
 /**
  * Initializes the game and sets the game to respond to update packets from the
  * server.
@@ -42,6 +53,16 @@ Game.prototype.init = function() {
   var context = this;
   this.socket.on('update', function(data) {
     context.receiveGameState(data);
+  });
+  this.drawing.init(function(type) {
+    console.log('Building ' + type);
+    if (context.currentActionState == Game.ACTION_STATES.BUILD_PENDING) {
+      context.currentActionState = Game.ACTION_STATES.CONTROL;
+      context.currentBuildType = Game.BUILD_TYPES.NONE;
+    } else {
+      context.currentActionState = Game.ACTION_STATES.BUILD_PENDING;
+      context.currentBuildType = type;
+    }
   });
 };
 
@@ -59,6 +80,9 @@ Game.prototype.receiveGameState = function(state) {
   this.praesidia = state.praesidia;
   this.turrets = state.turrets;
   this.latency = state.latency;
+
+  this.currentActionState = Game.ACTION_STATES.NONE;
+  this.currentBuildType = Game.BUILD_TYPES.NONE;
 };
 
 /**
@@ -69,10 +93,25 @@ Game.prototype.update = function() {
   if (this.self) {
     this.viewPort.update(this.self.x, this.self.y);
 
+    var build = this.self.build;
     var orientation = Math.atan2(
       Input.MOUSE[1] - Constants.CANVAS_HEIGHT / 2,
       Input.MOUSE[0] - Constants.CANVAS_WIDTH / 2) + Math.PI / 2;
+    var shot = false;
 
+    if (Input.LEFT_CLICKED || Input.TOUCH) {
+      if (this.currentActionState == Game.ACTION_STATES.BUILD_PENDING) {
+        build = {
+          type: this.currentBuildType,
+          x: this.self.x,
+          y: this.self.y
+        }
+        gameState = Game.ACTION_STATES.CONTROL;
+      } else {
+        shot = true;
+      }
+    }
+    
     // Emits an event for the containing the player's intention to move
     // or shoot to the server.
     var packet = {
@@ -83,7 +122,8 @@ Game.prototype.update = function() {
         left: Input.LEFT
       },
       orientation: orientation,
-      shot: Input.LEFT_CLICK || Input.TOUCH,
+      shot: shot,
+      build: build,
       timestamp: (new Date()).getTime()
     };
     this.socket.emit('player-action', packet);
