@@ -13,12 +13,6 @@ var chat = new Chat(socket,
                     document.getElementById('chat-input'));
 
 $(document).ready(function() {
-  socket.emit('new-player', {
-        name: "test"
-        // name: name
-  });
-      
-  /*
   $('#name-input').focus();
 
   function send_name() {
@@ -27,9 +21,10 @@ $(document).ready(function() {
       // The server will associate our socket id with this player and
       // any move commands will be sent with our ID after the server
       // sends back our ID.
+
+      // @todo: Move to server side
       socket.emit('new-player', {
-       name: "test"
-        // name: name
+        name: name
       });
       $('#name-prompt-container').empty();
       $('#name-prompt-container').append(
@@ -41,7 +36,6 @@ $(document).ready(function() {
   };
   $('#name-form').submit(send_name);
   $('#name-submit').click(send_name);
-  */
 
   socket.on('received-new-player', function(data) {
     // This is fired when the server receives the instance of our player.

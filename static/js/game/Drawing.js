@@ -28,6 +28,7 @@ Drawing.PRAESIDIUM_SRC = Drawing.BASE_IMG_URL + 'praesidium.png';
 Drawing.NEUTRAL_TURRET_SRC = Drawing.BASE_IMG_URL + 'neutral_turret.png';
 Drawing.SELF_TURRET_SRC = Drawing.BASE_IMG_URL + 'self_turret.png';
 Drawing.OTHER_TURRET_SRC = Drawing.BASE_IMG_URL + 'other_turret.png';
+Drawing.WALL_SRC = Drawing.BASE_IMG_URL + 'wall.png';
 Drawing.TILE_SRC = Drawing.BASE_IMG_URL + 'tile.png';
 Drawing.CANCEL_SRC = Drawing.BASE_IMG_URL + 'cancel.png';
 
@@ -37,15 +38,18 @@ Drawing.PRAESIDIUM_SIZE = [32, 32];
 Drawing.CONSTRUCT_SIZE = [64, 64];
 Drawing.TILE_SIZE = 100;
 
-Drawing.NEUTRAL_CONSTRUCT_SRC = [Drawing.NEUTRAL_TURRET_SRC, '', '', '', '', ''];
+Drawing.NEUTRAL_CONSTRUCT_SRC = [Drawing.NEUTRAL_TURRET_SRC, '', '',
+                                 Drawing.WALL_SRC, '', ''];
 Drawing.NEUTRAL_CONSTRUCT_IMG = [new Image(), new Image(), new Image(),
                                  new Image(), new Image(), new Image()];
 
-Drawing.SELF_CONSTRUCT_SRC = [Drawing.SELF_TURRET_SRC, '', '', '', '', ''];
+Drawing.SELF_CONSTRUCT_SRC = [Drawing.SELF_TURRET_SRC, '', '',
+                              Drawing.WALL_SRC, '', ''];
 Drawing.SELF_CONSTRUCT_IMG = [new Image(), new Image(), new Image(),
                               new Image(), new Image(), new Image()];
 
-Drawing.OTHER_CONSTRUCT_SRC = [Drawing.OTHER_TURRET_SRC, '', '', '', '', ''];
+Drawing.OTHER_CONSTRUCT_SRC = [Drawing.OTHER_TURRET_SRC, '', '',
+                               Drawing.WALL_SRC, '', ''];
 Drawing.OTHER_CONSTRUCT_IMG = [new Image(), new Image(), new Image(),
                                new Image(), new Image(), new Image()];
   

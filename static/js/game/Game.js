@@ -192,7 +192,6 @@ Game.prototype.draw = function() {
     for (var i = 0; i < this.constructs.length; ++i) {
       var constructCoords = this.viewPort.toCanvasCoords([this.constructs[i].x,
                                                           this.constructs[i].y]);
-      console.log(this.self.id);
       var owner = (this.self.id == this.constructs[i].owner) ? 'self' : 'other';
       this.drawing.drawConstruct(owner,
                                  constructCoords,
