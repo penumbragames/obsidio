@@ -158,10 +158,8 @@ Player.prototype.update = function(constructs, addPraesidiumCallback) {
       var offset = constructs[i].hitboxSize + this.hitboxSize;
       this.x = constructs[i].x + offset * Math.cos(angle);
       this.y = constructs[i].y + offset * Math.sin(angle);
-      break;
     }
   }
-
 
   if (this.isDead()) {
     var praesidiaPenalty = Math.floor(this.praesidia / 2);

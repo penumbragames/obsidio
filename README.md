@@ -1,5 +1,5 @@
 # Obsidio
-Obsidio is an online multiplayer battle arena game that takes place
+Obsidio is an multiplayer online battle arena game that takes place
 in a single large world. Anyone who logs on can battle anyone else that's
 online at the same time. To play, you move around and shoot other players
 while collecting the in-game resource, Praesidium. Once you have enough
