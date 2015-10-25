@@ -31,10 +31,13 @@ Drawing.TILE_SRC = Drawing.BASE_IMG_URL + 'tile.png';
 Drawing.PLAYER_SIZE = [64, 64];
 Drawing.PROJECTILE_SIZE = [8, 8];
 Drawing.PRAESIDIUM_SIZE = [32, 32];
-Drawing.TURRET_SIZE = [64, 64];
+Drawing.CONSTRUCT_SIZE = [64, 64];
 Drawing.TILE_SIZE = 100;
 
-Drawing.BUILD_IMAGES = [Drawing.TURRET_SRC, '', '', '', '', ''];
+Drawing.CONSTRUCT_SRC = [Drawing.TURRET_SRC, '', '', '', '', ''];
+Drawing.CONSTRUCTS = {
+  turret: 0
+}
   
 Drawing.prototype.init = function(startBuild, cancelBuild) {
   this.ui.setAttribute('id', 'ui');
@@ -104,16 +107,17 @@ Drawing.prototype.drawPraesidium = function(coords, quantity) {
   this.context.restore();
 };
 
-Drawing.prototype.drawTurret = function(coords) {
+Drawing.prototype.drawConstruct = function(coords, orientation, type) {
   this.context.save();
   this.context.translate(coords[0], coords[1]);
-  var turret = new Image();
-  turret.src = Drawing.TURRET_SRC;
-  this.context.drawImage(turret,
-                         -Drawing.TURRET_SIZE[0] / 2,
-                         -Drawing.TURRET_SIZE[1] / 2,
-                         Drawing.TURRET_SIZE[0],
-                         Drawing.TURRET_SIZE[1]);
+  this.context.rotate(orientation);
+  var construct = new Image();
+  construct.src = Drawing.BUILD_IMAGES[type];
+  this.context.drawImage(construct,
+                         -Drawing.CONSTRUCT_SIZE[0] / 2,
+                         -Drawing.CONSTRUCT_SIZE[1] / 2,
+                         Drawing.CONSTRUCT_SIZE[0],
+                         Drawing.CONSTRUCT_SIZE[1]);
   this.context.restore();
 }
 
