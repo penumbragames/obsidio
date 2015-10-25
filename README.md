@@ -54,5 +54,6 @@ the map.
 # Creators:
   - Alvin Lin (omgimanerd)
   - Kenneth Li (noobbyte)
+  - Hao Huang (HowYellow)
 
 &copy; 2015 Penumbra Games
