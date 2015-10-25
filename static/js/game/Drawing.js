@@ -82,7 +82,7 @@ Drawing.prototype.init = function(startBuild, cancelBuild) {
   }
 }
 
-Drawing.prototype.drawPlayer = function(isSelf, coords, orientation, name) {
+Drawing.prototype.drawPlayer = function(isSelf, coords, orientation, name, health) {
   this.context.save();
   this.context.translate(coords[0], coords[1]);
   this.context.rotate(orientation);
@@ -97,6 +97,24 @@ Drawing.prototype.drawPlayer = function(isSelf, coords, orientation, name) {
                          -Drawing.PLAYER_SIZE[1] / 2,
                          Drawing.PLAYER_SIZE[0],
                          Drawing.PLAYER_SIZE[1]);
+  this.context.restore();
+
+  this.context.save();
+  this.context.translate(coords[0], coords[1]);
+  var healthBarInterval = 96 / Constants.PLAYER_MAX_HEALTH;
+  for (var i = 0; i < Constants.PLAYER_MAX_HEALTH; ++i) {
+    if (i < health) {
+      this.context.fillStyle = Drawing.HP_COLOR;
+    } else {
+      this.context.fillStyle = Drawing.HP_MISSING_COLOR;
+    }
+    this.context.fillRect(-48 + healthBarInterval * i, -48,
+                          healthBarInterval, 8);
+  }
+  this.context.font = Drawing.FONT;
+  this.context.fillStyle = Drawing.FONT_COLOR;
+  this.context.textAlign = 'center';
+  this.context.fillText(name, 0, -56);
   this.context.restore();
 };
 

@@ -183,7 +183,8 @@ Game.prototype.draw = function() {
       false,
       this.viewPort.toCanvasCoords([this.players[i].x, this.players[i].y]),
       this.players[i].orientation,
-      this.players[i].name);
+      this.players[i].name,
+      this.players[i].health);
   }
     
   // Draw the UI and self player last.
@@ -226,7 +227,8 @@ Game.prototype.draw = function() {
       true,
       this.viewPort.toCanvasCoords([this.self.x, this.self.y]),
       this.self.orientation,
-      this.self.name);
+      this.self.name,
+      this.self.health);
   }
   
 };
