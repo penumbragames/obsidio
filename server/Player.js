@@ -14,26 +14,33 @@ var Util = require('../shared/Util');
  * @constructor
  * @param {number} x The x coordinate to generate the player at.
  * @param {number} y The y coordinate to generate the player at.
- * @param {number} orientation Direction to face the player from 0 to 2 * PI.
+ * @param {number} orientation This represents the direction the player will
+ *   face and is a radian measure.
+ * @param {number} hitboxSize The hitbox size of this player. This number
+ *   represents the radius of the circular hitbox in pixels.
  * @param {string} name The display name of the player.
  * @param {string} id The socket ID of the client associated with this
  *   player.
+ * @param {number} vmag The magnitude of the player's velocity in
+ *   pixels/millisecond.
+ * @param {number} shotCooldown The time between the player's shots in
+ *   milliseconds.
+ * @param {number} health The amount of health that the player starts with.
  */
-function Player(x, y, orientation, name, id) {
+function Player(x, y, orientation, hitboxSize, name, id,
+                vmag, shotCooldown, health) {
   this.x = x;
   this.y = y;
-  this.vx = 0;
-  this.vy = 0;
   this.orientation = orientation;
-  this.hitboxSize = Player.DEFAULT_HITBOX_SIZE;
+  this.hitboxSize = hitboxSize;
 
   this.name = name;
   this.id = id;
-  this.vmag = Player.DEFAULT_VELOCITY_MAGNITUDE;
-  this.shotCooldown = Player.DEFAULT_SHOT_COOLDOWN;
+  this.vmag = vmag;
+  this.shotCooldown = shotCooldown;
   this.lastShotTime = 0;
 
-  this.health = Player.MAX_HEALTH;
+  this.health = health;
   this.praesidia = 0;
   this.kills = 0;
   this.deaths = 0;
@@ -42,18 +49,15 @@ require('./inheritable');
 Player.inheritsFrom(Entity);
 
 /**
- * TURN_RATE is in radians per millisecond.
  * DEFAULT_VELOCITY_MAGNITUDE is in pixels per millisecond.
  * DEFAULT_SHOT_COOLDOWN is in milliseconds.
  * DEFAULT_HITBOX_SIZE is in pixels.
  * MAX_HEALTH is in health units.
- * MINIMUM_RESPAWN_BUFFER is a distance in pixels.
  */
 Player.DEFAULT_VELOCITY_MAGNITUDE = 0.3;
 Player.DEFAULT_SHOT_COOLDOWN = 800;
 Player.DEFAULT_HITBOX_SIZE = 24;
 Player.MAX_HEALTH = 10;
-Player.MINIMUM_RESPAWN_BUFFER = 1000;
 
 /**
  * Returns a new Player object given a name and id.
@@ -65,7 +69,12 @@ Player.MINIMUM_RESPAWN_BUFFER = 1000;
 Player.generateNewPlayer = function(name, id) {
   var point = Util.getRandomWorldPoint();
   var orientation = Util.randRange(0, 2 * Math.PI);
-  return new Player(point[0], point[1], orientation, name, id);
+  var hitboxSize = Player.DEFAULT_HITBOX_SIZE;
+  var vmag = Player.DEFAULT_VELOCITY_MAGNITUDE;
+  var shotCooldown = Player.DEFAULT_SHOT_COOLDOWN;
+  var health = Player.MAX_HEALTH;
+  return new Player(point[0], point[1], orientation, hitboxSize, name, id,
+                    vmag, shotCooldown, health);
 };
 
 /**
@@ -75,8 +84,13 @@ Player.generateNewPlayer = function(name, id) {
  *   client keyboard.
  * @param {number} orientation The angle of the client's mouse with respect
  *   to their player sprite.
+ * @param {boolean} shot This is true when the player is attempting to shoot.
+ *   It is equivalent to the state of the player's left click.
+ * @param {function()} addBulletCallback The function to call if the player
+ *   can shoot and has shot.
  */
-Player.prototype.updateOnInput = function(keyboardState, orientation) {
+Player.prototype.updateOnInput = function(keyboardState, orientation, shot,
+                                          addBulletCallback) {
   if (keyboardState.up) {
     this.vy = (keyboardState.left || keyboardState.right) ?
         -this.vmag / Math.SQRT2 : -this.vmag;
@@ -105,39 +119,38 @@ Player.prototype.updateOnInput = function(keyboardState, orientation) {
   }
 
   this.orientation = orientation;
+
+  if (shot && (new Date()).getTime() > this.lastShotTime + this.shotCooldown) {
+    this.lastShotTime = (new Date()).getTime();
+    addBulletCallback(this.x, this.y, this.orientation, this.id);
+  }
 };
 
 /**
  * Updates the player's position and powerup states, this runs in the 60Hz
  * server side loop so that powerups expire even when the player is not
  * moving or shooting.
+ * @param {function()} addPraesidiumCallback The function to call if the
+ *   player is dead and should drop a praesidium pallet.
  */
-Player.prototype.update = function() {
+Player.prototype.update = function(addPraesidiumCallback) {
   this.parent.update.call(this);
 
   var boundedCoord = Util.boundWorld(this.x, this.y);
   this.x = boundedCoord[0];
   this.y = boundedCoord[1];
-};
 
-/**
- * Returns a boolean indicating if the player's shot cooldown has passed and
- * the player can shoot.
- * @return {boolean}
- */
-Player.prototype.canShoot = function() {
-  return (new Date()).getTime() >
-    this.lastShotTime + this.shotCooldown;
-};
+  if (this.isDead()) {
+    var point = Util.getRandomWorldPoint();
+    this.x = point[0];
+    this.y = point[1];
+    this.health = Player.MAX_HEALTH;
+    this.deaths++;
 
-/**
- * Returns a bullet that the player has shot assuming that the player CAN
- * shoot. Resets lastShotTime.
- * @return {Bullet}
- */
-Player.prototype.getProjectileShot = function() {
-  this.lastShotTime = (new Date()).getTime();
-  return Bullet.create(this.x, this.y, this.orientation, this.id);
+    var praesidiaPenalty = Math.floor(this.praesidia / 2);
+    this.praesidia -= praesidiaPenalty;
+    addPraesidiumCallback(this.x, this.y, praesidiaPenalty);
+  }
 };
 
 /**
@@ -149,42 +162,11 @@ Player.prototype.isDead = function() {
 };
 
 /**
- * Damages the player by the given amount, factoring in shields.
+ * Damages the player by the given amount.
  * @param {number} amount The amount to damage the player by.
  */
 Player.prototype.damage = function(amount) {
   this.health -= amount;
-};
-
-/**
- * Handles the respawning of the player when killed.
- * @param {Array.<Player>} players An array of players to check against for
- *   smart respawning.
- * @todo The player respawn calculation with the minimum buffer doesn't quite
- *   work.
- */
-Player.prototype.respawn = function(players) {
-  var point = Util.getRandomWorldPoint();
-  var isValidSpawn = false;
-  var iter = 0;
-  while (!isValidSpawn || iter < 15) {
-    isValidSpawn = true;
-    for (var i = 0; i < players; ++i) {
-      if (Util.getEuclideanDistance2(point[0], point[1],
-                                     players[i].x, players[i].y) <
-          Player.MINIMUM_RESPAWN_BUFFER * Player.MINIMUM_RESPAWN_BUFFER) {
-        isValidSpawn = false;
-        continue;
-      }
-    }
-    point = Util.getRandomWorldPoint();
-    iter++;
-  }
-
-  this.x = point[0];
-  this.y = point[1];
-  this.health = Player.MAX_HEALTH;
-  this.deaths++;
 };
 
 module.exports = Player;

@@ -41,7 +41,14 @@ function Game() {
   this.praesidia = [];
 }
 
-Game.MAX_PRAESIDIA = 20;
+/**
+ * MIN_PRAESIDIA is the minimum number of praesidia resource pallets that
+ * should exist on the map.
+ * MAX_LEADERBOARD_PLAYERS is the maximum amount of players that will be
+ * displayed on the leaderboard.
+ */
+Game.MIN_PRAESIDIA = 20;
+Game.MAX_LEADERBOARD_PLAYERS = 15;
 
 /**
  * Creates a new player with the given name and ID.
@@ -98,15 +105,15 @@ Game.prototype.getPlayerNameBySocketId = function(id) {
  * @param {number} timestamp The timestamp of the packet sent.
  */
 Game.prototype.updatePlayerOnInput = function(id, keyboardState, orientation,
-                                       shot, timestamp) {
+                                              shot, timestamp) {
   var player = this.players.get(id);
   var client = this.clients.get(id);
   if (player) {
-    player.updateOnInput(keyboardState, orientation);
-    if (shot && player.canShoot()) {
-      this.projectiles.push(
-        player.getProjectileShot());
-    }
+    var context = this;
+    player.updateOnInput(keyboardState, orientation, shot,
+                         function(x, y, orientation, id) {
+      context.addBullet(x, y, orientation, id);
+    });
   }
   if (client) {
     client.latency = (new Date()).getTime() - timestamp;
@@ -114,13 +121,53 @@ Game.prototype.updatePlayerOnInput = function(id, keyboardState, orientation,
 };
 
 /**
+ * This function adds a bullet to the game's internal object arrays.
+ * @param {number} x The starting x-coordinate of the bullet.
+ * @param {number} y The starting y-coordinate of the bullet.
+ * @param {number} direction The direction the bullet will travel, as an
+ *   angle in radians.
+ * @param {string} source The socket ID of the player that fired the
+ *   bullet.
+ */
+Game.prototype.addBullet = function(x, y, direction, source) {
+  this.projectiles.push(Bullet.create(x, y, direction, source));
+};
+
+/**
+ * This function adds a turret to the game's internal object arrays.
+ * @param {number} x The x coordinate of this turret.
+ * @param {number} y The y coordinate of this turret.
+ * @param {number} orientation The orientation of this turret in radians.
+ * @param {string} owner The socket ID of the player that placed this
+ *   turret.
+ */
+Game.prototype.addTurret = function(x, y, orientation, owner) {
+  this.turrets.push(Turret.create(x, y, orientation, owner));
+};
+
+/**
+ * This function adds a praesidium pallet to the game's internal object arrays.
+ * @param {number} x The x coordinate of this praesidium pallet.
+ * @param {number} y The y coordinate of this praesidium pallet.
+ * @param {number} quantity The amount of praesidium that this pallet will
+ *   give upon pickup.
+ */
+Game.prototype.addPraesidium = function(x, y, quantity) {
+  this.praesidia.push(Praesidium.create(x, y, quantity));
+};
+
+/**
  * Updates the state of all the objects in the game.
  */
 Game.prototype.update = function() {
+  var context = this;
+
   // Update all the players.
   var players = this.players.values();
   for (var i = 0; i < players.length; ++i) {
-    players[i].update();
+    players[i].update(function(x, y, quantity) {
+      context.addPraesidium(x, y, quantity);
+    });
   }
 
   // Update all the projectiles.
@@ -135,7 +182,9 @@ Game.prototype.update = function() {
   // Update all the turrets.
   for (var i = 0; i < this.turrets.length; ++i) {
     if (this.turrets[i].shouldExist) {
-      this.turrets.update(this.players);
+      this.turrets.update(this.players, function(x, y, direction, source) {
+        context.addBullet(x, y, direction, source);
+      });
     } else {
       this.turrets.splice(i--, 1);
     }
@@ -149,7 +198,7 @@ Game.prototype.update = function() {
       this.praesidia.splice(i--, 1);
     }
   }
-  while (this.praesidia.length < Game.MAX_PRAESIDIA) {
+  while (this.praesidia.length < Game.MIN_PRAESIDIA) {
     this.praesidia.push(Praesidium.generateRandomPraesidium());
   }
 };
@@ -167,7 +216,7 @@ Game.prototype.sendState = function() {
     }
   }).sort(function(a, b) {
     return b.kills - a.kills;
-  }).slice(0, 10);
+  }).slice(0, Game.MAX_LEADERBOARD_PLAYERS);
 
   var ids = this.clients.keys();
   for (var i = 0; i < ids.length; ++i) {
