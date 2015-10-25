@@ -5,6 +5,7 @@
 
 var Bullet = require('./Bullet');
 var Entity = require('./Entity');
+var Praesidium = require('./Praesidium');
 
 var Constants = require('../shared/Constants');
 var Util = require('../shared/Util');
@@ -49,7 +50,7 @@ Construct.inheritsFrom(Entity);
  * MINIMUM_SHOOTING_DISTANCE_SQUARED is the squared distance at which the
  * the Construct will start shooting at a player if it is a turret.
  */
-Construct.MAX_HEALTH = 5;
+Construct.MAX_HEALTH = 4;
 Construct.HITBOX_SIZE = 32;
 Construct.TURRET_SHOT_COOLDOWN = 750;
 Construct.TURRET_MINIMUM_SHOOTING_DISTANCE_SQUARED = 100000;
@@ -129,7 +130,8 @@ Construct.prototype.getTarget = function(players, constructs) {
  *   this construct fires a bullet.
  * @param {Array.<Construct>} The array of existing constructs on the server.
  */
-Construct.prototype.update = function(clients, constructs, addBulletCallback) {
+Construct.prototype.update = function(clients, constructs, addBulletCallback,
+                                      addPraesidiumCallback) {
   switch (this.type) {
     // Behavior if this construct is a turret.
     case Constants.CONSTRUCT_TYPES.TURRET:
@@ -149,6 +151,11 @@ Construct.prototype.update = function(clients, constructs, addBulletCallback) {
 
   if (this.isDead()) {
     this.shouldExist = false;
+
+    var destroyPraesidia = Math.floor(
+        Constants.CONSTRUCT_REQUIREMENT[this.type] * 0.3);
+    addPraesidiumCallback(Praesidium.create(this.x, this.y,
+                                            destroyPraesidia));
   }
 };
 

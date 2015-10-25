@@ -157,8 +157,8 @@ Game.prototype.update = function() {
   // Update all the players.
   var players = this.players.values();
   for (var i = 0; i < players.length; ++i) {
-    players[i].update(function(x, y, quantity) {
-      context.addPraesidium(x, y, quantity);
+    players[i].update(function(praesidium) {
+      context.addPraesidium(praesidium);
     });
   }
 
@@ -176,6 +176,8 @@ Game.prototype.update = function() {
     if (this.constructs[i].shouldExist) {
       this.constructs[i].update(this.players, this.constructs, function(bullet) {
         context.addBullet(bullet);
+      }, function(praesidium) {
+        context.addPraesidium(praesidium);
       });
     } else {
       this.constructs.splice(i--, 1);
