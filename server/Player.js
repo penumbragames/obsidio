@@ -129,9 +129,10 @@ Player.prototype.updateOnInput = function(keyboardState, orientation, shot,
     addBulletCallback(Bullet.create(this.x, this.y, this.orientation, this.id));
   }
 
+
+//      Util.getEuclideanDistance(this.x, this.y, build.x, build.y) <
+//      Constants.CONSTRUCT_BUILD_RADIUS
   if (build &&
-      Util.getEuclideanDistance(this.x, this.y, build.x, build.y) <
-      Constants.CONSTRUCT_BUILD_RADIUS &&
       this.praesidia >= Constants.CONSTRUCT_REQUIREMENT[build.type]) {
     addConstructCallback(Construct.create(build.x, build.y, 0, this.id,
                                           build.type));
