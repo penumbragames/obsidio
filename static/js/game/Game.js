@@ -230,5 +230,4 @@ Game.prototype.draw = function() {
       this.self.name,
       this.self.health);
   }
-  
 };
