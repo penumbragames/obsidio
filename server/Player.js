@@ -129,8 +129,8 @@ Player.prototype.updateOnInput = function(keyboardState, orientation, shot,
   }
 
   if (build) {
-    addConstructCallback(Turret.create(build.type, build.x, build.y, 0,
-                                       this.id));
+    addConstructCallback(Construct.create(build.x, build.y, 0, this.id,
+                                          build.type));
   }
 };
 
