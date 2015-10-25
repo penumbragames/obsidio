@@ -36,9 +36,7 @@ Constants.CONSTRUCT_TYPES = {
   TURRET: 0
 };
 
-Constants.CONSTRUCT_REQ = [
-  0: 75
-];
+Constants.CONSTRUCT_REQ = [ 75 ];
 
 try {
   module.exports = Constants;
