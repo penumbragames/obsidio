@@ -13,8 +13,6 @@ function Constants() {
 
 /**
  * The world will always be a square, so there's no need for an x and y max.
- * WORLD and CANVAS constants should mirror those in the client side
- * JavaScript.
  * All values are in pixels.
  */
 Constants.WORLD_MIN = 0;
