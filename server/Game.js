@@ -41,7 +41,13 @@ function Game() {
   this.praesidia = [];
 }
 
-Game.MAX_PRAESIDIA = 20;
+/**
+ * MIN_PRAESIDIA is the minimum number of praesidia resource pallets that
+ * should exist on the map.
+ * MAX_LEADERBOARD_PLAYERS is the maximum amount of players that will be
+ * displayed on the leaderboard.
+ */
+Game.MIN_PRAESIDIA = 20;
 Game.MAX_LEADERBOARD_PLAYERS = 15;
 
 /**
@@ -192,7 +198,7 @@ Game.prototype.update = function() {
       this.praesidia.splice(i--, 1);
     }
   }
-  while (this.praesidia.length < Game.MAX_PRAESIDIA) {
+  while (this.praesidia.length < Game.MIN_PRAESIDIA) {
     this.praesidia.push(Praesidium.generateRandomPraesidium());
   }
 };
