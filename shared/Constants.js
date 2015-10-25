@@ -36,23 +36,35 @@ Constants.VISIBILITY_THRESHOLD_Y = 325;
 Constants.CONSTRUCT_TYPES = {
   NONE: -1,
   TURRET: 0,
-  WALL: 3
+  WALL: 3,
+  HEALER: 4
 };
 
 /**
  * Indicates the praesidium cost of a Construct, indexed by the
- * CONSTRUCT_TYPES
+ * CONSTRUCT_TYPES.
  * TURRET: 75
  * WALL: 15
+ * HEALER: 50
  */
 Constants.CONSTRUCT_REQUIREMENT = [30, 0, 0, 15, 0, 0];
+
+/**
+ * Indicates the cooldown of the action of a Construct in milliseconds, indexed
+ * by the CONSTRUCT_TYPES.
+ * TURRET: 500
+ * WALL: 0
+ * HEALER: 2500
+ */
+Constants.CONSTRUCT_ACTION_COOLDOWN = [500, 0, 0, 0, 2500, 0];
 
 /**
  * Indicates the maximum health of a Construct, indexed by CONSTRUCT_TYPES
  * TURRET: 6
  * WALL: 10
+ * HEALER: 6
  */
-Constants.CONSTRUCT_MAX_HEALTH = [6, 0, 0, 10, 0, 0];
+Constants.CONSTRUCT_MAX_HEALTH = [6, 0, 0, 10, 6, 0];
 
 /**
  * This is the maximum distance away from the player that a Construct can be

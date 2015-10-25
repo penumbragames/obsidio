@@ -21,10 +21,12 @@ var Util = require('../shared/Util');
  * @param {string} owner The socket ID of the player that placed this
  *   construct.
  * @param {string} type The type that this construct is.
+ * @param {number} actionCooldown The time between the construct's actions in
+ *   milliseconds.
  * @param {number} health This is the amount of health the construct starts
  *   with.
  */
-function Construct(x, y, orientation, hitboxSize, owner, type, shotCooldown,
+function Construct(x, y, orientation, hitboxSize, owner, type, actionCooldown,
                    health) {
   this.x = x;
   this.y = y;
@@ -34,8 +36,8 @@ function Construct(x, y, orientation, hitboxSize, owner, type, shotCooldown,
   this.owner = owner;
   this.type = type;
 
-  this.lastShotTime = 0;
-  this.shotCooldown = shotCooldown;
+  this.lastActionTime = 0;
+  this.actionCooldown = actionCooldown;
   this.health = health;
 
   this.shouldExist = true;
@@ -44,13 +46,15 @@ require('./inheritable');
 Construct.inheritsFrom(Entity);
 
 /**
- * TURRET_SHOT_COOLDOWN is the time in milliseconds between each construct shot.
  * TURRET_MINIMUM_SHOOTING_DISTANCE_SQUARED is the squared distance at which
  * the Construct will start shooting at a player if it is a turret.
+ * HEALER_MINIMUM_HEALING_DISTANCE_SQUARED is the squared distance at which
+ * the Construct will start healing a player.
  * HITBOX_SIZE is the radial size of the Construct hitbox in pixels.
  */
-Construct.TURRET_SHOT_COOLDOWN = 750;
 Construct.TURRET_MINIMUM_SHOOTING_DISTANCE_SQUARED = 100000;
+Construct.HEALER_MINIMUM_HEALING_DISTANCE_SQUARED = 16384;
+Construct.HEALER_HEAL_AMOUNT = 1;
 Construct.HITBOX_SIZE = 24;
 
 /**
@@ -64,20 +68,20 @@ Construct.HITBOX_SIZE = 24;
  */
 Construct.create = function(x, y, orientation, owner, type) {
   var hitboxSize = Construct.HITBOX_SIZE;
-  var shotCooldown = Construct.TURRET_SHOT_COOLDOWN;
+  var actionCooldown = Constants.CONSTRUCT_ACTION_COOLDOWN[type];
   var health = Constants.CONSTRUCT_MAX_HEALTH[type];
-  return new Construct(x, y, orientation, hitboxSize, owner, type, shotCooldown,
-                       health);
+  return new Construct(x, y, orientation, hitboxSize, owner, type,
+                       actionCooldown, health);
 };
 
 /**
  * Given an array of players, this function returns a player that the construct
- * will fire at if this construct is a turret. This does not perform a type
- * check on the construct object and will assume it is of type turret.
+ * will target at if this construct has a targetable action. This does not
+ * perform a type check on the construct object.
  * @param {Array.<Player>} players The array of players to check.
  * @param {Array.<Construct>} constructs The array of constructs to check.
  */
-Construct.prototype.getTarget = function(players, constructs) {
+Construct.prototype.getTarget = function(players, constructs, threshold) {
   var target = null;
 
   for (var i = 0; i < players.length; ++i) {
@@ -92,7 +96,7 @@ Construct.prototype.getTarget = function(players, constructs) {
       target = players[i];
     } else if (Util.getEuclideanDistance2(this.x, this.y,
                                           players[i].x, players[i].y) <
-               Construct.TURRET_MINIMUM_SHOOTING_DISTANCE_SQUARED) {
+               threshold) {
       target = players[i];
     }
   }
@@ -112,7 +116,7 @@ Construct.prototype.getTarget = function(players, constructs) {
       target = constructs[i];
     } else if (Util.getEuclideanDistance2(this.x, this.y,
                                           constructs[i].x, constructs[i].y) <
-               Construct.TURRET_MINIMUM_SHOOTING_DISTANCE_SQUARED) {
+               threshold) {
       target = constructs[i];
     }
   }
@@ -134,12 +138,15 @@ Construct.prototype.update = function(clients, constructs, addBulletCallback,
     // Behavior if this construct is a turret.
     case Constants.CONSTRUCT_TYPES.TURRET:
       var players = clients.values();
-      var target = this.getTarget(players, constructs);
+      var target = this.getTarget(
+          players, constructs,
+          Construct.TURRET_MINIMUM_SHOOTING_DISTANCE_SQUARED);
       if (target) {
         this.orientation = -Math.atan2(target.x - this.x, target.y - this.y) +
             Math.PI;
-        if ((new Date()).getTime() > this.lastShotTime + this.shotCooldown) {
-          this.lastShotTime = (new Date()).getTime();
+        if ((new Date()).getTime() >
+            this.lastActionTime + this.actionCooldown) {
+          this.lastActionTime = (new Date()).getTime();
           addBulletCallback(Bullet.create(
               this.x, this.y, this.orientation, this.owner));
         }
@@ -148,6 +155,19 @@ Construct.prototype.update = function(clients, constructs, addBulletCallback,
 
     // Behavior if this construct is a wall.
     case Constants.CONSTRUCT_TYPES.WALL:
+      break;
+
+    // Behavior if this construct is a healer.
+    case Constants.CONSTRUCT_TYPES.HEALER:
+      var owner = clients.get(this.owner);
+      if (Util.getEuclideanDistance2(this.x, this.y, owner.x, owner.y) <
+          Construct.HEALER_MINIMUM_HEALING_DISTANCE_SQUARED) {
+        if ((new Date()).getTime() >
+            this.lastActionTime + this.actionCooldown) {
+          owner.heal(Construct.HEALER_HEAL_AMOUNT);
+          this.lastActionTime = (new Date()).getTime();
+        }
+      }
       break;
   }
 

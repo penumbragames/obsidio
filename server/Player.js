@@ -191,7 +191,15 @@ Player.prototype.isDead = function() {
  * @param {number} amount The amount to damage the player by.
  */
 Player.prototype.damage = function(amount) {
-  this.health -= amount;
+  this.health = Math.max(this.health - amount, 0);
+};
+
+/**
+ * Heals the player by the given amount.
+ * @param {number} amount The amount to heal the player by.
+ */
+Player.prototype.heal = function(amount) {
+  this.health = Math.min(this.health + amount, Constants.PLAYER_MAX_HEALTH);
 };
 
 module.exports = Player;
