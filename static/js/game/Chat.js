@@ -1,7 +1,7 @@
 /**
  * This class handles the sending and receiving of chat messages as well as
  * their display. Chat messages will use the same socket as the game.
- * @author Alvin Lin (alvin.lin@stuypulse.com)
+ * @author Alvin Lin (omgimanerd1998@gmail.com)
  */
 
 /**
@@ -39,7 +39,8 @@ Chat.prototype.init = function() {
  * @param {string} name The name of the message sender.
  * @param {string} message The content of the message.
  * @param {boolean} isNotification Whether or not this message is an
- *   administrative notification.
+ *   administrative notification. This will set the notification class to
+ *   the added message's container.
  */
 Chat.prototype.receiveMessage = function(name, message, isNotification) {
   var element = document.createElement('li');

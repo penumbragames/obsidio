@@ -71,12 +71,12 @@ function startBuild(context, type) {
   context.currentActionState = Game.ACTION_STATES.BUILD_PENDING;
   context.currentBuildType = type;
   for (var i = 0; i < buildOptions.length; ++i) {
-    buildOptions[i].style.backgroundImage =
-      'url(' + Drawing.CANCEL_SRC + '), url(' + Drawing.NEUTRAL_CONSTRUCT_SRC[i] + ')';
-  }      
+    buildOptions[i].style.backgroundImage = 'url(' + Drawing.CANCEL_SRC +
+        '), url(' + Drawing.NEUTRAL_CONSTRUCT_SRC[i] + ')';
+  }
 };
 
-function cancelBuild(context) {  
+function cancelBuild(context) {
   var buildOptions = document.getElementsByClassName('ui-build-option');
   context.currentActionState = Game.ACTION_STATES.CONTROL;
   context.currentBuildType = Constants.CONSTRUCT_TYPES.NONE;
@@ -133,7 +133,7 @@ Game.prototype.update = function() {
         }
       }
     }
-    
+
     // Emits an event for the containing the player's intention to move
     // or shoot to the server.
     var packet = {
@@ -169,14 +169,15 @@ Game.prototype.draw = function() {
       this.viewPort.toCanvasCoords([this.praesidia[i].x, this.praesidia[i].y]),
       this.praesidia[i].quantity);
   }
-  
+
   // Draw the projectiles.
   for (var i = 0; i < this.projectiles.length; ++i) {
     this.drawing.drawProjectile(
-      this.viewPort.toCanvasCoords([this.projectiles[i].x, this.projectiles[i].y]),
+      this.viewPort.toCanvasCoords(
+          [this.projectiles[i].x, this.projectiles[i].y]),
       this.projectiles[i].orientation);
   }
-  
+
   // Draw any other players.
   for (var i = 0; i < this.players.length; ++i) {
     this.drawing.drawPlayer(
@@ -186,13 +187,13 @@ Game.prototype.draw = function() {
       this.players[i].name,
       this.players[i].health);
   }
-    
+
   // Draw the UI and self player last.
   if (this.self) {
     // Draw constructs.
     for (var i = 0; i < this.constructs.length; ++i) {
-      var constructCoords = this.viewPort.toCanvasCoords([this.constructs[i].x,
-                                                          this.constructs[i].y]);
+      var constructCoords = this.viewPort.toCanvasCoords(
+          [this.constructs[i].x, this.constructs[i].y]);
       var owner = (this.self.id == this.constructs[i].owner) ? 'self' : 'other';
       this.drawing.drawConstruct(owner,
                                  constructCoords,
@@ -200,8 +201,8 @@ Game.prototype.draw = function() {
                                  this.constructs[i].health,
                                  this.constructs[i].type);
     }
-    
-    // Draw build HUD.
+
+    // Draw build UI.
     if (this.currentActionState == Game.ACTION_STATES.BUILD_PENDING) {
       var requirement = Constants.CONSTRUCT_REQUIREMENT[this.currentBuildType];
       var mouseCoords = this.viewPort.toAbsoluteCoords(Input.MOUSE);
@@ -221,7 +222,7 @@ Game.prototype.draw = function() {
       this.drawing.context.globalAlpha = 1;
     }
     this.drawing.drawUI(this.self.health, this.self.praesidia);
-    
+
     // Draw the player.
     this.drawing.drawPlayer(
       true,

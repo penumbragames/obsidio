@@ -1,5 +1,8 @@
 /**
- * Methods for drawing all the sprites onto the HTML5 canvas.
+ * Methods for drawing all the sprites onto the HTML5 canvas. All coordinates
+ * passed the methods of the Drawing class should be canvas coordinates and not
+ * absolute game coordinates. They must be passed through the ViewPort class
+ * before coming into the Drawing class.
  * @author Kenneth Li (kennethli.3470@gmail.com)
  */
 
@@ -14,6 +17,9 @@ function Drawing(context) {
   this.ui = document.createElement('div');
 };
 
+/**
+ * Constants for the Drawing class.
+ */
 Drawing.FONT = '14px Helvetica';
 Drawing.FONT_COLOR = 'black';
 
@@ -57,13 +63,21 @@ Drawing.OTHER_CONSTRUCT_SRC = [Drawing.OTHER_TURRET_SRC, '', '',
 Drawing.OTHER_CONSTRUCT_IMG = [new Image(), new Image(), new Image(),
                                new Image(), new Image(), new Image()];
 
+/**
+ * Initializes the Drawing object.
+ * @param {function()} startBuild This is a callback function to call when
+ *   the player clicks on the UI to build a construct.
+ * @param {function()} cancelBuild This is callback function to call when the
+ *   user cancels a pending build.
+ */
 Drawing.prototype.init = function(startBuild, cancelBuild) {
   this.ui.setAttribute('id', 'ui');
 
   for (var i = 0; i < 6; ++i) {
     var buildOption = document.createElement('div');
     buildOption.setAttribute('class', 'ui-build-option');
-    buildOption.style.backgroundImage = 'url(' + Drawing.SELF_CONSTRUCT_SRC[i] + ')';
+    buildOption.style.backgroundImage = 'url(' +
+      Drawing.SELF_CONSTRUCT_SRC[i] + ')';
     (function(j) {
       buildOption.onclick = function(e) {
         startBuild(j);
@@ -86,6 +100,18 @@ Drawing.prototype.init = function(startBuild, cancelBuild) {
   }
 }
 
+/**
+ * Draws a player on the canvas.
+ * @param {boolean} isSelf This is true if we want this method to draw the
+ *   client player and false if we want to draw an enemy player.
+ * @param {[number, number]} coords The canvas coordinates to draw the player
+ *   at.
+ * @param {number} orientation The orientation of the player in radians.
+ * @param {string} name The name of the player, which will be displayed above
+ *   the player sprite.
+ * @param {number} health The health of the player to display in the healthbar
+ *   above their sprite.
+ */
 Drawing.prototype.drawPlayer = function(isSelf, coords, orientation, name, health) {
   this.context.save();
   this.context.translate(coords[0], coords[1]);
@@ -122,6 +148,12 @@ Drawing.prototype.drawPlayer = function(isSelf, coords, orientation, name, healt
   this.context.restore();
 };
 
+/**
+ * Draws a projectile on the canvas.
+ * @param {[number, number]} coords The canvas coordinates to generate the
+ *   projectile at.
+ * @param {number} orientation The orientation of the projectile in radians.
+ */
 Drawing.prototype.drawProjectile = function(coords, orientation) {
   this.context.save();
   this.context.translate(coords[0], coords[1]);
@@ -136,7 +168,12 @@ Drawing.prototype.drawProjectile = function(coords, orientation) {
   this.context.restore();
 };
 
-Drawing.prototype.drawPraesidium = function(coords, quantity) {
+/**
+ * Draws a praesidium pallet at the given coordinates.
+ * @param {[number, number]} coords The canvas coordinates to draw the
+ *   praesidium pallet at.
+ */
+Drawing.prototype.drawPraesidium = function(coords) {
   this.context.save();
   this.context.translate(coords[0], coords[1]);
   var praesidium = new Image();
@@ -149,7 +186,18 @@ Drawing.prototype.drawPraesidium = function(coords, quantity) {
   this.context.restore();
 };
 
-Drawing.prototype.drawConstruct = function(owner, coords, orientation, health, type) {
+/**
+ * Draws a construct on the canvas.
+ * @param {string} owner A string that is either 'self', 'other', or 'neutral'
+ *   to determine how to draw the construct.
+ * @param {[number, number]} coords The canvas coordinates to draw the
+ *   construct at.
+ * @param {number} orientation The orientation of the construct in radians.
+ * @param {number} health The health of the construct.
+ * @param {number} type The type of the construct as defined in Constants.
+ */
+Drawing.prototype.drawConstruct = function(owner, coords, orientation,
+                                           health, type) {
   this.context.save();
   this.context.translate(coords[0], coords[1]);
   this.context.rotate(orientation);
@@ -194,6 +242,11 @@ Drawing.prototype.drawRange = function(coords, radius, color) {
   this.context.globalAlpha = 1;
 }
 
+/**
+ * Draws the UI that shows the player's health and praesidia level.
+ * @param {number} health The health of the player.
+ * @param {number} praesidia The amount of praesidia the player has.
+ */
 Drawing.prototype.drawUI = function(health, praesidia) {
   this.context.fillStyle = '#AAAAAA';
   this.context.fillRect(0, 0, 200, 50);
@@ -218,7 +271,6 @@ Drawing.prototype.drawUI = function(health, praesidia) {
  * @param {[number, number]} bottomRight The coordinates of the
  *   bottom-rightmost point to stop laying the tiles down at.
  */
-
 Drawing.prototype.drawTiles = function(topLeft, bottomRight) {
   this.context.save();
   var tile = new Image();
