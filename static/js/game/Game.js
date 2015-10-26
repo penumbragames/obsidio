@@ -16,8 +16,7 @@
  * @param {Environment} environment The Environment object that handles the
  *   drawing of the game environment.
  */
-function Game(socket, leaderboard, drawing, viewPort,
-              environment) {
+function Game(socket, leaderboard, drawing, viewPort, environment) {
   this.socket = socket;
 
   this.leaderboard = leaderboard;
@@ -45,17 +44,17 @@ Game.ACTION_STATES = {
 /**
  * Factory method to create a Game object.
  * @param {Socket} socket The socket connected to the server.
- * @param {Element} canvasEl The canvas element that the game will use to
+ * @param {Element} canvasElement The canvas element that the game will use to
  *   draw to.
- * @param {Element} leaderboardEl The div element that the game will draw
+ * @param {Element} leaderboardElement The div element that the game will draw
  *   the leaderboard to.
  */
-Game.create = function(socket, canvasEl, leaderboardEl) {
-  canvasEl.width = Constants.CANVAS_WIDTH;
-  canvasEl.height = Constants.CANVAS_HEIGHT;
-  var canvasContext = canvasEl.getContext('2d');
+Game.create = function(socket, canvasElement, leaderboardElement) {
+  canvasElement.width = Constants.CANVAS_WIDTH;
+  canvasElement.height = Constants.CANVAS_HEIGHT;
+  var canvasContext = canvasElement.getContext('2d');
 
-  var leaderboard = new Leaderboard(leaderboardEl);
+  var leaderboard = new Leaderboard(leaderboardElement);
   var drawing = new Drawing(canvasContext);
   var viewPort = new ViewPort();
   var environment = new Environment(viewPort, drawing);
