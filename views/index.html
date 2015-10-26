@@ -9,15 +9,12 @@
   <div id='name-prompt-overlay'>
     <div id='name-prompt-container'>
       <form id='name-form'>
-        <div class='input-group'>
+        <div>
           <input type='text'
-                 class='form-control'
                  id='name-input'
                  placeholder='Nickname'
                  autocomplete='off' />
-          <span class='input-group-addon'
-                id='name-submit'>
-            <p style = "color:white">Play</p>
+          <p style="color:white">Play</p>
           </span>
         </div>
       </form>
@@ -38,19 +35,17 @@
       </tr>
       <tr>
         <td id='leaderboard-container'>
-          <div>
-            <h3>
-              Leaderboard:
-            </h3>
-            <ul id='leaderboard'>
-            </ul>
-          </div>
+          <h3>
+            Leaderboard:
+          </h3>
+          <ul id='leaderboard'>
+          </ul>
         </td>
         <td id='game-container'>
           <canvas id='canvas'>
           </canvas>
         </td>
-        <td>
+        <td id='chat-container'>
           <ul id='chat-display'>
           </ul>
           <input id='chat-input' type='text'

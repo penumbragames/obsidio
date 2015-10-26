@@ -46,6 +46,7 @@ Drawing.NEUTRAL_CONSTRUCT_SRC = [Drawing.NEUTRAL_TURRET_SRC, '', '',
 Drawing.NEUTRAL_CONSTRUCT_IMG = [new Image(), new Image(), new Image(),
                                  new Image(), new Image(), new Image()];
 
+// USE THE PRELOADED IMAGE SON!
 Drawing.SELF_CONSTRUCT_SRC = [Drawing.SELF_TURRET_SRC, '', '',
                               Drawing.WALL_SRC, Drawing.SELF_HEALER_SRC, ''];
 Drawing.SELF_CONSTRUCT_IMG = [new Image(), new Image(), new Image(),
@@ -55,7 +56,7 @@ Drawing.OTHER_CONSTRUCT_SRC = [Drawing.OTHER_TURRET_SRC, '', '',
                                Drawing.WALL_SRC, Drawing.OTHER_HEALER_SRC, ''];
 Drawing.OTHER_CONSTRUCT_IMG = [new Image(), new Image(), new Image(),
                                new Image(), new Image(), new Image()];
-  
+
 Drawing.prototype.init = function(startBuild, cancelBuild) {
   this.ui.setAttribute('id', 'ui');
 
@@ -75,7 +76,7 @@ Drawing.prototype.init = function(startBuild, cancelBuild) {
   this.ui.onclick = function() {
     cancelBuild();
   };
-  
+
   document.getElementById('game-container').appendChild(this.ui);
 
   for (var i = 0; i < Drawing.NEUTRAL_CONSTRUCT_IMG.length; ++i) {
@@ -193,7 +194,7 @@ Drawing.prototype.drawRange = function(coords, radius, color) {
   this.context.globalAlpha = 1;
 }
 
-Drawing.prototype.drawUI = function(health, praesidia) {  
+Drawing.prototype.drawUI = function(health, praesidia) {
   this.context.fillStyle = '#AAAAAA';
   this.context.fillRect(0, 0, 200, 50);
   this.context.font = Drawing.FONT;
