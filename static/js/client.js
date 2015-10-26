@@ -21,8 +21,6 @@ $(document).ready(function() {
       // The server will associate our socket id with this player and
       // any move commands will be sent with our ID after the server
       // sends back our ID.
-
-      // @todo: Move to server side
       socket.emit('new-player', {
         name: name
       });
