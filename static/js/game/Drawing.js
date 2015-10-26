@@ -217,7 +217,7 @@ Drawing.prototype.drawConstruct = function(owner, coords, orientation,
 
   this.context.save();
   this.context.translate(coords[0], coords[1]);
-  if (owner != 'neutral') {
+  if (owner != 'build_pending') {
     var healthBarInterval = 96 / Constants.CONSTRUCT_MAX_HEALTH[type];
     for (var i = 0; i < Constants.CONSTRUCT_MAX_HEALTH[type]; ++i) {
       if (i < health) {
