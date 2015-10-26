@@ -17,7 +17,7 @@ function Leaderboard(element) {
 
 /**
  * Updates the leaderboard.
- * @param {Array.<Object>} players A sorted array of the top ten players.
+ * @param {Array.<Object>} players A sorted array of the top players.
  */
 Leaderboard.prototype.update = function(players) {
   this.players = players;
@@ -30,7 +30,7 @@ Leaderboard.prototype.update = function(players) {
     var playerElement = document.createElement('li');
     playerElement.appendChild(document.createTextNode(
       this.players[i].name +
-        "  Kills: "   + this.players[i].kills +
+        ":  Kills: "   + this.players[i].kills +
         "  Deaths: "  + this.players[i].deaths));
     this.element.appendChild(playerElement);
   };

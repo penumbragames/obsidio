@@ -5,9 +5,9 @@
  */
 
 var socket = io();
-var game = new Game(socket,
-                    document.getElementById('canvas'),
-                    document.getElementById('leaderboard'));
+var game = Game.create(socket,
+                       document.getElementById('canvas'),
+                       document.getElementById('leaderboard'));
 var chat = new Chat(socket,
                     document.getElementById('chat-display'),
                     document.getElementById('chat-input'));

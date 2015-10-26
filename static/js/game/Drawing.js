@@ -101,6 +101,14 @@ Drawing.prototype.init = function(startBuild, cancelBuild) {
 }
 
 /**
+ * Clears the canvas context.
+ */
+Drawing.prototype.clear = function() {
+  this.context.clearRect(0, 0,
+                         Constants.CANVAS_WIDTH, Constants.CANVAS_HEIGHT);
+};
+
+/**
  * Draws a player on the canvas.
  * @param {boolean} isSelf This is true if we want this method to draw the
  *   client player and false if we want to draw an enemy player.
