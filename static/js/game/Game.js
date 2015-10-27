@@ -135,7 +135,6 @@ Game.prototype.update = function() {
       Input.MOUSE[0] - Constants.CANVAS_WIDTH / 2) + Math.PI / 2;
     var shot = false;
 
-    // TODO: Fix shooting after placing construct
     if (Input.LEFT_CLICK || Input.TOUCH) {
       if (Input.MOUSE[0] >= 0 && Input.MOUSE[0] < 700 &&
           Input.MOUSE[1] >= 0 && Input.MOUSE[1] < 600) {
