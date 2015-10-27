@@ -85,6 +85,7 @@ Game.prototype.init = function() {
   );
 };
 
+// @todo: Turn these into methods of the Game class and bind them during init()
 function startBuild(context, type) {
   var buildOptions = document.getElementsByClassName('ui-build-option');
   context.currentActionState = Game.ACTION_STATES.BUILD_PENDING;
