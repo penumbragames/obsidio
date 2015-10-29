@@ -67,44 +67,41 @@ Game.create = function(socket, canvasElement, leaderboardElement) {
  * the server.
  */
 Game.prototype.init = function() {
-  var context = this;
-  this.socket.on('update', function(data) {
-    context.receiveGameState(data);
-  });
+  this.socket.on('update', bind(this, function(data) {
+    this.receiveGameState(data);
+  }));
   this.drawing.init(
-    function(type) { // startBuild(type)
-      if (context.currentActionState == Game.ACTION_STATES.BUILD_PENDING) {
-        cancelBuild(context);
+    bind(this, function(type) {
+      if (this.currentActionState == Game.ACTION_STATES.BUILD_PENDING) {
+        this.cancelBuild();
       } else {
-        startBuild(context, type);
+        this.startBuild(type);
       }
-    },
-    function() { // cancelBuild()
-      cancelBuild(context);
+    }), bind(this, function() {
+      this.cancelBuild();
     }
-  );
+  ));
 };
 
-// @todo: Turn these into methods of the Game class and bind them during init()
-function startBuild(context, type) {
+Game.prototype.startBuild = function(type) {
   var buildOptions = document.getElementsByClassName('ui-build-option');
-  context.currentActionState = Game.ACTION_STATES.BUILD_PENDING;
-  context.currentBuildType = type;
+  this.currentActionState = Game.ACTION_STATES.BUILD_PENDING;
+  this.currentBuildType = type;
   for (var i = 0; i < buildOptions.length; ++i) {
     buildOptions[i].style.backgroundImage = 'url(' + Drawing.CANCEL_SRC +
         '), url(' + Drawing.NEUTRAL_CONSTRUCT_SRC[i] + ')';
   }
 };
 
-function cancelBuild(context) {
+Game.prototype.cancelBuild = function() {
   var buildOptions = document.getElementsByClassName('ui-build-option');
-  context.currentActionState = Game.ACTION_STATES.CONTROL;
-  context.currentBuildType = Constants.CONSTRUCT_TYPES.NONE;
+  this.currentActionState = Game.ACTION_STATES.CONTROL;
+  this.currentBuildType = Constants.CONSTRUCT_TYPES.NONE;
   for (var i = 0; i < buildOptions.length; ++i) {
-    buildOptions[i].style.backgroundImage =
-      'url(' + Drawing.NEUTRAL_CONSTRUCT_SRC[i] + ')';
+    buildOptions[i].style.backgroundImage = 'url(' +
+        Drawing.NEUTRAL_CONSTRUCT_SRC[i] + ')';
   }
-};
+}
 
 /**
  * Updates the game's internal storage of all the powerups, called each time

@@ -78,6 +78,9 @@ Drawing.prototype.init = function(startBuild, cancelBuild) {
     buildOption.setAttribute('class', 'ui-build-option');
     buildOption.style.backgroundImage = 'url(' +
       Drawing.SELF_CONSTRUCT_SRC[i] + ')';
+    // We use an anonymous function here to do static binding so that the
+    // function is called with the value of i that it was assigned at that
+    // iteration of the loop.
     (function(j) {
       buildOption.onclick = function(e) {
         startBuild(j);
