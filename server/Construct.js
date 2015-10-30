@@ -1,6 +1,6 @@
 /**
  * This is the class file that encapsulates any player built construct.
- * @author Alvin Lin (alin18@stuy.edu)
+ * @author Alvin Lin (alvin.lin.dev@gmail.com)
  */
 
 var Bullet = require('./Bullet');

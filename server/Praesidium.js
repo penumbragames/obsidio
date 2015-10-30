@@ -1,7 +1,7 @@
 /**
  * This is a class that encapsulates the praesidium pallets that can be picked
  * up to increase your own supply.
- * @author Alvin Lin (alin18@stuy.edu)
+ * @author Alvin Lin (alvin.lin.dev@gmail.com)
  */
 
 var Entity = require('./Entity');

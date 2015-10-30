@@ -1,6 +1,6 @@
 /**
  * Base functions needed on the client side.
- * @author Alvin Lin (omgimanerd1998@gmail.com)
+ * @author Alvin Lin (alvin.lin.dev@gmail.com)
  */
 
 function bind(context, method) {
@@ -9,10 +9,13 @@ function bind(context, method) {
   };
 }
 
-function createDiv(parent, className) {
+function createDiv(parent, id, className) {
   var div = document.createElement('div');
   if (parent) {
     parent.appendChild(div);
+  }
+  if (id) {
+    div.setAttribute('id', id);
   }
   if (className) {
     div.setAttribute('class', className);

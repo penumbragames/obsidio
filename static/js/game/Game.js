@@ -1,7 +1,7 @@
 /**
  * Class encapsulating the client side of the game, handles drawing and
  * updates.
- * @author Alvin Lin (omgimanerd1998@gmail.com)
+ * @author Alvin Lin (alvin.lin.dev@gmail.com)
  */
 
 /**
@@ -13,16 +13,13 @@
  * @param {Drawing} drawing The Drawing object that will render the game.
  * @param {ViewPort} viewPort The ViewPort object that will manage the player's
  *   current view.
- * @param {Environment} environment The Environment object that handles the
- *   drawing of the game environment.
  */
-function Game(socket, leaderboard, drawing, viewPort, environment) {
+function Game(socket, leaderboard, drawing, viewPort) {
   this.socket = socket;
 
   this.leaderboard = leaderboard;
   this.drawing = drawing;
   this.viewPort = viewPort;
-  this.environment = environment;
 
   this.self = null;
   this.players = [];
@@ -57,9 +54,8 @@ Game.create = function(socket, canvasElement, leaderboardElement) {
   var leaderboard = new Leaderboard(leaderboardElement);
   var drawing = new Drawing(canvasContext);
   var viewPort = new ViewPort();
-  var environment = new Environment(viewPort, drawing);
   return new Game(socket, leaderboard, drawing,
-                  viewPort, environment);
+                  viewPort);
 };
 
 /**
@@ -176,7 +172,25 @@ Game.prototype.draw = function() {
   this.drawing.clear()
 
   // Draw the background first.
-  this.environment.draw();
+  var center = this.viewPort.selfCoords;
+  this.drawing.drawTiles(
+    this.viewPort.toCanvasCoords([
+      Math.max(Math.floor(
+          (center[0] - Constants.CANVAS_WIDTH / 2) / Drawing.TILE_SIZE) *
+          Drawing.TILE_SIZE, Constants.WORLD_MIN),
+      Math.max(Math.floor(
+          (center[1] - Constants.CANVAS_HEIGHT / 2) / Drawing.TILE_SIZE) *
+          Drawing.TILE_SIZE, Constants.WORLD_MIN)
+    ]),
+    this.viewPort.toCanvasCoords([
+      Math.min((Math.ceil(
+          (center[0] + Constants.CANVAS_WIDTH / 2) / Drawing.TILE_SIZE) + 1) *
+          Drawing.TILE_SIZE, Constants.WORLD_MAX),
+      Math.min((Math.ceil(
+          (center[1] + Constants.CANVAS_HEIGHT / 2) / Drawing.TILE_SIZE) + 1) *
+          Drawing.TILE_SIZE, Constants.WORLD_MAX)
+    ])
+  );
 
   // Draw praesidia pallets.
   for (var i = 0; i < this.praesidia.length; ++i) {

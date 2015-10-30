@@ -1,7 +1,7 @@
 /**
  * Game class on the server to manage the state of existing players and
  * and entities.
- * @author Alvin Lin (alin18@stuy.edu)
+ * @author Alvin Lin (alvin.lin.dev@gmail.com)
  */
 
 var HashMap = require('hashmap');

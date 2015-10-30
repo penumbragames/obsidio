@@ -1,6 +1,6 @@
 /**
  * Wrapper class for all entities on the server.
- * @author Alvin Lin (alin18@stuy.edu)
+ * @author Alvin Lin (alvin.lin.dev@gmail.com)
  */
 
 var Constants = require('../shared/Constants');

@@ -14,7 +14,10 @@
  */
 function Drawing(context) {
   this.context = context;
+
   this.ui = document.createElement('div');
+
+
 };
 
 /**
@@ -27,10 +30,14 @@ Drawing.HP_COLOR = 'green';
 Drawing.HP_MISSING_COLOR = 'red';
 
 Drawing.BASE_IMG_URL = '/static/img/';
+
 Drawing.SELF_PLAYER_SRC = Drawing.BASE_IMG_URL + 'self_player.png';
 Drawing.OTHER_PLAYER_SRC = Drawing.BASE_IMG_URL + 'other_player.png';
 Drawing.PROJECTILE_SRC = Drawing.BASE_IMG_URL + 'projectile.png';
 Drawing.PRAESIDIUM_SRC = Drawing.BASE_IMG_URL + 'praesidium.png';
+Drawing.TILE_SRC = Drawing.BASE_IMG_URL + 'tile.png';
+Drawing.CANCEL_SRC = Drawing.BASE_IMG_URL + 'cancel.png';
+
 Drawing.NEUTRAL_TURRET_SRC = Drawing.BASE_IMG_URL + 'neutral_turret.png';
 Drawing.SELF_TURRET_SRC = Drawing.BASE_IMG_URL + 'self_turret.png';
 Drawing.OTHER_TURRET_SRC = Drawing.BASE_IMG_URL + 'other_turret.png';
@@ -38,8 +45,6 @@ Drawing.WALL_SRC = Drawing.BASE_IMG_URL + 'wall.png';
 Drawing.NEUTRAL_HEALER_SRC = Drawing.BASE_IMG_URL + 'neutral_healer.png';
 Drawing.SELF_HEALER_SRC = Drawing.BASE_IMG_URL + 'self_healer.png';
 Drawing.OTHER_HEALER_SRC = Drawing.BASE_IMG_URL + 'other_healer.png';
-Drawing.TILE_SRC = Drawing.BASE_IMG_URL + 'tile.png';
-Drawing.CANCEL_SRC = Drawing.BASE_IMG_URL + 'cancel.png';
 
 Drawing.PLAYER_SIZE = [64, 64];
 Drawing.PROJECTILE_SIZE = [8, 8];
@@ -47,19 +52,30 @@ Drawing.PRAESIDIUM_SIZE = [32, 32];
 Drawing.CONSTRUCT_SIZE = [64, 64];
 Drawing.TILE_SIZE = 100;
 
-Drawing.NEUTRAL_CONSTRUCT_SRC = [Drawing.NEUTRAL_TURRET_SRC, '', '',
-                                 Drawing.WALL_SRC, Drawing.NEUTRAL_HEALER_SRC, ''];
+Drawing.NEUTRAL_CONSTRUCT_SRCS = [Drawing.NEUTRAL_TURRET_SRC,
+                                 '',
+                                 '',
+                                 Drawing.WALL_SRC,
+                                 Drawing.NEUTRAL_HEALER_SRC,
+                                 ''];
 Drawing.NEUTRAL_CONSTRUCT_IMG = [new Image(), new Image(), new Image(),
                                  new Image(), new Image(), new Image()];
 
-// USE THE PRELOADED IMAGE SON!
-Drawing.SELF_CONSTRUCT_SRC = [Drawing.SELF_TURRET_SRC, '', '',
-                              Drawing.WALL_SRC, Drawing.SELF_HEALER_SRC, ''];
+Drawing.SELF_CONSTRUCT_SRCS = [Drawing.SELF_TURRET_SRC,
+                              '',
+                              '',
+                              Drawing.WALL_SRC,
+                              Drawing.SELF_HEALER_SRC,
+                              ''];
 Drawing.SELF_CONSTRUCT_IMG = [new Image(), new Image(), new Image(),
                               new Image(), new Image(), new Image()];
 
-Drawing.OTHER_CONSTRUCT_SRC = [Drawing.OTHER_TURRET_SRC, '', '',
-                               Drawing.WALL_SRC, Drawing.OTHER_HEALER_SRC, ''];
+Drawing.OTHER_CONSTRUCT_SRCS = [Drawing.OTHER_TURRET_SRC,
+                               '',
+                               '',
+                               Drawing.WALL_SRC,
+                               Drawing.OTHER_HEALER_SRC,
+                               ''];
 Drawing.OTHER_CONSTRUCT_IMG = [new Image(), new Image(), new Image(),
                                new Image(), new Image(), new Image()];
 
