@@ -37,17 +37,15 @@ Chat.create = function(socket, displayElement, textElement) {
  * in client.js.
  */
 Chat.prototype.init = function() {
-  var context = this;
-
-  this.textElement.onkeydown = function(e) {
+  this.textElement.onkeydown = bind(this, function(e) {
     if (e.keyCode == 13) {
-      context.sendMessage();
+      this.sendMessage();
     }
-  }
-
-  this.socket.on('chat-server-to-clients', function(data) {
-    context.receiveMessage(data.name, data.message, data.isNotification);
   });
+
+  this.socket.on('chat-server-to-clients', bind(this, function(data) {
+    this.receiveMessage(data.name, data.message, data.isNotification);
+  }));
 };
 
 /**
