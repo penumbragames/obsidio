@@ -43,6 +43,8 @@ UI.prototype.init = function(startBuildCallback, endBuildCallback) {
     // We use an anonymous function here to do static binding so that the
     // function is called with the value of i that it was assigned at that
     // iteration of the loop.
+    // @todo: look into a better bind() method and stick it in base.js to use
+    // here.
     (function(j) {
       buildOptionElement.onclick = function(e) {
         startBuildCallback(j);

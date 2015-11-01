@@ -84,12 +84,20 @@ Game.prototype.init = function() {
   );
 };
 
+/**
+ * Sets the Game's action states and build types when the player intends to
+ * start building.
+ */
 Game.prototype.startBuild = function(type) {
   this.currentActionState = Game.ACTION_STATES.BUILD_PENDING;
   this.currentBuildType = type;
   this.ui.startBuild();
 };
 
+/**
+ * Sets the Game's action states and build types when the player finishes a
+ * build action.
+ */
 Game.prototype.endBuild = function() {
   this.currentActionState = Game.ACTION_STATES.CONTROL;
   this.currentBuildType = Constants.CONSTRUCT_TYPES.NONE;
