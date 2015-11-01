@@ -14,11 +14,12 @@
  * @param {ViewPort} viewPort The ViewPort object that will manage the player's
  *   current view.
  */
-function Game(socket, leaderboard, drawing, viewPort) {
+function Game(socket, leaderboard, drawing, ui, viewPort) {
   this.socket = socket;
 
   this.leaderboard = leaderboard;
   this.drawing = drawing;
+  this.ui = ui;
   this.viewPort = viewPort;
 
   this.self = null;
@@ -46,16 +47,17 @@ Game.ACTION_STATES = {
  * @param {Element} leaderboardElement The div element that the game will draw
  *   the leaderboard to.
  */
-Game.create = function(socket, canvasElement, leaderboardElement) {
+Game.create = function(socket, canvasContainerElement,
+                       canvasElement, leaderboardElement) {
   canvasElement.width = Constants.CANVAS_WIDTH;
   canvasElement.height = Constants.CANVAS_HEIGHT;
   var canvasContext = canvasElement.getContext('2d');
 
   var leaderboard = new Leaderboard(leaderboardElement);
   var drawing = Drawing.create(canvasContext);
+  var ui = UI.create(canvasContainerElement);
   var viewPort = new ViewPort();
-  return new Game(socket, leaderboard, drawing,
-                  viewPort);
+  return new Game(socket, leaderboard, drawing, ui, viewPort);
 };
 
 /**
@@ -66,15 +68,16 @@ Game.prototype.init = function() {
   this.socket.on('update', bind(this, function(data) {
     this.receiveGameState(data);
   }));
-  this.drawing.init(
+  this.drawing.init();
+  this.ui.init(
     bind(this, function(type) {
       if (this.currentActionState == Game.ACTION_STATES.BUILD_PENDING) {
-        this.cancelBuild();
+        this.endBuild();
       } else {
         this.startBuild(type);
       }
     }),
-    bind(this, this.cancelBuild)
+    bind(this, this.endBuild)
   );
 };
 
@@ -88,7 +91,7 @@ Game.prototype.startBuild = function(type) {
   }
 };
 
-Game.prototype.cancelBuild = function() {
+Game.prototype.endBuild = function() {
   var buildOptions = document.getElementsByClassName('ui-build-option');
   this.currentActionState = Game.ACTION_STATES.CONTROL;
   this.currentBuildType = Constants.CONSTRUCT_TYPES.NONE;
@@ -138,7 +141,7 @@ Game.prototype.update = function() {
             x: coords[0],
             y: coords[1]
           }
-          this.cancelBuild();
+          this.endBuild();
         }
         shot = false;
       }

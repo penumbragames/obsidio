@@ -15,8 +15,6 @@
 function Drawing(context) {
   this.context = context;
 
-  this.ui = document.createElement('div');
-
   this.selfPlayerImage = null;
   this.otherPlayerImage = null;
   this.projectileImage = null;
@@ -28,7 +26,6 @@ function Drawing(context) {
   this.otherConstructImages = [];
 
   this.cancelImage = null;
-
 };
 
 /**
@@ -100,7 +97,7 @@ Drawing.create = function(context) {
  * @param {function()} cancelBuild This is callback function to call when the
  *   user cancels a pending build.
  */
-Drawing.prototype.init = function(startBuild, cancelBuild) {
+Drawing.prototype.init = function() {
   this.selfPlayerImage = createImage(Drawing.SELF_PLAYER_SRC);
   this.otherPlayerImage = createImage(Drawing.OTHER_PLAYER_SRC);
   this.projectileImage = createImage(Drawing.PROJECTILE_SRC);
@@ -119,29 +116,6 @@ Drawing.prototype.init = function(startBuild, cancelBuild) {
     this.otherConstructImages.push(createImage(
         Drawing.OTHER_CONSTRUCT_SRCS[i]));
   }
-
-  this.ui.setAttribute('id', 'ui');
-
-  for (var i = 0; i < 6; ++i) {
-    var buildOption = document.createElement('div');
-    buildOption.setAttribute('class', 'ui-build-option');
-    buildOption.style.backgroundImage = 'url(' +
-      Drawing.SELF_CONSTRUCT_SRCS[i] + ')';
-    // We use an anonymous function here to do static binding so that the
-    // function is called with the value of i that it was assigned at that
-    // iteration of the loop.
-    (function(j) {
-      buildOption.onclick = function(e) {
-        startBuild(j);
-        e.stopPropagation();
-      }
-    }(i));
-    this.ui.appendChild(buildOption);
-  }
-
-  this.ui.onclick = cancelBuild;
-
-  document.getElementById('game-container').appendChild(this.ui);
 }
 
 /**
