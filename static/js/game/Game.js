@@ -61,8 +61,8 @@ Game.create = function(socket, canvasContainerElement,
 };
 
 /**
- * Initializes the game and sets the game to respond to update packets from
- * the server.
+ * Initializes the Game object and its child objects as well as setting the
+ * event handlers.
  */
 Game.prototype.init = function() {
   this.socket.on('update', bind(this, function(data) {

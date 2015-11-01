@@ -92,10 +92,6 @@ Drawing.create = function(context) {
 
 /**
  * Initializes the Drawing object.
- * @param {function()} startBuild This is a callback function to call when
- *   the player clicks on the UI to build a construct.
- * @param {function()} cancelBuild This is callback function to call when the
- *   user cancels a pending build.
  */
 Drawing.prototype.init = function() {
   this.selfPlayerImage = createImage(Drawing.SELF_PLAYER_SRC);
