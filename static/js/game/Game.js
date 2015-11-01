@@ -134,7 +134,9 @@ Game.prototype.update = function() {
             y: coords[1]
           }
           this.endBuild();
+          shot = false;
         }
+      } else {
         shot = false;
       }
     }
