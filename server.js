@@ -4,9 +4,16 @@
  * @todo Add unit tests!
  */
 
-var PORT_NUMBER = process.env.PORT || 5000;
-var IP = process.env.IP || 'localhost';
+var DEV_MODE = false;
 var FRAME_RATE = 1000.0 / 60.0;
+var IP = process.env.IP || 'localhost';
+var PORT_NUMBER = process.env.PORT || 5000;
+
+process.argv.forEach(function(value, index, array) {
+  if (value == '--dev') {
+    DEV_MODE = true;
+  }
+});
 
 // Dependencies.
 var express = require('express');
@@ -38,7 +45,9 @@ app.use('/shared',
 
 // Routing
 app.get('/', function(request, response) {
-  response.render('index.html');
+  response.render('index.html', {
+    dev_mode: DEV_MODE
+  });
 });
 
 // Server side input handler, modifies the state of the players and the
@@ -93,4 +102,7 @@ setInterval(function() {
 // Starts the server.
 server.listen(PORT_NUMBER, function() {
   console.log('Starting server on port ' + PORT_NUMBER);
+  if (DEV_MODE) {
+    console.log('DEVELOPMENT MODE ENABLED: SERVING UNCOMPILED JAVASCRIPT!');
+  }
 });
