@@ -4,6 +4,7 @@
  * @todo Add unit tests!
  */
 
+var CHAT_TAG = '[Obsidio]';
 var DEV_MODE = false;
 var FRAME_RATE = 1000.0 / 60.0;
 var IP = process.env.IP || 'localhost';
@@ -57,14 +58,20 @@ app.get('/', function(request, response) {
 io.on('connection', function(socket) {
   // When a new player joins, the server adds a new player to the game.
   socket.on('new-player', function(data) {
-   game.addNewPlayer(data.name, socket);
-   io.sockets.emit('chat-server-to-clients', {
-      name: '[Obsidio]',
+    game.addNewPlayer(data.name, socket);
+    socket.emit('received-new-player');
+    io.sockets.emit('chat-server-to-clients', {
+      name: CHAT_TAG,
       message: data.name + ' has joined the game.',
       isNotification: true
-   });
-
-   socket.emit('received-new-player');
+    });
+    socket.emit('chat-server-to-clients', {
+      name: CHAT_TAG,
+      message: 'Welcome ' + data.name + '. Use WASD to move and click to ' +
+          'shoot! Move around to acquire praesidia and use it to build ' +
+          'turrets and other fortifications. Good luck!',
+      isNotification: true
+    });
  });
 
   // Update the internal object states every time a player sends an intent
@@ -86,7 +93,7 @@ io.on('connection', function(socket) {
   socket.on('disconnect', function() {
     var name = game.removePlayer(socket.id);
     io.sockets.emit('chat-server-to-clients', {
-      name: '[Obsidio]',
+      name: CHAT_TAG,
       message: name + ' has left the game.',
       isNotification: true
     });
