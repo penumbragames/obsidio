@@ -10,7 +10,8 @@ var IP = process.env.IP || 'localhost';
 var PORT_NUMBER = process.env.PORT || 5000;
 
 process.argv.forEach(function(value, index, array) {
-  if (value == '--dev') {
+  if (value == '--dev' || value == '-dev' ||
+      value == '--development' || value == '-development') {
     DEV_MODE = true;
   }
 });
