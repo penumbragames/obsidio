@@ -82,23 +82,15 @@ Game.prototype.init = function() {
 };
 
 Game.prototype.startBuild = function(type) {
-  var buildOptions = document.getElementsByClassName('ui-build-option');
   this.currentActionState = Game.ACTION_STATES.BUILD_PENDING;
   this.currentBuildType = type;
-  for (var i = 0; i < buildOptions.length; ++i) {
-    buildOptions[i].style.backgroundImage = 'url(' + Drawing.CANCEL_SRC +
-        '), url(' + Drawing.NEUTRAL_CONSTRUCT_SRCS[i] + ')';
-  }
+  this.ui.startBuild();
 };
 
 Game.prototype.endBuild = function() {
-  var buildOptions = document.getElementsByClassName('ui-build-option');
   this.currentActionState = Game.ACTION_STATES.CONTROL;
   this.currentBuildType = Constants.CONSTRUCT_TYPES.NONE;
-  for (var i = 0; i < buildOptions.length; ++i) {
-    buildOptions[i].style.backgroundImage = 'url(' +
-        Drawing.NEUTRAL_CONSTRUCT_SRCS[i] + ')';
-  }
+  this.ui.endBuild();
 }
 
 /**
