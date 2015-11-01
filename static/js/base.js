@@ -22,3 +22,9 @@ function createDiv(parent, id, className) {
   }
   return div;
 }
+
+function createImage(src, width, height) {
+  var image = new Image(width, height);
+  image.src = src;
+  return image;
+}

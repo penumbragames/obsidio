@@ -17,6 +17,17 @@ function Drawing(context) {
 
   this.ui = document.createElement('div');
 
+  this.selfPlayerImage = null;
+  this.otherPlayerImage = null;
+  this.projectileImage = null;
+  this.praesidiumImage = null;
+  this.tileImage = null;
+
+  this.neutralConstructImages = [];
+  this.selfConstructImages = [];
+  this.otherConstructImages = [];
+
+  this.cancelImage = null;
 
 };
 
@@ -36,7 +47,6 @@ Drawing.OTHER_PLAYER_SRC = Drawing.BASE_IMG_URL + 'other_player.png';
 Drawing.PROJECTILE_SRC = Drawing.BASE_IMG_URL + 'projectile.png';
 Drawing.PRAESIDIUM_SRC = Drawing.BASE_IMG_URL + 'praesidium.png';
 Drawing.TILE_SRC = Drawing.BASE_IMG_URL + 'tile.png';
-Drawing.CANCEL_SRC = Drawing.BASE_IMG_URL + 'cancel.png';
 
 Drawing.NEUTRAL_TURRET_SRC = Drawing.BASE_IMG_URL + 'neutral_turret.png';
 Drawing.SELF_TURRET_SRC = Drawing.BASE_IMG_URL + 'self_turret.png';
@@ -45,12 +55,7 @@ Drawing.WALL_SRC = Drawing.BASE_IMG_URL + 'wall.png';
 Drawing.NEUTRAL_HEALER_SRC = Drawing.BASE_IMG_URL + 'neutral_healer.png';
 Drawing.SELF_HEALER_SRC = Drawing.BASE_IMG_URL + 'self_healer.png';
 Drawing.OTHER_HEALER_SRC = Drawing.BASE_IMG_URL + 'other_healer.png';
-
-Drawing.PLAYER_SIZE = [64, 64];
-Drawing.PROJECTILE_SIZE = [8, 8];
-Drawing.PRAESIDIUM_SIZE = [32, 32];
-Drawing.CONSTRUCT_SIZE = [64, 64];
-Drawing.TILE_SIZE = 100;
+Drawing.CANCEL_SRC = Drawing.BASE_IMG_URL + 'cancel.png';
 
 Drawing.NEUTRAL_CONSTRUCT_SRCS = [Drawing.NEUTRAL_TURRET_SRC,
                                  '',
@@ -58,8 +63,6 @@ Drawing.NEUTRAL_CONSTRUCT_SRCS = [Drawing.NEUTRAL_TURRET_SRC,
                                  Drawing.WALL_SRC,
                                  Drawing.NEUTRAL_HEALER_SRC,
                                  ''];
-Drawing.NEUTRAL_CONSTRUCT_IMG = [new Image(), new Image(), new Image(),
-                                 new Image(), new Image(), new Image()];
 
 Drawing.SELF_CONSTRUCT_SRCS = [Drawing.SELF_TURRET_SRC,
                               '',
@@ -67,8 +70,6 @@ Drawing.SELF_CONSTRUCT_SRCS = [Drawing.SELF_TURRET_SRC,
                               Drawing.WALL_SRC,
                               Drawing.SELF_HEALER_SRC,
                               ''];
-Drawing.SELF_CONSTRUCT_IMG = [new Image(), new Image(), new Image(),
-                              new Image(), new Image(), new Image()];
 
 Drawing.OTHER_CONSTRUCT_SRCS = [Drawing.OTHER_TURRET_SRC,
                                '',
@@ -76,8 +77,21 @@ Drawing.OTHER_CONSTRUCT_SRCS = [Drawing.OTHER_TURRET_SRC,
                                Drawing.WALL_SRC,
                                Drawing.OTHER_HEALER_SRC,
                                ''];
-Drawing.OTHER_CONSTRUCT_IMG = [new Image(), new Image(), new Image(),
-                               new Image(), new Image(), new Image()];
+
+Drawing.PLAYER_SIZE = [64, 64];
+Drawing.PROJECTILE_SIZE = [8, 8];
+Drawing.PRAESIDIUM_SIZE = [32, 32];
+Drawing.CONSTRUCT_SIZE = [64, 64];
+Drawing.TILE_SIZE = 100;
+
+/**
+ * Factory method for a Drawing object.
+ * @param {CanvasRenderingContext2D} context The context this object will
+ *   draw to.
+ */
+Drawing.create = function(context) {
+  return new Drawing(context);
+};
 
 /**
  * Initializes the Drawing object.
@@ -87,13 +101,32 @@ Drawing.OTHER_CONSTRUCT_IMG = [new Image(), new Image(), new Image(),
  *   user cancels a pending build.
  */
 Drawing.prototype.init = function(startBuild, cancelBuild) {
+  this.selfPlayerImage = createImage(Drawing.SELF_PLAYER_SRC);
+  this.otherPlayerImage = createImage(Drawing.OTHER_PLAYER_SRC);
+  this.projectileImage = createImage(Drawing.PROJECTILE_SRC);
+  this.praesidiumImage = createImage(Drawing.PRAESIDIUM_SRC);
+  this.tileImage = createImage(Drawing.TILE_SRC);
+
+  for (var i = 0; i < Drawing.NEUTRAL_CONSTRUCT_SRCS.length; ++i) {
+    this.neutralConstructImages.push(createImage(
+        Drawing.NEUTRAL_CONSTRUCT_SRCS[i]));
+  }
+  for (var i = 0; i < Drawing.SELF_CONSTRUCT_SRCS.length; ++i) {
+    this.selfConstructImages.push(createImage(
+        Drawing.SELF_CONSTRUCT_SRCS[i]));
+  }
+  for (var i = 0; i < Drawing.OTHER_CONSTRUCT_SRCS.length; ++i) {
+    this.otherConstructImages.push(createImage(
+        Drawing.OTHER_CONSTRUCT_SRCS[i]));
+  }
+
   this.ui.setAttribute('id', 'ui');
 
   for (var i = 0; i < 6; ++i) {
     var buildOption = document.createElement('div');
     buildOption.setAttribute('class', 'ui-build-option');
     buildOption.style.backgroundImage = 'url(' +
-      Drawing.SELF_CONSTRUCT_SRC[i] + ')';
+      Drawing.SELF_CONSTRUCT_SRCS[i] + ')';
     // We use an anonymous function here to do static binding so that the
     // function is called with the value of i that it was assigned at that
     // iteration of the loop.
@@ -106,25 +139,17 @@ Drawing.prototype.init = function(startBuild, cancelBuild) {
     this.ui.appendChild(buildOption);
   }
 
-  this.ui.onclick = function() {
-    cancelBuild();
-  };
+  this.ui.onclick = cancelBuild;
 
   document.getElementById('game-container').appendChild(this.ui);
-
-  for (var i = 0; i < Drawing.NEUTRAL_CONSTRUCT_IMG.length; ++i) {
-    Drawing.NEUTRAL_CONSTRUCT_IMG[i].src = Drawing.NEUTRAL_CONSTRUCT_SRC[i];
-    Drawing.SELF_CONSTRUCT_IMG[i].src = Drawing.SELF_CONSTRUCT_SRC[i];
-    Drawing.OTHER_CONSTRUCT_IMG[i].src = Drawing.OTHER_CONSTRUCT_SRC[i];
-  }
 }
 
 /**
  * Clears the canvas context.
  */
 Drawing.prototype.clear = function() {
-  this.context.clearRect(0, 0,
-                         Constants.CANVAS_WIDTH, Constants.CANVAS_HEIGHT);
+  this.context.clearRect(
+      0, 0, Constants.CANVAS_WIDTH, Constants.CANVAS_HEIGHT);
 };
 
 /**
@@ -143,13 +168,8 @@ Drawing.prototype.drawPlayer = function(isSelf, coords, orientation, name, healt
   this.context.save();
   this.context.translate(coords[0], coords[1]);
   this.context.rotate(orientation);
-  var player = new Image();
-  if (isSelf) {
-    player.src = Drawing.SELF_PLAYER_SRC;
-  } else {
-    player.src = Drawing.OTHER_PLAYER_SRC;
-  }
-  this.context.drawImage(player,
+  var playerImage = isSelf ? this.selfPlayerImage : this.otherPlayerImage;
+  this.context.drawImage(playerImage,
                          -Drawing.PLAYER_SIZE[0] / 2,
                          -Drawing.PLAYER_SIZE[1] / 2,
                          Drawing.PLAYER_SIZE[0],
@@ -185,9 +205,7 @@ Drawing.prototype.drawProjectile = function(coords, orientation) {
   this.context.save();
   this.context.translate(coords[0], coords[1]);
   this.context.rotate(orientation);
-  var projectile = new Image();
-  projectile.src = Drawing.PROJECTILE_SRC;
-  this.context.drawImage(projectile,
+  this.context.drawImage(this.projectileImage,
                          -Drawing.PROJECTILE_SIZE[0] / 2,
                          -Drawing.PROJECTILE_SIZE[1] / 2,
                          Drawing.PROJECTILE_SIZE[0],
@@ -203,9 +221,7 @@ Drawing.prototype.drawProjectile = function(coords, orientation) {
 Drawing.prototype.drawPraesidium = function(coords) {
   this.context.save();
   this.context.translate(coords[0], coords[1]);
-  var praesidium = new Image();
-  praesidium.src = Drawing.PRAESIDIUM_SRC;
-  this.context.drawImage(praesidium,
+  this.context.drawImage(this.praesidiumImage,
                          -Drawing.PRAESIDIUM_SIZE[0] / 2,
                          -Drawing.PRAESIDIUM_SIZE[1] / 2,
                          Drawing.PRAESIDIUM_SIZE[0],
@@ -228,12 +244,14 @@ Drawing.prototype.drawConstruct = function(owner, coords, orientation,
   this.context.save();
   this.context.translate(coords[0], coords[1]);
   this.context.rotate(orientation);
+  var construct = null;
+  // @todo: refactor the owner string types into constants
   if (owner == 'self') {
-    var construct = Drawing.SELF_CONSTRUCT_IMG[type];
+    construct = this.selfConstructImages[type];
   } else if (owner == 'other') {
-    var construct = Drawing.OTHER_CONSTRUCT_IMG[type];
+    construct = this.otherConstructImages[type];
   } else {
-    var construct = Drawing.NEUTRAL_CONSTRUCT_IMG[type];
+    construct = this.neutralConstructImages[type];
   }
   this.context.drawImage(construct,
                          -Drawing.CONSTRUCT_SIZE[0] / 2,
@@ -259,7 +277,14 @@ Drawing.prototype.drawConstruct = function(owner, coords, orientation,
   this.context.restore();
 }
 
-Drawing.prototype.drawRange = function(coords, radius, color) {
+/**
+ * Draws a circle around the player showing the range that the player can build
+ * in.
+ * @param {[number, number]} coords The canvas coordinates of the player.
+ * @param {number} radius The radius of the player's build range.
+ * @param {string} color The color of the build range indicator.
+ */
+Drawing.prototype.drawBuildRange = function(coords, radius, color) {
   this.context.fillStyle = color;
   this.context.globalAlpha = 0.3;
   this.context.beginPath();
@@ -300,11 +325,9 @@ Drawing.prototype.drawUI = function(health, praesidia) {
  */
 Drawing.prototype.drawTiles = function(topLeft, bottomRight) {
   this.context.save();
-  var tile = new Image();
-  tile.src = Drawing.TILE_SRC;
   for (var x = topLeft[0]; x < bottomRight[0]; x += Drawing.TILE_SIZE) {
     for (var y = topLeft[1]; y < bottomRight[1]; y += Drawing.TILE_SIZE) {
-      this.context.drawImage(tile, x, y);
+      this.context.drawImage(this.tileImage, x, y);
     }
   }
   this.context.restore();

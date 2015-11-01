@@ -5,8 +5,8 @@
  */
 
 /**
- * Creates a game on the client side to manage and render the players,
- * projectiles, and powerups.
+ * Creates a Game on the client side to render the players and entities as
+ * well as the player UI.
  * @constructor
  * @param {Socket} socket The socket connected to the server.
  * @param {Leaderboard} leaderboard The Leaderboard object to update.
@@ -52,7 +52,7 @@ Game.create = function(socket, canvasElement, leaderboardElement) {
   var canvasContext = canvasElement.getContext('2d');
 
   var leaderboard = new Leaderboard(leaderboardElement);
-  var drawing = new Drawing(canvasContext);
+  var drawing = Drawing.create(canvasContext);
   var viewPort = new ViewPort();
   return new Game(socket, leaderboard, drawing,
                   viewPort);
@@ -73,10 +73,9 @@ Game.prototype.init = function() {
       } else {
         this.startBuild(type);
       }
-    }), bind(this, function() {
-      this.cancelBuild();
-    }
-  ));
+    }),
+    bind(this, this.cancelBuild)
+  );
 };
 
 Game.prototype.startBuild = function(type) {
@@ -85,7 +84,7 @@ Game.prototype.startBuild = function(type) {
   this.currentBuildType = type;
   for (var i = 0; i < buildOptions.length; ++i) {
     buildOptions[i].style.backgroundImage = 'url(' + Drawing.CANCEL_SRC +
-        '), url(' + Drawing.NEUTRAL_CONSTRUCT_SRC[i] + ')';
+        '), url(' + Drawing.NEUTRAL_CONSTRUCT_SRCS[i] + ')';
   }
 };
 
@@ -95,7 +94,7 @@ Game.prototype.cancelBuild = function() {
   this.currentBuildType = Constants.CONSTRUCT_TYPES.NONE;
   for (var i = 0; i < buildOptions.length; ++i) {
     buildOptions[i].style.backgroundImage = 'url(' +
-        Drawing.NEUTRAL_CONSTRUCT_SRC[i] + ')';
+        Drawing.NEUTRAL_CONSTRUCT_SRCS[i] + ')';
   }
 }
 
@@ -127,11 +126,11 @@ Game.prototype.update = function() {
     var orientation = Math.atan2(
       Input.MOUSE[1] - Constants.CANVAS_HEIGHT / 2,
       Input.MOUSE[0] - Constants.CANVAS_WIDTH / 2) + Math.PI / 2;
-    var shot = false;
+    var shot = Input.LEFT_CLICK || Input.TOUCH;
 
     if (Input.LEFT_CLICK || Input.TOUCH) {
-      if (Input.MOUSE[0] >= 0 && Input.MOUSE[0] < 700 &&
-          Input.MOUSE[1] >= 0 && Input.MOUSE[1] < 600) {
+      if (Util.inBound(Input.MOUSE[0], 0, 700) &&
+          Util.inBound(Input.MOUSE[1], 0, 600)) {
         if (this.currentActionState == Game.ACTION_STATES.BUILD_PENDING) {
           var coords = this.viewPort.toAbsoluteCoords(Input.MOUSE);
           build = {
@@ -139,10 +138,9 @@ Game.prototype.update = function() {
             x: coords[0],
             y: coords[1]
           }
-          cancelBuild(this);
-        } else {
-          shot = true;
+          this.cancelBuild();
         }
+        shot = false;
       }
     }
 
@@ -242,8 +240,8 @@ Game.prototype.draw = function() {
                    Constants.CONSTRUCT_BUILD_RADIUS *
                    Constants.CONSTRUCT_BUILD_RADIUS) ?
         '#00FF00' : '#FF0000';
-      this.drawing.drawRange(this.viewPort.toCanvasCoords([this.self.x,
-                                                           this.self.y]),
+      this.drawing.drawBuildRange(this.viewPort.toCanvasCoords([this.self.x,
+                                                                this.self.y]),
                              Constants.CONSTRUCT_BUILD_RADIUS,
                              color);
       this.drawing.context.globalAlpha = 0.7;
