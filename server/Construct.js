@@ -3,7 +3,7 @@
  * @author Alvin Lin (alvin.lin.dev@gmail.com)
  */
 
-var Bullet = require('./Bullet');
+var Projectile = require('./Projectile');
 var Entity = require('./Entity');
 var Praesidium = require('./Praesidium');
 
@@ -128,11 +128,11 @@ Construct.prototype.getTarget = function(players, constructs, threshold) {
  * Updates this Construct.
  * @param {Hashmap} clients The Hashmap of active IDs and players stored on
  *   the server.
- * @param {function()} addBulletCallback The callback function to call if
- *   this construct fires a bullet.
+ * @param {function()} addProjectileCallback The callback function to call if
+ *   this construct fires a projectile.
  * @param {Array.<Construct>} The array of existing constructs on the server.
  */
-Construct.prototype.update = function(clients, constructs, addBulletCallback,
+Construct.prototype.update = function(clients, constructs, addProjectileCallback,
                                       addPraesidiumCallback) {
   switch (this.type) {
     // Behavior if this construct is a turret.
@@ -147,7 +147,7 @@ Construct.prototype.update = function(clients, constructs, addBulletCallback,
         if ((new Date()).getTime() >
             this.lastActionTime + this.actionCooldown) {
           this.lastActionTime = (new Date()).getTime();
-          addBulletCallback(Bullet.create(
+          addProjectileCallback(Projectile.create(
               this.x, this.y, this.orientation, this.owner));
         }
       }

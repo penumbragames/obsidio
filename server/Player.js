@@ -4,7 +4,7 @@
  * @author Alvin Lin (alvin.lin.dev@gmail.com)
  */
 
-var Bullet = require('./Bullet');
+var Projectile = require('./Projectile');
 var Entity = require('./Entity');
 var Praesidium = require('./Praesidium');
 var Construct = require('./Construct');
@@ -87,11 +87,11 @@ Player.generateNewPlayer = function(name, id) {
  *   to their player sprite.
  * @param {boolean} shot This is true when the player is attempting to shoot.
  *   It is equivalent to the state of the player's left click.
- * @param {function()} addBulletCallback The function to call if the player
+ * @param {function()} addProjectileCallback The function to call if the player
  *   can shoot and has shot.
  */
 Player.prototype.updateOnInput = function(keyboardState, orientation, shot,
-                                          build, addBulletCallback,
+                                          build, addProjectileCallback,
                                           addConstructCallback) {
   if (keyboardState.up) {
     this.vy = (keyboardState.left || keyboardState.right) ?
@@ -124,7 +124,7 @@ Player.prototype.updateOnInput = function(keyboardState, orientation, shot,
 
   if (shot && (new Date()).getTime() > this.lastShotTime + this.shotCooldown) {
     this.lastShotTime = (new Date()).getTime();
-    addBulletCallback(Bullet.create(this.x, this.y, this.orientation, this.id));
+    addProjectileCallback(Projectile.create(this.x, this.y, this.orientation, this.id));
   }
 
   if (build &&

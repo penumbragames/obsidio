@@ -8,7 +8,7 @@ var HashMap = require('hashmap');
 
 var Player = require('./Player');
 var Praesidium = require('./Praesidium');
-var Bullet = require('./Bullet');
+var Projectile = require('./Projectile');
 
 var Util = require('../shared/Util');
 
@@ -114,8 +114,8 @@ Game.prototype.updatePlayerOnInput = function(id, keyboardState, orientation,
   if (player) {
     var context = this;
     player.updateOnInput(keyboardState, orientation, shot, build,
-                         function(bullet) {
-      context.addBullet(bullet);
+                         function(projectile) {
+      context.addProjectile(projectile);
     }, function(construct) {
       context.addConstruct(construct);
     });
@@ -126,12 +126,12 @@ Game.prototype.updatePlayerOnInput = function(id, keyboardState, orientation,
 };
 
 /**
- * This function adds a bullet to the game's internal object arrays.
- * @param {Bullet} bullet The bullet to add to the game's internal object
+ * This function adds a projectile to the game's internal object arrays.
+ * @param {Projectile} projectile The projectile to add to the game's internal object
  *   array.
  */
-Game.prototype.addBullet = function(bullet) {
-  this.projectiles.push(bullet);
+Game.prototype.addProjectile = function(projectile) {
+  this.projectiles.push(projectile);
 };
 
 /**
@@ -178,8 +178,8 @@ Game.prototype.update = function() {
   for (var i = 0; i < this.constructs.length; ++i) {
     if (this.constructs[i].shouldExist) {
       this.constructs[i].update(this.players, this.constructs,
-                                function(bullet) {
-        context.addBullet(bullet);
+                                function(projectile) {
+        context.addProjectile(projectile);
       }, function(praesidium) {
         context.addPraesidium(praesidium);
       });

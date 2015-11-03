@@ -1,5 +1,5 @@
 /**
- * This is the server app script that is run on the server.
+ * This is the app script that is run on the server.
  * @author Alvin Lin (alvin.lin.dev@gmail.com)
  * @todo Add unit tests!
  */
