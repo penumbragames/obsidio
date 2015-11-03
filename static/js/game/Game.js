@@ -121,14 +121,19 @@ Game.prototype.update = function() {
     this.viewPort.update(this.self.x, this.self.y);
 
     var build = this.self.build;
-    var orientation = Math.atan2(
-      Input.MOUSE[1] - Constants.CANVAS_HEIGHT / 2,
-      Input.MOUSE[0] - Constants.CANVAS_WIDTH / 2) + Math.PI / 2;
+    if (Util.inBound(Input.MOUSE[0], 0, Constants.GAME_WIDTH) &&
+        Util.inBound(Input.MOUSE[1], 0, Constants.GAME_HEIGHT)) {
+      var orientation = Math.atan2(
+        Input.MOUSE[1] - Constants.GAME_HEIGHT / 2,
+        Input.MOUSE[0] - Constants.GAME_WIDTH / 2) + Math.PI / 2;
+    } else {
+      var orientation = this.self.orientation;
+    }
     var shot = Input.LEFT_CLICK || Input.TOUCH;
 
     if (Input.LEFT_CLICK || Input.TOUCH) {
-      if (Util.inBound(Input.MOUSE[0], 0, 700) &&
-          Util.inBound(Input.MOUSE[1], 0, 600)) {
+      if (Util.inBound(Input.MOUSE[0], 0, Constants.GAME_WIDTH) &&
+          Util.inBound(Input.MOUSE[1], 0, Constants.GAME_HEIGHT)) {
         if (this.currentActionState == Game.ACTION_STATES.BUILD_PENDING) {
           var coords = this.viewPort.toAbsoluteCoords(Input.MOUSE);
           build = {

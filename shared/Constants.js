@@ -20,6 +20,9 @@ Constants.WORLD_MAX = 2500;
 Constants.WORLD_PADDING = 30;
 Constants.CANVAS_WIDTH = 800;
 Constants.CANVAS_HEIGHT = 600;
+Constants.GAME_WIDTH = 700;
+Constants.GAME_HEIGHT = 600;
+                            
 /**
  * Constants.VISIBILITY_THRESHOLD_X = (Constants.CANVAS_WIDTH / 2) + 25
  */
