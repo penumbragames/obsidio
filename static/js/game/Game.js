@@ -33,6 +33,9 @@ function Game(socket, leaderboard, drawing, ui, viewPort) {
   this.currentBuildType = Constants.CONSTRUCT_TYPES.NONE;
 }
 
+/**
+ * Defines game action states for clarity.
+ */
 Game.ACTION_STATES = {
   NONE: -1,
   CONTROL: 0,
