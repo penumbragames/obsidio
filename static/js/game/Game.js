@@ -164,7 +164,7 @@ Game.prototype.update = function() {
  */
 Game.prototype.draw = function() {
   // Clear the canvas.
-  this.drawing.clear()
+  this.drawing.clear();
 
   // Draw the background first.
   var center = this.viewPort.selfCoords;
@@ -219,7 +219,7 @@ Game.prototype.draw = function() {
       var constructCoords = this.viewPort.toCanvasCoords(
           [this.constructs[i].x, this.constructs[i].y]);
       var owner = (this.self.id == this.constructs[i].owner) ?
-          'self' : 'other';
+          Constants.SELF_ID : Constants.OTHER_ID;
       this.drawing.drawConstruct(owner,
                                  constructCoords,
                                  this.constructs[i].orientation,
@@ -242,7 +242,7 @@ Game.prototype.draw = function() {
                              Constants.CONSTRUCT_BUILD_RADIUS,
                              color);
       this.drawing.context.globalAlpha = 0.7;
-      this.drawing.drawConstruct('build_pending', Input.MOUSE, 0, 0,
+      this.drawing.drawConstruct(Constants.NEUTRAL_ID, Input.MOUSE, 0, 0,
                                  this.currentBuildType);
       this.drawing.context.globalAlpha = 1;
     }

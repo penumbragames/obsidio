@@ -35,8 +35,7 @@ UI.create = function(containerElement) {
  *   build.
  */
 UI.prototype.init = function(startBuildCallback, endBuildCallback) {
-  // @todo: refactor 6 into a constant
-  for (var i = 0; i < 6; ++i) {
+  for (var i = 0; i < Constants.NUM_CONSTRUCTS; ++i) {
     var buildOptionElement = createDiv(this.buildOptionContainerElement,
                                        null, 'ui-build-option');
     buildOptionElement.style.backgroundImage = 'url(' +

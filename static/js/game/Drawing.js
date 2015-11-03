@@ -20,10 +20,8 @@ function Drawing(context) {
   this.projectileImage = null;
   this.praesidiumImage = null;
   this.tileImage = null;
-
-  this.neutralConstructImages = [];
-  this.selfConstructImages = [];
-  this.otherConstructImages = [];
+  
+  this.constructImages = {};
 
   this.cancelImage = null;
 };
@@ -39,20 +37,26 @@ Drawing.HP_MISSING_COLOR = 'red';
 
 Drawing.BASE_IMG_URL = '/static/img/';
 
-Drawing.SELF_PLAYER_SRC = Drawing.BASE_IMG_URL + 'self_player.png';
-Drawing.OTHER_PLAYER_SRC = Drawing.BASE_IMG_URL + 'other_player.png';
+Drawing.SELF_URL = Drawing.BASE_IMG_URL + Constants.SELF_ID;
+Drawing.OTHER_URL = Drawing.BASE_IMG_URL + Constants.OTHER_ID;
+Drawing.NEUTRAL_URL = Drawing.BASE_IMG_URL + Constants.NEUTRAL_ID;
+
+Drawing.SELF_PLAYER_SRC = Drawing.SELF_URL + '_player.png';
+Drawing.OTHER_PLAYER_SRC = Drawing.OTHER_URL + '_player.png';
+
+Drawing.SELF_TURRET_SRC = Drawing.SELF_URL + '_turret.png';
+Drawing.OTHER_TURRET_SRC = Drawing.OTHER_URL + '_turret.png';
+Drawing.NEUTRAL_TURRET_SRC = Drawing.NEUTRAL_URL + '_turret.png';
+Drawing.SELF_HEALER_SRC = Drawing.SELF_URL + '_healer.png';
+Drawing.OTHER_HEALER_SRC = Drawing.OTHER_URL + '_healer.png';
+Drawing.NEUTRAL_HEALER_SRC = Drawing.NEUTRAL_URL + '_healer.png';
+
+Drawing.CANCEL_SRC = Drawing.BASE_IMG_URL + 'cancel.png';
+Drawing.WALL_SRC = Drawing.BASE_IMG_URL + 'wall.png';
+
 Drawing.PROJECTILE_SRC = Drawing.BASE_IMG_URL + 'projectile.png';
 Drawing.PRAESIDIUM_SRC = Drawing.BASE_IMG_URL + 'praesidium.png';
 Drawing.TILE_SRC = Drawing.BASE_IMG_URL + 'tile.png';
-
-Drawing.NEUTRAL_TURRET_SRC = Drawing.BASE_IMG_URL + 'neutral_turret.png';
-Drawing.SELF_TURRET_SRC = Drawing.BASE_IMG_URL + 'self_turret.png';
-Drawing.OTHER_TURRET_SRC = Drawing.BASE_IMG_URL + 'other_turret.png';
-Drawing.WALL_SRC = Drawing.BASE_IMG_URL + 'wall.png';
-Drawing.NEUTRAL_HEALER_SRC = Drawing.BASE_IMG_URL + 'neutral_healer.png';
-Drawing.SELF_HEALER_SRC = Drawing.BASE_IMG_URL + 'self_healer.png';
-Drawing.OTHER_HEALER_SRC = Drawing.BASE_IMG_URL + 'other_healer.png';
-Drawing.CANCEL_SRC = Drawing.BASE_IMG_URL + 'cancel.png';
 
 Drawing.NEUTRAL_CONSTRUCT_SRCS = [Drawing.NEUTRAL_TURRET_SRC,
                                  '',
@@ -100,17 +104,17 @@ Drawing.prototype.init = function() {
   this.praesidiumImage = createImage(Drawing.PRAESIDIUM_SRC);
   this.tileImage = createImage(Drawing.TILE_SRC);
 
-  for (var i = 0; i < Drawing.NEUTRAL_CONSTRUCT_SRCS.length; ++i) {
-    this.neutralConstructImages.push(createImage(
-        Drawing.NEUTRAL_CONSTRUCT_SRCS[i]));
-  }
-  for (var i = 0; i < Drawing.SELF_CONSTRUCT_SRCS.length; ++i) {
-    this.selfConstructImages.push(createImage(
+  this.constructImages[Constants.SELF_ID] = [];
+  this.constructImages[Constants.OTHER_ID] = [];
+  this.constructImages[Constants.NEUTRAL_ID] = [];
+  
+  for (var i = 0; i < Constants.NUM_CONSTRUCTS; ++i) {
+    this.constructImages[Constants.SELF_ID].push(createImage(
         Drawing.SELF_CONSTRUCT_SRCS[i]));
-  }
-  for (var i = 0; i < Drawing.OTHER_CONSTRUCT_SRCS.length; ++i) {
-    this.otherConstructImages.push(createImage(
+    this.constructImages[Constants.OTHER_ID].push(createImage(
         Drawing.OTHER_CONSTRUCT_SRCS[i]));
+    this.constructImages[Constants.NEUTRAL_ID].push(createImage(
+        Drawing.NEUTRAL_CONSTRUCT_SRCS[i]));
   }
 }
 
@@ -214,16 +218,7 @@ Drawing.prototype.drawConstruct = function(owner, coords, orientation,
   this.context.save();
   this.context.translate(coords[0], coords[1]);
   this.context.rotate(orientation);
-  var construct = null;
-  // @todo: refactor the owner string types into constants
-  if (owner == 'self') {
-    construct = this.selfConstructImages[type];
-  } else if (owner == 'other') {
-    construct = this.otherConstructImages[type];
-  } else {
-    construct = this.neutralConstructImages[type];
-  }
-  this.context.drawImage(construct,
+  this.context.drawImage(this.constructImages[owner][type],
                          -Drawing.CONSTRUCT_SIZE[0] / 2,
                          -Drawing.CONSTRUCT_SIZE[1] / 2,
                          Drawing.CONSTRUCT_SIZE[0],
@@ -232,7 +227,7 @@ Drawing.prototype.drawConstruct = function(owner, coords, orientation,
 
   this.context.save();
   this.context.translate(coords[0], coords[1]);
-  if (owner != 'build_pending') {
+  if (owner != Constants.NEUTRAL_ID) {
     var healthBarInterval = 96 / Constants.CONSTRUCT_MAX_HEALTH[type];
     for (var i = 0; i < Constants.CONSTRUCT_MAX_HEALTH[type]; ++i) {
       if (i < health) {

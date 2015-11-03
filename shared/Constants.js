@@ -29,6 +29,10 @@ Constants.VISIBILITY_THRESHOLD_X = 425;
  */
 Constants.VISIBILITY_THRESHOLD_Y = 325;
 
+/**
+ * Number of constructs indicates the number of distinct construct types.
+ */
+Constants.NUM_CONSTRUCTS = 6;
 
 /**
  * Construct types indicate the global index of that Construct in other arrays.
@@ -76,6 +80,13 @@ Constants.CONSTRUCT_BUILD_RADIUS = 128;
  * This is the maximum health of a Player.
  */
 Constants.PLAYER_MAX_HEALTH = 10;
+
+/**
+ * Indicate ownership string literals.
+ */
+Constants.SELF_ID = 'self';
+Constants.OTHER_ID = 'other';
+Constants.NEUTRAL_ID = 'neutral';
 
 try {
   module.exports = Constants;
