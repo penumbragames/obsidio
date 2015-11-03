@@ -45,6 +45,7 @@ UI.prototype.init = function(startBuildCallback, endBuildCallback) {
     // iteration of the loop.
     // @todo: look into a better bind() method and stick it in base.js to use
     // here.
+    // @todo (omgimanerd): I don't like this but okay.
     (function(j) {
       buildOptionElement.onclick = function(e) {
         startBuildCallback(j);
