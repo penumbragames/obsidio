@@ -16,7 +16,7 @@
   "bugs": {
     "url": "https://github.com/penumbragames/obsidio/issues"
   },
-  "homepage": "https://github.com/penumbragames/obsidio#readme",
+  "homepage": "http://obsidio.herokuapp.com",
   "dependencies": {
     "bower": "^1.6.5",
     "express": "^4.13.3",
